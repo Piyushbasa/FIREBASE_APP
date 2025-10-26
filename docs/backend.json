@@ -1,5 +1,31 @@
+
 {
   "entities": {
+    "Post": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Post",
+      "type": "object",
+      "description": "Represents a single post in the community forum.",
+      "properties": {
+        "content": {
+          "type": "string",
+          "description": "The main content of the post."
+        },
+        "authorId": {
+          "type": "string",
+          "description": "The UID of the user who created the post."
+        },
+        "authorName": {
+          "type": "string",
+          "description": "The display name or email of the user who created the post."
+        },
+        "createdAt": {
+          "type": "object",
+          "description": "The timestamp when the post was created. This should be a Firestore ServerTimestamp."
+        }
+      },
+      "required": ["content", "authorId", "authorName", "createdAt"]
+    },
     "UserProfile": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "UserProfile",
@@ -24,12 +50,7 @@
           "description": "The user's general location (e.g., city, state)."
         }
       },
-      "required": [
-        "id",
-        "userName",
-        "email",
-        "location"
-      ]
+      "required": ["id", "userName", "email", "location"]
     },
     "CommodityPrice": {
       "$schema": "http://json-schema.org/draft-07/schema#",
@@ -221,96 +242,23 @@
     ]
   },
   "firestore": {
-    "structure": [
-      {
-        "path": "/users/{userId}/profile",
-        "definition": {
-          "entityName": "UserProfile",
-          "schema": {
-            "$ref": "#/backend/entities/UserProfile"
-          },
-          "description": "Stores user profile information. Access restricted to the user with the matching userId.",
-          "params": [
-            {
-              "name": "userId",
-              "description": "The unique identifier of the user."
-            }
-          ]
-        }
+    "collections": {
+      "posts": {
+        "schema": {
+          "$ref": "#/entities/Post"
+        },
+        "description": "Stores all posts for the community forum. Publicly readable, but only authenticated users can create posts. Users can only edit or delete their own posts."
       },
-      {
-        "path": "/commodity_prices/{commodityPriceId}",
-        "definition": {
-          "entityName": "CommodityPrice",
-          "schema": {
-            "$ref": "#/backend/entities/CommodityPrice"
-          },
-          "description": "Stores commodity price data. Publicly accessible.",
-          "params": [
-            {
-              "name": "commodityPriceId",
-              "description": "The unique identifier of the commodity price."
-            }
-          ]
-        }
-      },
-      {
-        "path": "/users/{userId}/field_images/{fieldImageId}",
-        "definition": {
-          "entityName": "FieldImage",
-          "schema": {
-            "$ref": "#/backend/entities/FieldImage"
-          },
-          "description": "Stores field images uploaded by users. Access restricted to the user with the matching userId.",
-          "params": [
-            {
-              "name": "userId",
-              "description": "The unique identifier of the user."
+       "users": {
+        "collections": {
+          "{userId}": {
+            "schema": {
+              "$ref": "#/entities/UserProfile"
             },
-            {
-              "name": "fieldImageId",
-              "description": "The unique identifier of the field image."
-            }
-          ]
-        }
-      },
-      {
-        "path": "/users/{userId}/crop_suggestions/{cropSuggestionId}",
-        "definition": {
-          "entityName": "CropSuggestion",
-          "schema": {
-            "$ref": "#/backend/entities/CropSuggestion"
-          },
-          "description": "Stores crop suggestions for users. Access restricted to the user with the matching userId.",
-          "params": [
-            {
-              "name": "userId",
-              "description": "The unique identifier of the user."
-            },
-            {
-              "name": "cropSuggestionId",
-              "description": "The unique identifier of the crop suggestion."
-            }
-          ]
-        }
-      },
-      {
-        "path": "/weather_data/{weatherDataId}",
-        "definition": {
-          "entityName": "WeatherData",
-          "schema": {
-            "$ref": "#/backend/entities/WeatherData"
-          },
-          "description": "Stores weather data. Publicly accessible.",
-          "params": [
-            {
-              "name": "weatherDataId",
-              "description": "The unique identifier of the weather data."
-            }
-          ]
+            "description": "Stores public profile information for a user."
+          }
         }
       }
-    ],
-    "reasoning": "The Firestore structure is designed to optimize security, scalability, and debuggability for the AgriAssist application, following the principles of Authorization Independence, Clarity of Intent, DBAC, and QAPs.\n\n1.  **User Profiles:** User profiles are stored in a path-based structure under `/users/{userId}/profile`. This ensures private data ownership and simplifies security rules, as access control is directly tied to the authenticated user's ID.\n\n2.  **Field Images and Crop Suggestions:** These entities are also stored under the user's path (`/users/{userId}/field_images` and `/users/{userId}/crop_suggestions`). This enforces clear ownership.  No denormalization is needed as the path itself establishes ownership.\n\n3.  **Commodity Prices:** Commodity prices are stored in a global collection `/commodity_prices`.  Since price data is generally public, no specific authorization is needed.\n\n4.  **Weather Data:** Weather data is stored in a global collection `/weather_data`. As with commodity prices, weather data is generally public, so no specific authorization is needed.\n\n**Authorization Independence:**\nThe structure uses path-based ownership for user-related data (field images and crop suggestions) to avoid `get()` calls in security rules. The `userId` is implicitly available through the path, making authorization rules simple and atomic.\n\n**QAPs (Rules are not Filters):**\nThe segregation of user-owned data under `/users/{userId}` allows for secure `list` operations. A user can only list data under their own ID, preventing unauthorized access to other users' data. Commodity and weather data, being public, can be listed without restrictions."
+    }
   }
 }

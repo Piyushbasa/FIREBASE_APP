@@ -1,8 +1,9 @@
+
 "use client";
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, BarChart2, Bot, GraduationCap, Users } from 'lucide-react';
+import { Home, BarChart2, Bot, GraduationCap, MessageSquare, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
@@ -10,7 +11,8 @@ const navItems = [
   { href: '/market', label: 'Market', icon: BarChart2 },
   { href: '/assistant', label: 'Assistant', icon: Bot },
   { href: '/learn', label: 'Learn', icon: GraduationCap },
-  { href: '/community', label: 'Community', icon: Users },
+  { href: '/community', label: 'Forum', icon: MessageSquare },
+  { href: '/profile', label: 'Profile', icon: User },
 ];
 
 export function BottomNavbar() {
