@@ -1,6 +1,5 @@
 'use client';
 import { Header } from '@/components/dashboard/header';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CropSuggestionCard } from '@/components/dashboard/crop-suggestion-card';
 import { CityData } from '@/components/dashboard/city-data';
 import { PlantHealthCard } from '@/components/dashboard/plant-health-card';
@@ -12,20 +11,16 @@ export default function Home() {
       <Header />
       <main className="flex-1 p-4">
         <div className="mx-auto max-w-7xl">
-          <Tabs defaultValue="dashboard">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-              <TabsTrigger value="suggester">AI Crop Suggester</TabsTrigger>
-            </TabsList>
-            <TabsContent value="dashboard" className="space-y-4">
-              <CityData />
-              <PlantHealthCard />
-              <SunTimesCard />
-            </TabsContent>
-            <TabsContent value="suggester">
-              <CropSuggestionCard />
-            </TabsContent>
-          </Tabs>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <div className="lg:col-span-2 space-y-4">
+                <CityData />
+                <PlantHealthCard />
+              </div>
+              <div className="space-y-4">
+                <CropSuggestionCard />
+                <SunTimesCard />
+              </div>
+            </div>
         </div>
       </main>
     </div>
