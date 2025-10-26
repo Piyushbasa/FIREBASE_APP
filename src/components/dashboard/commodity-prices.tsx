@@ -125,7 +125,7 @@ export function CommodityPrices() {
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isLoading} className="w-full sm:w-auto">
+            <Button type="submit" disabled={isLoading} className="w-full">
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Get Prices
             </Button>
@@ -133,15 +133,15 @@ export function CommodityPrices() {
         </Form>
         
         {isLoading && (
-          <div className="mt-8 flex justify-center items-center flex-col gap-4 text-center">
+          <div className="mt-6 flex justify-center items-center flex-col gap-4 text-center">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            <p className="text-muted-foreground">Our AI is analyzing the markets... <br/>This may take a moment.</p>
+            <p className="text-muted-foreground text-sm">Our AI is analyzing the markets... <br/>This may take a moment.</p>
           </div>
         )}
 
         {priceData && priceData.prices.length > 0 && (
-          <div className="mt-8">
-            <h3 className="text-lg font-semibold mb-4">Price Results for {form.getValues('location')}</h3>
+          <div className="mt-6">
+            <h3 className="text-base font-semibold mb-2">Price Results for {form.getValues('location')}</h3>
             <div className="rounded-md border">
             <Table>
               <TableHeader>

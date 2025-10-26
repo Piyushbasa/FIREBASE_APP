@@ -10,7 +10,7 @@ export function WeatherCard() {
         </CardTitle>
         <p className="text-sm text-muted-foreground">Napa Valley, CA</p>
       </CardHeader>
-      <CardContent className="grid grid-cols-2 gap-4">
+      <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="flex items-center gap-2 p-2 rounded-lg bg-secondary/50">
           <Thermometer className="w-6 h-6 text-accent" />
           <div>

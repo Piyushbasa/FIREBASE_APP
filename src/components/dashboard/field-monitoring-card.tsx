@@ -14,9 +14,9 @@ export function FieldMonitoringCard() {
         <CardTitle>Field Monitoring</CardTitle>
         <CardDescription>Real-time status of your fields</CardDescription>
       </CardHeader>
-      <CardContent className="flex-grow flex items-center justify-center">
+      <CardContent className="flex-grow flex items-center justify-center p-4">
         {fieldImages.length > 0 ? (
-          <Carousel className="w-full max-w-xs sm:max-w-sm">
+          <Carousel className="w-full max-w-xs">
             <CarouselContent>
               {fieldImages.map((image) => (
                 <CarouselItem key={image.id}>
