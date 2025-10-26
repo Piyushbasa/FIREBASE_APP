@@ -29,7 +29,7 @@ export default function RootLayout({
             className="object-cover -z-10"
             data-ai-hint="green field"
           />
-        <div className="relative flex flex-col min-h-screen bg-black/30">
+        <div className="relative flex flex-col min-h-screen">
           <main className="flex-1 pb-24">{children}</main>
           <BottomNavbar />
         </div>
