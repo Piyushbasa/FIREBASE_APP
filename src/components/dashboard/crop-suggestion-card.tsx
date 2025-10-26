@@ -38,6 +38,8 @@ export function CropSuggestionCard() {
       season: "Summer",
       temperature: "25°C",
       weatherAlerts: "None",
+      fieldLength: undefined,
+      fieldWidth: undefined,
     },
   });
 
@@ -169,7 +171,7 @@ export function CropSuggestionCard() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input type="number" placeholder="Length (meters)" {...field} />
+                        <Input type="number" placeholder="Length (meters)" {...field} value={field.value ?? ''} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -181,7 +183,7 @@ export function CropSuggestionCard() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input type="number" placeholder="Width (meters)" {...field} />
+                        <Input type="number" placeholder="Width (meters)" {...field} value={field.value ?? ''} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
