@@ -15,7 +15,6 @@ const SuggestCropInputSchema = z.object({
   soilType: z.string().describe('The type of soil (e.g., Loam, Clay, Sandy).'),
   season: z.string().describe('The current season (e.g., Spring, Summer, Autumn, Winter).'),
   temperature: z.string().describe('The current or average temperature (e.g., "25°C").'),
-  weatherAlerts: z.string().describe('Any active weather alerts (e.g., "Heatwave warning", "Cyclone").'),
   fieldLength: z.coerce.number().optional(),
   fieldWidth: z.coerce.number().optional(),
 });
@@ -46,7 +45,6 @@ Location: {{{location}}}
 Soil Type: {{{soilType}}}
 Season: {{{season}}}
 Temperature: {{{temperature}}}
-Weather Alerts: {{{weatherAlerts}}}
 {{#if fieldLength}}
 Field Dimensions: {{{fieldLength}}}m x {{{fieldWidth}}}m
 {{/if}}
