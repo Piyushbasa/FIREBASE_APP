@@ -14,14 +14,42 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useToast } from "@/hooks/use-toast";
 import { fetchCommodityPrices } from "@/app/actions";
 import type { CommodityPricesOutput } from "@/ai/flows/commodity-price-tracking";
+import { ScrollArea } from "../ui/scroll-area";
 
 const commodities = [
+  { id: "arhar (tur/red gram)", label: "Arhar (Tur/Red Gram)" },
+  { id: "bajra (pearl millet)", label: "Bajra (Pearl Millet)" },
+  { id: "barley (jau)", label: "Barley (Jau)" },
+  { id: "bengal gram dal (chana dal)", label: "Bengal Gram Dal (Chana Dal)" },
+  { id: "black gram (urad dal)", label: "Black Gram (Urad Dal)" },
+  { id: "castor seed", label: "Castor Seed" },
+  { id: "coriander", label: "Coriander" },
+  { id: "cotton", label: "Cotton" },
+  { id: "ginger", label: "Ginger" },
+  { id: "gram", label: "Gram" },
+  { id: "green gram (moong)", label: "Green Gram (Moong)" },
+  { id: "groundnut", label: "Groundnut" },
+  { id: "guar seed", label: "Guar Seed" },
+  { id: "jowar (sorghum)", label: "Jowar (Sorghum)" },
+  { id: "lentil (masur)", label: "Lentil (Masur)" },
+  { id: "linseed", label: "Linseed" },
+  { id: "maize", label: "Maize (Corn)" },
+  { id: "mustard", label: "Mustard" },
+  { id: "paddy (dhan)", label: "Paddy (Dhan)" },
+  { id: "ragi (finger millet)", label: "Ragi (Finger Millet)" },
+  { id: "rapeseed & mustard", label: "Rapeseed & Mustard" },
   { id: "rice", label: "Rice" },
-  { id: "corn", label: "Corn" },
+  { id: "safflower", label: "Safflower" },
+  { id: "sesamum (sesame)", label: "Sesamum (Sesame)" },
+  { id: "soyabean", label: "Soyabean" },
+  { id: "sugarcane", label: "Sugarcane" },
+  { id: "sunflower", label: "Sunflower" },
+  { id: "wheat", label: "Wheat" },
   { id: "grapes", label: "Grapes" },
   { id: "potatoes", label: "Potatoes" },
   { id: "olives", label: "Olives" },
 ] as const;
+
 
 const FormSchema = z.object({
   commodities: z.array(z.string()).refine((value) => value.some((item) => item), {
@@ -59,12 +87,12 @@ export function CommodityPrices() {
   }
 
   return (
-    <Card className="h-full">
+    <Card className="h-full flex flex-col">
       <CardHeader>
         <CardTitle>Commodity Price Tracker</CardTitle>
         <CardDescription>Get prices for key commodities from markets across India.</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex flex-col flex-grow">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
@@ -76,7 +104,8 @@ export function CommodityPrices() {
                     <FormLabel>Commodities</FormLabel>
                     <FormDescription>Select the commodities you want to track.</FormDescription>
                   </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                  <ScrollArea className="h-40">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pr-4">
                   {commodities.map((item) => (
                     <FormField
                       key={item.id}
@@ -98,13 +127,14 @@ export function CommodityPrices() {
                                 }}
                               />
                             </FormControl>
-                            <FormLabel className="font-normal">{item.label}</FormLabel>
+                            <FormLabel className="font-normal text-sm">{item.label}</FormLabel>
                           </FormItem>
                         );
                       }}
                     />
                   ))}
                   </div>
+                  </ScrollArea>
                   <FormMessage />
                 </FormItem>
               )}
@@ -116,38 +146,42 @@ export function CommodityPrices() {
           </form>
         </Form>
         
+        <div className="flex-grow mt-6">
         {isLoading && (
-          <div className="mt-6 flex justify-center items-center flex-col gap-4 text-center">
+          <div className="flex justify-center items-center flex-col gap-4 text-center h-full">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
             <p className="text-muted-foreground text-sm">Our AI is analyzing markets across India... <br/>This may take a moment.</p>
           </div>
         )}
 
         {priceData && priceData.prices.length > 0 && (
-          <div className="mt-6">
+          <div>
             <h3 className="text-base font-semibold mb-2">Price Results from Indian Markets</h3>
-            <div className="rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Commodity</TableHead>
-                  <TableHead>Market</TableHead>
-                  <TableHead className="text-right">Price</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {priceData.prices.map((price, index) => (
-                  <TableRow key={`${price.commodity}-${index}`}>
-                    <TableCell className="font-medium capitalize">{price.commodity}</TableCell>
-                    <TableCell>{price.market}</TableCell>
-                    <TableCell className="text-right">{`${price.price} / ${price.unit}`}</TableCell>
+            <ScrollArea className="h-64">
+              <div className="rounded-md border pr-4">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Commodity</TableHead>
+                    <TableHead>Market</TableHead>
+                    <TableHead className="text-right">Price</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-            </div>
+                </TableHeader>
+                <TableBody>
+                  {priceData.prices.map((price, index) => (
+                    <TableRow key={`${price.commodity}-${index}`}>
+                      <TableCell className="font-medium capitalize">{price.commodity}</TableCell>
+                      <TableCell>{price.market}</TableCell>
+                      <TableCell className="text-right">{`${price.price} / ${price.unit}`}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              </div>
+            </ScrollArea>
           </div>
         )}
+        </div>
       </CardContent>
     </Card>
   );

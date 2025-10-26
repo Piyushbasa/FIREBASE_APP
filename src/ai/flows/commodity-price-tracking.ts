@@ -15,7 +15,7 @@ const CommodityPricesInputSchema = z.object({
   location: z.string().describe('The location for which to retrieve commodity prices. Can be "all India" for a summary from major markets.'),
   commodities: z
     .array(z.string())
-    .describe('The commodities for which to retrieve prices (e.g., rice, corn, grapes, potatoes, olives).'),
+    .describe('The commodities for which to retrieve prices (e.g., rice, wheat, cotton).'),
 });
 export type CommodityPricesInput = z.infer<typeof CommodityPricesInputSchema>;
 
@@ -41,11 +41,11 @@ const prompt = ai.definePrompt({
   output: {schema: CommodityPricesOutputSchema},
   prompt: `You are an expert agricultural economist specializing in Indian markets. Your task is to retrieve the current prices for the following commodities.
 
-If the location is "all India", provide a representative price from three different major mandis (markets) for each commodity requested. For example, for rice, you could provide prices from markets in Punjab, Andhra Pradesh, and West Bengal.
+If the location is "all India", provide a representative price from three different major mandis (markets) for each commodity requested. For example, for wheat, you could provide prices from markets in Punjab, Uttar Pradesh, and Madhya Pradesh.
 
 If a specific location in India is provided, retrieve prices from the main market in that location.
 
-Use Indian market data and price units like INR per quintal.
+Use real, up-to-date Indian market data and price units like INR per quintal.
 
 Location: {{{location}}}
 Commodities: {{#each commodities}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}
