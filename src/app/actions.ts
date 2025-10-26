@@ -5,8 +5,8 @@ import { suggestCrop, SuggestCropInput, SuggestCropOutput } from '@/ai/flows/sug
 
 export async function fetchCommodityPrices(input: CommodityPricesInput): Promise<{ data: CommodityPricesOutput | null; error: string | null }> {
   try {
-    if (!input.location || input.commodities.length === 0) {
-        return { data: null, error: 'Please provide a location and select at least one commodity.' };
+    if (input.commodities.length === 0) {
+        return { data: null, error: 'Please select at least one commodity.' };
     }
     const result = await getCommodityPrices(input);
     return { data: result, error: null };

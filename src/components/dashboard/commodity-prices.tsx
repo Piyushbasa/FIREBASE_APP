@@ -9,7 +9,6 @@ import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
@@ -25,7 +24,6 @@ const commodities = [
 ] as const;
 
 const FormSchema = z.object({
-  location: z.string().min(2, { message: "Location must be at least 2 characters." }),
   commodities: z.array(z.string()).refine((value) => value.some((item) => item), {
     message: "You have to select at least one commodity.",
   }),
@@ -39,7 +37,6 @@ export function CommodityPrices() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      location: "",
       commodities: [],
     },
   });
@@ -47,7 +44,7 @@ export function CommodityPrices() {
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     setIsLoading(true);
     setPriceData(null);
-    const result = await fetchCommodityPrices(data);
+    const result = await fetchCommodityPrices({ ...data, location: "all India" });
 
     if (result.error) {
       toast({
@@ -65,24 +62,11 @@ export function CommodityPrices() {
     <Card className="h-full">
       <CardHeader>
         <CardTitle>Commodity Price Tracker</CardTitle>
-        <CardDescription>Get location-specific prices for key commodities powered by AI.</CardDescription>
+        <CardDescription>Get prices for key commodities from markets across India.</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="location"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Location</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g., Fresno, California" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             <FormField
               control={form.control}
               name="commodities"
@@ -135,25 +119,27 @@ export function CommodityPrices() {
         {isLoading && (
           <div className="mt-6 flex justify-center items-center flex-col gap-4 text-center">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            <p className="text-muted-foreground text-sm">Our AI is analyzing the markets... <br/>This may take a moment.</p>
+            <p className="text-muted-foreground text-sm">Our AI is analyzing markets across India... <br/>This may take a moment.</p>
           </div>
         )}
 
         {priceData && priceData.prices.length > 0 && (
           <div className="mt-6">
-            <h3 className="text-base font-semibold mb-2">Price Results for {form.getValues('location')}</h3>
+            <h3 className="text-base font-semibold mb-2">Price Results from Indian Markets</h3>
             <div className="rounded-md border">
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Commodity</TableHead>
+                  <TableHead>Market</TableHead>
                   <TableHead className="text-right">Price</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {priceData.prices.map((price) => (
-                  <TableRow key={price.commodity}>
+                {priceData.prices.map((price, index) => (
+                  <TableRow key={`${price.commodity}-${index}`}>
                     <TableCell className="font-medium capitalize">{price.commodity}</TableCell>
+                    <TableCell>{price.market}</TableCell>
                     <TableCell className="text-right">{`${price.price} / ${price.unit}`}</TableCell>
                   </TableRow>
                 ))}

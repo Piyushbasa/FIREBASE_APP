@@ -12,7 +12,7 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const CommodityPricesInputSchema = z.object({
-  location: z.string().describe('The location for which to retrieve commodity prices.'),
+  location: z.string().describe('The location for which to retrieve commodity prices. Can be "all India" for a summary from major markets.'),
   commodities: z
     .array(z.string())
     .describe('The commodities for which to retrieve prices (e.g., rice, corn, grapes, potatoes, olives).'),
@@ -25,6 +25,7 @@ const CommodityPricesOutputSchema = z.object({
       commodity: z.string().describe('The name of the commodity.'),
       price: z.string().describe('The current price of the commodity.'),
       unit: z.string().describe('The unit of measurement for the price (e.g., INR/quintal).'),
+      market: z.string().describe('The market (mandi) where this price was recorded.'),
     })
   ),
 });
@@ -38,12 +39,18 @@ const prompt = ai.definePrompt({
   name: 'commodityPriceTrackingPrompt',
   input: {schema: CommodityPricesInputSchema},
   output: {schema: CommodityPricesOutputSchema},
-  prompt: `You are an expert agricultural economist specializing in Indian markets. Your task is to retrieve the current prices for the following commodities in the specified location. If the location is in India, use Indian market data (e.g., from mandis) and price units like INR per quintal. Make reasonable assumptions if the location is not specific enough.
+  prompt: `You are an expert agricultural economist specializing in Indian markets. Your task is to retrieve the current prices for the following commodities.
+
+If the location is "all India", provide a representative price from three different major mandis (markets) for each commodity requested. For example, for rice, you could provide prices from markets in Punjab, Andhra Pradesh, and West Bengal.
+
+If a specific location in India is provided, retrieve prices from the main market in that location.
+
+Use Indian market data and price units like INR per quintal.
 
 Location: {{{location}}}
 Commodities: {{#each commodities}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}
 
-Provide the prices in a structured JSON format, including the commodity name, price, and unit of measurement.
+Provide the prices in a structured JSON format, including the commodity name, price, unit of measurement, and the market (mandi) it was sourced from.
 `,
 });
 
