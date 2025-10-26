@@ -16,8 +16,8 @@ const SuggestCropInputSchema = z.object({
   season: z.string().describe('The current season (e.g., Spring, Summer, Autumn, Winter).'),
   temperature: z.string().describe('The current or average temperature (e.g., "25°C").'),
   weatherAlerts: z.string().describe('Any active weather alerts (e.g., "Heatwave warning", "None").'),
-  fieldLength: z.number().optional().describe('The length of the field in meters.'),
-  fieldWidth: z.number().optional().describe('The width of the field in meters.'),
+  fieldLength: z.coerce.number().optional(),
+  fieldWidth: z.coerce.number().optional(),
 });
 export type SuggestCropInput = z.infer<typeof SuggestCropInputSchema>;
 
@@ -40,7 +40,7 @@ const prompt = ai.definePrompt({
   name: 'suggestCropPrompt',
   input: {schema: SuggestCropInputSchema},
   output: {schema: SuggestCropOutputSchema},
-  prompt: `You are an expert agricultural advisor. Based on the parameters provided, suggest optimal crops to plant. Provide a short reasoning for each suggestion and some general planting advice.
+  prompt: `You are an expert agricultural advisor with a specialization in Indian agriculture. Based on the parameters provided, suggest optimal crops to plant. Provide a short reasoning for each suggestion and some general planting advice.
 
 Location: {{{location}}}
 Soil Type: {{{soilType}}}
@@ -51,7 +51,7 @@ Weather Alerts: {{{weatherAlerts}}}
 Field Dimensions: {{{fieldLength}}}m x {{{fieldWidth}}}m
 {{/if}}
 
-Consider factors like climate suitability, soil compatibility, and resilience to weather conditions. If field dimensions are provided, you can optionally factor that into your advice.
+Consider factors like climate suitability for Indian regions, soil compatibility, local water availability, and resilience to weather conditions. If field dimensions are provided, you can optionally factor that into your advice.
 `,
 });
 

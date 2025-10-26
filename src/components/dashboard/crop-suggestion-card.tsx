@@ -80,7 +80,7 @@ export function CropSuggestionCard() {
                   <FormItem>
                     <FormLabel>Location</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., Napa Valley, CA" {...field} />
+                      <Input placeholder="e.g., Pune, Maharashtra" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -99,11 +99,14 @@ export function CropSuggestionCard() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="Loam">Loam</SelectItem>
-                          <SelectItem value="Clay">Clay</SelectItem>
-                          <SelectItem value="Sandy">Sandy</SelectItem>
-                          <SelectItem value="Silt">Silt</SelectItem>
-                          <SelectItem value="Peat">Peat</SelectItem>
+                          <SelectItem value="Alluvial">Alluvial</SelectItem>
+                          <SelectItem value="Black">Black</SelectItem>
+                          <SelectItem value="Red and Yellow">Red and Yellow</SelectItem>
+                          <SelectItem value="Laterite">Laterite</SelectItem>
+                          <SelectItem value="Arid">Arid</SelectItem>
+                          <SelectItem value="Saline">Saline</SelectItem>
+                          <SelectItem value="Peaty">Peaty</SelectItem>
+                          <SelectItem value="Forest">Forest</SelectItem>
                         </SelectContent>
                       </Select>
                     <FormMessage />
@@ -123,10 +126,9 @@ export function CropSuggestionCard() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="Spring">Spring</SelectItem>
-                          <SelectItem value="Summer">Summer</SelectItem>
-                          <SelectItem value="Autumn">Autumn</SelectItem>
-                          <SelectItem value="Winter">Winter</SelectItem>
+                          <SelectItem value="Kharif (Monsoon)">Kharif (Monsoon)</SelectItem>
+                          <SelectItem value="Rabi (Winter)">Rabi (Winter)</SelectItem>
+                          <SelectItem value="Zaid (Summer)">Zaid (Summer)</SelectItem>
                         </SelectContent>
                       </Select>
                     <FormMessage />
@@ -140,7 +142,7 @@ export function CropSuggestionCard() {
                   <FormItem>
                     <FormLabel>Temperature</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., 25°C / 77°F" {...field} />
+                      <Input placeholder="e.g., 25°C" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

@@ -24,7 +24,7 @@ const CommodityPricesOutputSchema = z.object({
     z.object({
       commodity: z.string().describe('The name of the commodity.'),
       price: z.string().describe('The current price of the commodity.'),
-      unit: z.string().describe('The unit of measurement for the price (e.g., USD/ton).'),
+      unit: z.string().describe('The unit of measurement for the price (e.g., INR/quintal).'),
     })
   ),
 });
@@ -38,7 +38,7 @@ const prompt = ai.definePrompt({
   name: 'commodityPriceTrackingPrompt',
   input: {schema: CommodityPricesInputSchema},
   output: {schema: CommodityPricesOutputSchema},
-  prompt: `You are an expert agricultural economist. Your task is to retrieve the current prices for the following commodities in the specified location.  Make reasonable assumptions if the location is not specific enough.
+  prompt: `You are an expert agricultural economist specializing in Indian markets. Your task is to retrieve the current prices for the following commodities in the specified location. If the location is in India, use Indian market data (e.g., from mandis) and price units like INR per quintal. Make reasonable assumptions if the location is not specific enough.
 
 Location: {{{location}}}
 Commodities: {{#each commodities}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}
