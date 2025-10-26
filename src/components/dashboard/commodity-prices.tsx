@@ -12,6 +12,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
+import { fetchCommodityPrices } from "@/app/actions";
 import type { CommodityPricesOutput } from "@/ai/flows/commodity-price-tracking";
 import { ScrollArea } from "../ui/scroll-area";
 import { Input } from "../ui/input";
@@ -89,8 +90,7 @@ export function CommodityPrices() {
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     setIsLoading(true);
     setPriceData(null);
-    // const result = await fetchCommodityPrices(data);
-    const result = { error: 'This feature has been disabled.', data: null };
+    const result = await fetchCommodityPrices(data);
 
 
     if (result.error) {
@@ -235,6 +235,7 @@ export function CommodityPrices() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Commodity</TableHead>
+                    <TableHead>Market</TableHead>
                     <TableHead className="text-right">Price</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -242,7 +243,8 @@ export function CommodityPrices() {
                   {priceData.prices.map((price, index) => (
                     <TableRow key={`${price.commodity}-${index}`}>
                       <TableCell className="font-medium capitalize">{price.commodity}</TableCell>
-                      <TableCell className="text-right">{`${price.price} / ${price.unit} (in ${price.market})`}</TableCell>
+                       <TableCell>{price.market}</TableCell>
+                      <TableCell className="text-right">{`${price.price} / ${price.unit}`}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
