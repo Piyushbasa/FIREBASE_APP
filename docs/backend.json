@@ -30,16 +30,8 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "UserProfile",
       "type": "object",
-      "description": "Represents a user profile in the AgriAssist application.",
+      "description": "Represents a user's profile information.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the UserProfile entity."
-        },
-        "userName": {
-          "type": "string",
-          "description": "The user's username."
-        },
         "email": {
           "type": "string",
           "description": "The user's email address.",
@@ -47,10 +39,10 @@
         },
         "location": {
           "type": "string",
-          "description": "The user's general location (e.g., city, state)."
+          "description": "The user's primary location for farming activities."
         }
       },
-      "required": ["id", "userName", "email", "location"]
+      "required": ["email"]
     },
     "CommodityPrice": {
       "$schema": "http://json-schema.org/draft-07/schema#",
@@ -191,7 +183,7 @@
           "description": "The location for which the weather data is recorded (e.g., latitude, longitude)."
         },
         "temperature": {
-          "type": "number",
+          "type": "number",_
           "description": "The temperature in Celsius or Fahrenheit."
         },
         "humidity": {
@@ -249,13 +241,13 @@
         },
         "description": "Stores all posts for the community forum. Publicly readable, but only authenticated users can create posts. Users can only edit or delete their own posts."
       },
-       "users": {
+       "userProfile": {
         "collections": {
           "{userId}": {
             "schema": {
               "$ref": "#/entities/UserProfile"
             },
-            "description": "Stores public profile information for a user."
+            "description": "Stores public profile information for a user, such as their location."
           }
         }
       }

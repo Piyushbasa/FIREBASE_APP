@@ -24,7 +24,7 @@ const FormSchema = z.object({
   fieldWidth: z.coerce.number().optional(),
 });
 
-export function CropSuggestionCard() {
+export function CropSuggestionCard({ defaultLocation }: { defaultLocation?: string }) {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = React.useState(false);
   const [suggestion, setSuggestion] = React.useState<SuggestCropOutput | null>(null);
@@ -32,7 +32,7 @@ export function CropSuggestionCard() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      location: "",
+      location: defaultLocation || "",
       soilType: "Loam",
       season: "Summer",
       temperature: "25°C",
@@ -40,6 +40,13 @@ export function CropSuggestionCard() {
       fieldWidth: undefined,
     },
   });
+
+  React.useEffect(() => {
+    if (defaultLocation) {
+      form.setValue("location", defaultLocation);
+    }
+  }, [defaultLocation, form]);
+
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     setIsLoading(true);
@@ -198,7 +205,7 @@ export function CropSuggestionCard() {
             <div className="space-y-3">
               {suggestion.suggestedCrops.map((crop, index) => (
                 <div key={index} className="p-3 rounded-md border bg-secondary/50">
-                  <p className="font-semibold text-white">{crop.name}</p>
+                  <p className="font-semibold">{crop.name}</p>
                   <p className="text-sm text-muted-foreground">{crop.reasoning}</p>
                 </div>
               ))}

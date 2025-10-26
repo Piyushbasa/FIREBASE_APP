@@ -70,13 +70,23 @@ const indianCities = [
     "Delhi", "Chandigarh", "Puducherry", "Srinagar", "Jammu", "Leh", "Port Blair"
 ].sort();
 
-export function CityData() {
+export function CityData({ defaultCity }: { defaultCity?: string }) {
   const { toast } = useToast();
-  const [selectedCity, setSelectedCity] = React.useState(indianCities.find(c => c === "Bhubaneswar") || indianCities[0]);
+  const [selectedCity, setSelectedCity] = React.useState(defaultCity || indianCities.find(c => c === "Bhubaneswar") || indianCities[0]);
   const [weatherData, setWeatherData] = React.useState<WeatherDataOutput | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
 
+  React.useEffect(() => {
+    if (defaultCity) {
+      setSelectedCity(defaultCity);
+    }
+  }, [defaultCity]);
+
   const getWeatherData = React.useCallback(async (city: string) => {
+    if (!city) {
+      setIsLoading(false);
+      return;
+    };
     setIsLoading(true);
     setWeatherData(null);
     const result = await fetchWeatherData({ city });
@@ -115,7 +125,7 @@ export function CityData() {
               </SelectContent>
           </Select>
         </CardTitle>
-        <CardDescription>{selectedCity}, India</CardDescription>
+        <CardDescription>{selectedCity || 'Select a city to see data'}, India</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {isLoading && (
@@ -215,6 +225,12 @@ export function CityData() {
               </div>
             )}
           </>
+        )}
+
+        {!isLoading && !weatherData && (
+             <div className="text-center p-4 border rounded-lg bg-secondary/50">
+                <p className="text-muted-foreground">Please select a city to view weather data.</p>
+            </div>
         )}
       </CardContent>
     </Card>

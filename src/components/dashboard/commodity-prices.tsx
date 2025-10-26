@@ -60,7 +60,7 @@ const FormSchema = z.object({
   location: z.string().min(1, { message: "Location is required." }),
 });
 
-export function CommodityPrices() {
+export function CommodityPrices({ defaultLocation }: { defaultLocation?: string }) {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = React.useState(false);
   const [priceData, setPriceData] = React.useState<CommodityPricesOutput | null>(null);
@@ -69,10 +69,16 @@ export function CommodityPrices() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      commodities: [],
-      location: "Odisha"
+      commodities: ["rice", "wheat"],
+      location: defaultLocation || "Odisha"
     },
   });
+
+  React.useEffect(() => {
+    if (defaultLocation) {
+      form.setValue("location", defaultLocation);
+    }
+  }, [defaultLocation, form]);
 
   const handleAddCustomCommodity = () => {
     const currentCommodities = form.getValues("commodities");
