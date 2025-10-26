@@ -3,3 +3,4 @@ config();
 
 import '@/ai/flows/commodity-price-tracking.ts';
 import '@/ai/flows/suggest-crop.ts';
+import '@/ai/flows/get-weather-data.ts';

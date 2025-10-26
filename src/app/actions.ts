@@ -2,6 +2,7 @@
 
 import { getCommodityPrices, CommodityPricesInput, CommodityPricesOutput } from '@/ai/flows/commodity-price-tracking';
 import { suggestCrop, SuggestCropInput, SuggestCropOutput } from '@/ai/flows/suggest-crop';
+import { getWeatherData, WeatherDataInput, WeatherDataOutput } from '@/ai/flows/get-weather-data';
 
 export async function fetchCommodityPrices(input: CommodityPricesInput): Promise<{ data: CommodityPricesOutput | null; error: string | null }> {
   try {
@@ -26,4 +27,15 @@ export async function fetchCropSuggestion(input: SuggestCropInput): Promise<{ da
     const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
     return { data: null, error: `Failed to fetch crop suggestion: ${errorMessage}` };
   }
+}
+
+export async function fetchWeatherData(input: WeatherDataInput): Promise<{ data: WeatherDataOutput | null; error: string | null }> {
+    try {
+        const result = await getWeatherData(input);
+        return { data: result, error: null };
+    } catch (e) {
+        console.error(e);
+        const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
+        return { data: null, error: `Failed to fetch weather data: ${errorMessage}` };
+    }
 }
