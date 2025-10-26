@@ -6,7 +6,7 @@ import { CommodityPrices } from '@/components/dashboard/commodity-prices';
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen bg-background font-body text-foreground">
+    <div className="flex flex-col min-h-screen font-body text-foreground">
       <Header />
       <main className="flex-1 p-4">
         <div className="mx-auto max-w-7xl grid gap-6">
