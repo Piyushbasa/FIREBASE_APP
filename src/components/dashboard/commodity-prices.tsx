@@ -234,7 +234,6 @@ export function CommodityPrices() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Commodity</TableHead>
-                    <TableHead>Market</TableHead>
                     <TableHead className="text-right">Price</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -242,8 +241,7 @@ export function CommodityPrices() {
                   {priceData.prices.map((price, index) => (
                     <TableRow key={`${price.commodity}-${index}`}>
                       <TableCell className="font-medium capitalize">{price.commodity}</TableCell>
-                      <TableCell>{price.market}</TableCell>
-                      <TableCell className="text-right">{`${price.price} / ${price.unit}`}</TableCell>
+                      <TableCell className="text-right">{`${price.price} / ${price.unit} (in ${price.market})`}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

@@ -39,18 +39,20 @@ const prompt = ai.definePrompt({
   name: 'commodityPriceTrackingPrompt',
   input: {schema: CommodityPricesInputSchema},
   output: {schema: CommodityPricesOutputSchema},
-  prompt: `You are an expert agricultural economist specializing in Indian markets. Your task is to retrieve the current prices for the following commodities.
+  prompt: `You are an expert agricultural economist specializing in Indian markets. Your task is to retrieve the current price for each of the following commodities.
 
-If the location is "all India", provide a representative price from three different major mandis (markets) for each commodity requested. For example, for wheat, you could provide prices from markets in Punjab, Uttar Pradesh, and Madhya Pradesh.
+For each commodity, provide a single, representative price from a major mandi (market).
 
-If a specific Indian state (e.g., Odisha) is provided, retrieve prices from three different main markets within that state.
+If the location is "all India", provide a representative national price.
+
+If a specific Indian state is provided, retrieve a representative price from a main market within that state.
 
 Use real, up-to-date Indian market data and price units like INR per quintal.
 
 Location: {{{location}}}
 Commodities: {{#each commodities}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}
 
-Provide the prices in a structured JSON format, including the commodity name, price, unit of measurement, and the market (mandi) it was sourced from.
+Provide the prices in a structured JSON format, including the commodity name, a single price, unit of measurement, and the market (mandi) it was sourced from.
 `,
 });
 
