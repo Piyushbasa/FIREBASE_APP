@@ -10,13 +10,69 @@ import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "../ui/skeleton";
 
 const indianCities = [
+    // Andhra Pradesh
+    "Visakhapatnam", "Vijayawada", "Tirupati",
+    // Arunachal Pradesh
+    "Itanagar",
+    // Assam
+    "Guwahati", "Dibrugarh",
+    // Bihar
+    "Patna", "Gaya",
+    // Chhattisgarh
+    "Raipur", "Bhilai",
+    // Goa
+    "Panaji",
+    // Gujarat
+    "Ahmedabad", "Surat", "Vadodara", "Rajkot",
+    // Haryana
+    "Faridabad", "Gurugram",
+    // Himachal Pradesh
+    "Shimla",
+    // Jharkhand
+    "Ranchi", "Jamshedpur",
+    // Karnataka
+    "Bangalore", "Mysore", "Mangalore",
+    // Kerala
+    "Thiruvananthapuram", "Kochi", "Kozhikode",
+    // Madhya Pradesh
+    "Indore", "Bhopal", "Jabalpur",
+    // Maharashtra
+    "Mumbai", "Pune", "Nagpur", "Nashik",
+    // Manipur
+    "Imphal",
+    // Meghalaya
+    "Shillong",
+    // Mizoram
+    "Aizawl",
+    // Nagaland
+    "Kohima", "Dimapur",
+    // Odisha
     "Bhubaneswar", "Cuttack", "Rourkela", "Puri", "Sambalpur",
-    "Mumbai", "Delhi", "Bangalore", "Hyderabad", "Ahmedabad", "Chennai", "Kolkata", "Surat", "Pune", "Jaipur"
-];
+    // Punjab
+    "Ludhiana", "Amritsar",
+    // Rajasthan
+    "Jaipur", "Jodhpur", "Udaipur",
+    // Sikkim
+    "Gangtok",
+    // Tamil Nadu
+    "Chennai", "Coimbatore", "Madurai",
+    // Telangana
+    "Hyderabad", "Warangal",
+    // Tripura
+    "Agartala",
+    // Uttar Pradesh
+    "Lucknow", "Kanpur", "Agra", "Varanasi",
+    // Uttarakhand
+    "Dehradun", "Haridwar",
+    // West Bengal
+    "Kolkata", "Asansol", "Siliguri",
+    // Union Territories
+    "Delhi", "Chandigarh", "Puducherry", "Srinagar", "Jammu", "Leh", "Port Blair"
+].sort();
 
 export function CityData() {
   const { toast } = useToast();
-  const [selectedCity, setSelectedCity] = React.useState(indianCities[0]);
+  const [selectedCity, setSelectedCity] = React.useState(indianCities.find(c => c === "Bhubaneswar") || indianCities[0]);
   const [weatherData, setWeatherData] = React.useState<WeatherDataOutput | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
 
