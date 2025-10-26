@@ -1,45 +1,43 @@
+'use client';
 import { Header } from '@/components/dashboard/header';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { MessageSquare, ThumbsUp } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { Landmark, Newspaper, ExternalLink } from 'lucide-react';
+import Image from 'next/image';
 
-const posts = [
+const resources = [
   {
-    id: 1,
-    author: {
-      name: 'Ramesh Kumar',
-      avatarUrl: 'https://picsum.photos/seed/1/40/40',
-      initials: 'RK',
-    },
-    content: 'The monsoon is late this year in Maharashtra. Has anyone started sowing yet? I am worried about my cotton crop.',
-    likes: 12,
-    comments: 4,
-    time: '2h ago',
+    title: 'PM-KISAN Scheme',
+    description: 'Official portal for the Pradhan Mantri Kisan Samman Nidhi (PM-KISAN) scheme. Check your status and find information.',
+    icon: Landmark,
+    href: 'https://pmkisan.gov.in/',
+    cta: 'Visit PM-KISAN Portal',
   },
   {
-    id: 2,
-    author: {
-      name: 'Sunita Devi',
-      avatarUrl: 'https://picsum.photos/seed/2/40/40',
-      initials: 'SD',
-    },
-    content: 'Has anyone used the new fertilizer subsidy scheme? I need some information on how to apply for it in Punjab.',
-    likes: 25,
-    comments: 8,
-    time: '5h ago',
+    title: 'Agri Coop Schemes',
+    description: 'Explore various schemes from the Department of Agriculture & Farmers Welfare for cooperation and farmer welfare.',
+    icon: Landmark,
+    href: 'https://agricoop.nic.in/en/Schemes',
+    cta: 'Explore Schemes',
   },
-    {
-    id: 3,
-    author: {
-      name: 'Arjun Singh',
-      avatarUrl: 'https://picsum.photos/seed/3/40/40',
-      initials: 'AS',
-    },
-    content: 'Good news! The local mandi prices for wheat have increased by 5%. Finally a good day for us farmers in Uttar Pradesh.',
-    likes: 45,
-    comments: 15,
-    time: '1d ago',
+  {
+    title: 'Farmers\' Development Initiatives',
+    description: "Learn about the Indian government's vision and initiatives for agricultural growth and farmer development.",
+    icon: Newspaper,
+    href: 'https://www.india.gov.in/topics/agriculture',
+    cta: 'Learn More',
+  },
+  {
+    title: 'Ministry of Agriculture on X (Twitter)',
+    description: 'Follow the official account of the Ministry of Agriculture & Farmers Welfare for the latest news and updates.',
+    icon: () => (
+      <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 fill-current">
+        <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
+      </svg>
+    ),
+    href: 'https://twitter.com/agrigoi',
+    cta: 'Follow @agrigoi',
   },
 ];
 
@@ -50,37 +48,33 @@ export default function CommunityPage() {
       <Header />
       <main className="flex-1 p-4">
         <div className="mx-auto max-w-7xl">
-          <div className="flex justify-between items-center mb-4">
-            <h1 className="text-2xl font-bold">Community Hub</h1>
-            <Button>New Post</Button>
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold">Resources & Govt. Schemes</h1>
+            <p className="text-muted-foreground">Stay updated with the latest information and government initiatives.</p>
           </div>
-          <div className="space-y-4">
-            {posts.map(post => (
-              <Card key={post.id}>
-                <CardHeader>
-                    <div className="flex items-center gap-3">
-                        <Avatar>
-                            <AvatarImage src={post.author.avatarUrl} alt={post.author.name} />
-                            <AvatarFallback>{post.author.initials}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                            <CardTitle className="text-base">{post.author.name}</CardTitle>
-                            <CardDescription>{post.time}</CardDescription>
-                        </div>
+          <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2">
+            {resources.map((resource, index) => (
+                <Card key={index} className="flex flex-col">
+                  <CardHeader>
+                    <div className="flex items-start gap-4">
+                      <div className="bg-primary/20 p-2 rounded-lg">
+                        <resource.icon className="w-6 h-6 text-primary" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-lg">{resource.title}</CardTitle>
+                        <CardDescription className="mt-1">{resource.description}</CardDescription>
+                      </div>
                     </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm">{post.content}</p>
-                </CardContent>
-                <CardFooter className="flex justify-start gap-6">
-                  <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                    <ThumbsUp className="w-4 h-4" /> {post.likes}
-                  </div>
-                  <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                    <MessageSquare className="w-4 h-4" /> {post.comments}
-                  </div>
-                </CardFooter>
-              </Card>
+                  </CardHeader>
+                  <CardContent className="flex-grow flex items-end">
+                    <Link href={resource.href} target="_blank" rel="noopener noreferrer" className="w-full">
+                      <Button className="w-full" variant="secondary">
+                        {resource.cta}
+                        <ExternalLink className="w-4 h-4 ml-2" />
+                      </Button>
+                    </Link>
+                  </CardContent>
+                </Card>
             ))}
           </div>
         </div>
