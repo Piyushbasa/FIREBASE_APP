@@ -42,16 +42,16 @@ const prompt = ai.definePrompt({
   name: 'getWeatherDataPrompt',
   input: { schema: WeatherDataInputSchema },
   output: { schema: WeatherDataOutputSchema },
-  prompt: `You are a real-time weather and environmental data service for India.
-Your task is to retrieve the current weather conditions, Air Quality Index (AQI), and any active weather alerts for the specified Indian city.
-Use the most up-to-date information available from official sources like the IMD (Indian Meteorological Department).
+  prompt: `You are a real-time weather and environmental data service for Indian farmers.
+Your primary task is to retrieve current weather conditions, the Air Quality Index (AQI), and any early warnings or active weather alerts that are critical for agriculture.
+Use the most up-to-date information available from official sources like the IMD (Indian Meteorological Department) and other relevant government agencies.
 
 City: {{{city}}}
 
 Provide the data in a structured JSON format.
-- For weather, provide temperature, humidity, wind, and precipitation.
+- For weather, provide the current temperature, humidity, wind, and precipitation.
 - For AQI, provide the numerical value and a descriptive level.
-- For alerts, provide the specific, active alert message (e.g., "Heavy rainfall warning", "Heatwave conditions expected"). If there are no active alerts, the alert message should be "None".
+- For alerts, provide specific, actionable, and timely warnings (e.g., "Cyclone Yaas making landfall in 24 hours", "Heatwave conditions expected for the next 48 hours", "Warning for heavy to very heavy rainfall"). If there are no active or upcoming critical alerts, the alert message should be "No critical alerts".
 `,
 });
 
