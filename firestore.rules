@@ -1,0 +1,137 @@
+/**
+ * @file AgriAssist Firestore Security Rules
+ * @version Prototyping
+ *
+ * @description This ruleset enforces a user-ownership model for private user data and allows public access to commodity and weather data.
+ *
+ * Data Structure:
+ * - User profiles, field images, and crop suggestions are stored under /users/{userId} to ensure private data ownership.
+ * - Commodity prices and weather data are stored in top-level collections for public accessibility.
+ *
+ * Key Security Decisions:
+ * - User listing is disallowed to prevent unauthorized enumeration of user IDs.
+ * - Public data (commodity prices, weather data) is readable by all.
+ * - All write operations on user-owned data are restricted to the owning user.
+ *
+ * Denormalization for Authorization:
+ * - The userId is implicitly available through the path for user-owned data, simplifying authorization rules and avoiding extra reads.
+ *
+ * Structural Segregation:
+ * - Private user data is stored under the /users/{userId} path, while public data is stored in top-level collections.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * @description Enforces user-ownership for user profiles. Only the authenticated user can read or write their own profile.
+     * @path /users/{userId}/profile
+     * @allow (get, create, update, delete) if the authenticated user ID matches the {userId} path parameter.
+     * @deny (get, create, update, delete) if the authenticated user ID does not match the {userId} path parameter.
+     * @principle Enforces document ownership for all operations.
+     */
+    match /users/{userId}/profile {
+      //function
+      function isSignedIn() {
+        return request.auth != null;
+      }
+
+      function isOwner(userId) {
+        return request.auth.uid == userId;
+      }
+
+      function isExistingOwner(userId) {
+        return isOwner(userId) && existsAfter(/databases/$(database)/documents/users/$(userId)/profile);
+      }
+
+      allow get: if isOwner(userId);
+      allow list: if false; // User listing is not permitted
+
+      allow create: if isSignedIn() && isOwner(userId);
+      allow update: if isSignedIn() && isExistingOwner(userId);
+      allow delete: if isSignedIn() && isExistingOwner(userId);
+    }
+
+    /**
+     * @description Allows public read access to commodity prices. No authentication required.
+     * @path /commodity_prices/{commodityPriceId}
+     * @allow (get, list) to anyone, including unauthenticated users.
+     * @deny (create, update, delete) to everyone.
+     * @principle Allows public read access to commodity price data, while restricting write access.
+     */
+    match /commodity_prices/{commodityPriceId} {
+      allow get: if true;
+      allow list: if true;
+      allow create, update, delete: if false;
+    }
+
+    /**
+     * @description Enforces user-ownership for field images. Only the authenticated user can read or write their own field images.
+     * @path /users/{userId}/field_images/{fieldImageId}
+     * @allow (get, create, update, delete) if the authenticated user ID matches the {userId} path parameter.
+     * @deny (get, create, update, delete) if the authenticated user ID does not match the {userId} path parameter.
+     * @principle Enforces document ownership for all operations.
+     */
+    match /users/{userId}/field_images/{fieldImageId} {
+      function isSignedIn() {
+        return request.auth != null;
+      }
+
+      function isOwner(userId) {
+        return request.auth.uid == userId;
+      }
+
+      function isExistingOwner(userId) {
+        return isOwner(userId) && existsAfter(/databases/$(database)/documents/users/$(userId)/field_images/$(fieldImageId));
+      }
+
+      allow get: if isOwner(userId);
+      allow list: if false;
+
+      allow create: if isSignedIn() && isOwner(userId);
+      allow update: if isSignedIn() && isExistingOwner(userId);
+      allow delete: if isSignedIn() && isExistingOwner(userId);
+    }
+
+    /**
+     * @description Enforces user-ownership for crop suggestions. Only the authenticated user can read or write their own crop suggestions.
+     * @path /users/{userId}/crop_suggestions/{cropSuggestionId}
+     * @allow (get, create, update, delete) if the authenticated user ID matches the {userId} path parameter.
+     * @deny (get, create, update, delete) if the authenticated user ID does not match the {userId} path parameter.
+     * @principle Enforces document ownership for all operations.
+     */
+    match /users/{userId}/crop_suggestions/{cropSuggestionId} {
+      function isSignedIn() {
+        return request.auth != null;
+      }
+
+      function isOwner(userId) {
+        return request.auth.uid == userId;
+      }
+
+      function isExistingOwner(userId) {
+        return isOwner(userId) && existsAfter(/databases/$(database)/documents/users/$(userId)/crop_suggestions/$(cropSuggestionId));
+      }
+
+      allow get: if isOwner(userId);
+      allow list: if false;
+
+      allow create: if isSignedIn() && isOwner(userId);
+      allow update: if isSignedIn() && isExistingOwner(userId);
+      allow delete: if isSignedIn() && isExistingOwner(userId);
+    }
+
+    /**
+     * @description Allows public read access to weather data. No authentication required.
+     * @path /weather_data/{weatherDataId}
+     * @allow (get, list) to anyone, including unauthenticated users.
+     * @deny (create, update, delete) to everyone.
+     * @principle Allows public read access to weather data, while restricting write access.
+     */
+    match /weather_data/{weatherDataId} {
+      allow get: if true;
+      allow list: if true;
+      allow create, update, delete: if false;
+    }
+  }
+}

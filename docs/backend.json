@@ -1,0 +1,316 @@
+{
+  "entities": {
+    "UserProfile": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UserProfile",
+      "type": "object",
+      "description": "Represents a user profile in the AgriAssist application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the UserProfile entity."
+        },
+        "userName": {
+          "type": "string",
+          "description": "The user's username."
+        },
+        "email": {
+          "type": "string",
+          "description": "The user's email address.",
+          "format": "email"
+        },
+        "location": {
+          "type": "string",
+          "description": "The user's general location (e.g., city, state)."
+        }
+      },
+      "required": [
+        "id",
+        "userName",
+        "email",
+        "location"
+      ]
+    },
+    "CommodityPrice": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "CommodityPrice",
+      "type": "object",
+      "description": "Represents the price of a specific commodity at a specific time.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the CommodityPrice entity."
+        },
+        "commodityName": {
+          "type": "string",
+          "description": "The name of the commodity (e.g., rice, corn)."
+        },
+        "price": {
+          "type": "number",
+          "description": "The price of the commodity."
+        },
+        "unit": {
+          "type": "string",
+          "description": "The unit of measurement for the price (e.g., USD/ton)."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "The timestamp when the price was recorded.",
+          "format": "date-time"
+        },
+        "location": {
+          "type": "string",
+          "description": "The location where the commodity price is applicable."
+        }
+      },
+      "required": [
+        "id",
+        "commodityName",
+        "price",
+        "unit",
+        "timestamp",
+        "location"
+      ]
+    },
+    "FieldImage": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "FieldImage",
+      "type": "object",
+      "description": "Represents an image of a farmer's field.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the FieldImage entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to UserProfile. (Relationship: UserProfile 1:N FieldImage)"
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of the field image.",
+          "format": "uri"
+        },
+        "uploadTimestamp": {
+          "type": "string",
+          "description": "Timestamp when the image was uploaded.",
+          "format": "date-time"
+        },
+        "latitude": {
+          "type": "number",
+          "description": "Latitude of the field location."
+        },
+        "longitude": {
+          "type": "number",
+          "description": "Longitude of the field location."
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "imageUrl",
+        "uploadTimestamp",
+        "latitude",
+        "longitude"
+      ]
+    },
+    "CropSuggestion": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "CropSuggestion",
+      "type": "object",
+      "description": "Represents a crop suggestion based on various factors.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the CropSuggestion entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to UserProfile. (Relationship: UserProfile 1:N CropSuggestion)"
+        },
+        "cropName": {
+          "type": "string",
+          "description": "The name of the suggested crop."
+        },
+        "reasoning": {
+          "type": "string",
+          "description": "The reasoning behind the crop suggestion (e.g., soil conditions, weather patterns)."
+        },
+        "confidenceScore": {
+          "type": "number",
+          "description": "A score indicating the confidence level of the suggestion."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Timestamp when the suggestion was generated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "cropName",
+        "reasoning",
+        "confidenceScore",
+        "timestamp"
+      ]
+    },
+    "WeatherData": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "WeatherData",
+      "type": "object",
+      "description": "Represents weather data for a specific location and time.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the WeatherData entity."
+        },
+        "location": {
+          "type": "string",
+          "description": "The location for which the weather data is recorded (e.g., latitude, longitude)."
+        },
+        "temperature": {
+          "type": "number",
+          "description": "The temperature in Celsius or Fahrenheit."
+        },
+        "humidity": {
+          "type": "number",
+          "description": "The humidity percentage."
+        },
+        "windSpeed": {
+          "type": "number",
+          "description": "The wind speed in km/h or mph."
+        },
+        "precipitation": {
+          "type": "number",
+          "description": "The amount of precipitation in mm or inches."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "The timestamp when the weather data was recorded.",
+          "format": "date-time"
+        },
+        "sunriseTime": {
+          "type": "string",
+          "description": "The time of sunrise.",
+          "format": "date-time"
+        },
+        "sunsetTime": {
+          "type": "string",
+          "description": "The time of sunset.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "location",
+        "temperature",
+        "humidity",
+        "windSpeed",
+        "precipitation",
+        "timestamp",
+        "sunriseTime",
+        "sunsetTime"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}/profile",
+        "definition": {
+          "entityName": "UserProfile",
+          "schema": {
+            "$ref": "#/backend/entities/UserProfile"
+          },
+          "description": "Stores user profile information. Access restricted to the user with the matching userId.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/commodity_prices/{commodityPriceId}",
+        "definition": {
+          "entityName": "CommodityPrice",
+          "schema": {
+            "$ref": "#/backend/entities/CommodityPrice"
+          },
+          "description": "Stores commodity price data. Publicly accessible.",
+          "params": [
+            {
+              "name": "commodityPriceId",
+              "description": "The unique identifier of the commodity price."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/field_images/{fieldImageId}",
+        "definition": {
+          "entityName": "FieldImage",
+          "schema": {
+            "$ref": "#/backend/entities/FieldImage"
+          },
+          "description": "Stores field images uploaded by users. Access restricted to the user with the matching userId.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user."
+            },
+            {
+              "name": "fieldImageId",
+              "description": "The unique identifier of the field image."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/crop_suggestions/{cropSuggestionId}",
+        "definition": {
+          "entityName": "CropSuggestion",
+          "schema": {
+            "$ref": "#/backend/entities/CropSuggestion"
+          },
+          "description": "Stores crop suggestions for users. Access restricted to the user with the matching userId.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user."
+            },
+            {
+              "name": "cropSuggestionId",
+              "description": "The unique identifier of the crop suggestion."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/weather_data/{weatherDataId}",
+        "definition": {
+          "entityName": "WeatherData",
+          "schema": {
+            "$ref": "#/backend/entities/WeatherData"
+          },
+          "description": "Stores weather data. Publicly accessible.",
+          "params": [
+            {
+              "name": "weatherDataId",
+              "description": "The unique identifier of the weather data."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed to optimize security, scalability, and debuggability for the AgriAssist application, following the principles of Authorization Independence, Clarity of Intent, DBAC, and QAPs.\n\n1.  **User Profiles:** User profiles are stored in a path-based structure under `/users/{userId}/profile`. This ensures private data ownership and simplifies security rules, as access control is directly tied to the authenticated user's ID.\n\n2.  **Field Images and Crop Suggestions:** These entities are also stored under the user's path (`/users/{userId}/field_images` and `/users/{userId}/crop_suggestions`). This enforces clear ownership.  No denormalization is needed as the path itself establishes ownership.\n\n3.  **Commodity Prices:** Commodity prices are stored in a global collection `/commodity_prices`.  Since price data is generally public, no specific authorization is needed.\n\n4.  **Weather Data:** Weather data is stored in a global collection `/weather_data`. As with commodity prices, weather data is generally public, so no specific authorization is needed.\n\n**Authorization Independence:**\nThe structure uses path-based ownership for user-related data (field images and crop suggestions) to avoid `get()` calls in security rules. The `userId` is implicitly available through the path, making authorization rules simple and atomic.\n\n**QAPs (Rules are not Filters):**\nThe segregation of user-owned data under `/users/{userId}` allows for secure `list` operations. A user can only list data under their own ID, preventing unauthorized access to other users' data. Commodity and weather data, being public, can be listed without restrictions."
+  }
+}
