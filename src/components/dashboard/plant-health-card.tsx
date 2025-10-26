@@ -9,21 +9,21 @@ export function PlantHealthCard() {
         <CardDescription>Current status of your primary crop</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">
-        <div className="flex items-center gap-4 p-4 rounded-lg bg-secondary/50">
+        <div className="flex items-center gap-4 p-4 rounded-lg bg-black/20">
           <HeartPulse className="w-8 h-8 text-accent" />
           <div>
             <p className="text-sm text-muted-foreground">Current Health</p>
             <p className="text-lg font-semibold">Excellent</p>
           </div>
         </div>
-        <div className="flex items-center gap-4 p-4 rounded-lg bg-secondary/50">
+        <div className="flex items-center gap-4 p-4 rounded-lg bg-black/20">
           <Droplets className="w-8 h-8 text-accent" />
           <div>
             <p className="text-sm text-muted-foreground">Last Watering</p>
             <p className="text-lg font-semibold">Yesterday, 5:00 PM</p>
           </div>
         </div>
-        <div className="flex items-center gap-4 p-4 rounded-lg bg-secondary/50">
+        <div className="flex items-center gap-4 p-4 rounded-lg bg-black/20">
           <ShieldCheck className="w-8 h-8 text-accent" />
           <div>
             <p className="text-sm text-muted-foreground">Last Pesticides</p>
