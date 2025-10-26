@@ -12,6 +12,7 @@ import { NewPostForm } from '@/components/community/NewPostForm';
 import { ForumPost, Post } from '@/components/community/ForumPost';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Loader2 } from 'lucide-react';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 
 
 export default function CommunityPage() {
@@ -29,7 +30,7 @@ export default function CommunityPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
+      <Header rightContent={<SidebarTrigger />} />
       <main className="flex-1 p-4">
         <div className="mx-auto max-w-2xl">
           <Card>

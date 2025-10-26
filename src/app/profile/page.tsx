@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { setDocumentNonBlocking } from '@/firebase/non-blocking-updates';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 
 type UserProfile = {
   email: string;
@@ -81,7 +82,7 @@ export default function ProfilePage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
+      <Header rightContent={<SidebarTrigger />} />
       <main className="flex-1 flex items-center justify-center p-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">

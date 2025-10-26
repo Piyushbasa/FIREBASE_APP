@@ -1,3 +1,4 @@
+
 'use client';
 import { Header } from '@/components/dashboard/header';
 import { CommodityPrices } from '@/components/dashboard/commodity-prices';
@@ -6,6 +7,7 @@ import { useDoc } from '@/firebase';
 import { doc, Firestore } from 'firebase/firestore';
 import { useFirestore } from '@/firebase';
 import { useMemoFirebase } from '@/firebase/provider';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 
 type UserProfile = {
   location?: string;
@@ -24,7 +26,7 @@ export default function MarketPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
+      <Header rightContent={<SidebarTrigger />} />
       <main className="flex-1 p-4">
         <div className="mx-auto max-w-7xl">
           <CommodityPrices defaultLocation={userProfile?.location} />

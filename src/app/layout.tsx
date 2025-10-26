@@ -6,12 +6,59 @@ import Image from 'next/image';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { BottomNavbar } from '@/components/dashboard/bottom-navbar';
-import { useEffect, useState } from 'react';
 import { FirebaseClientProvider } from '@/firebase';
 import { ThemeProvider } from '@/components/theme-provider';
+import { SidebarProvider, Sidebar, SidebarInset, SidebarTrigger, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarHeader, SidebarContent } from '@/components/ui/sidebar';
+import { BarChart2, Bot, GraduationCap, Home, Leaf, MessageSquare, User, Wrench } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
 
-const backgroundImage = "https://picsum.photos/seed/farm/1920/1080";
+const backgroundImage = "https://images.unsplash.com/photo-1492944548512-5a90181354d5?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+
+const navItems = [
+  { href: '/', label: 'Home', icon: Home },
+  { href: '/market', label: 'Market', icon: BarChart2 },
+  { href: '/assistant', label: 'Assistant', icon: Bot },
+  { href: '/learn', label: 'Learn', icon: GraduationCap },
+  { href: '/community', label: 'Forum', icon: MessageSquare },
+  { href: '/tools', label: 'Tools', icon: Wrench },
+  { href: '/profile', label: 'Profile', icon: User },
+];
+
+function AppSidebar() {
+    const pathname = usePathname();
+    return (
+        <Sidebar>
+            <SidebarHeader>
+                 <div className="flex items-center gap-3">
+                    <div className="bg-primary/20 p-1.5 rounded-lg">
+                        <Leaf className="h-6 w-6 text-primary" />
+                    </div>
+                    <h1 className="text-xl font-bold font-headline text-foreground">
+                    AgriSmart
+                    </h1>
+                </div>
+            </SidebarHeader>
+            <SidebarContent>
+                <SidebarMenu>
+                    {navItems.map((item) => (
+                         <SidebarMenuItem key={item.href}>
+                             <Link href={item.href} className='w-full'>
+                                <SidebarMenuButton isActive={pathname === item.href} tooltip={item.label}>
+                                    <item.icon />
+                                    <span>{item.label}</span>
+                                </SidebarMenuButton>
+                            </Link>
+                         </SidebarMenuItem>
+                    ))}
+                </SidebarMenu>
+            </SidebarContent>
+        </Sidebar>
+    );
+}
+
 
 export default function RootLayout({
   children,
@@ -38,18 +85,25 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
         >
-          <Image
-            src={backgroundImage}
-            alt="Lush green farming fields"
-            fill
-            className="object-cover -z-10 transition-opacity duration-1000"
-            data-ai-hint="green farming fields"
-          />
-           <FirebaseClientProvider>
-            <main className="relative flex-1 pb-24">{children}</main>
-            <BottomNavbar />
-            <Toaster />
-          </FirebaseClientProvider>
+            <FirebaseClientProvider>
+                <SidebarProvider>
+                    <Image
+                        src={backgroundImage}
+                        alt="Lush green farming fields"
+                        fill
+                        className="object-cover -z-10 transition-opacity duration-1000"
+                        data-ai-hint="green farming fields"
+                    />
+                    <div className="md:flex">
+                        <AppSidebar />
+                         <SidebarInset className="relative pb-24 md:pb-4">
+                            {children}
+                        </SidebarInset>
+                    </div>
+                    <BottomNavbar />
+                    <Toaster />
+                </SidebarProvider>
+            </FirebaseClientProvider>
         </ThemeProvider>
       </body>
     </html>

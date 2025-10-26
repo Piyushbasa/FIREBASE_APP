@@ -1,3 +1,4 @@
+
 'use client';
 import { useState } from 'react';
 import { Header } from '@/components/dashboard/header';
@@ -6,6 +7,7 @@ import { BookOpen, Sprout, Landmark, Search } from 'lucide-react';
 import Link from 'next/link';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 
 const learningTopics = [
     {
@@ -52,7 +54,7 @@ export default function LearnPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
+      <Header rightContent={<SidebarTrigger />} />
       <main className="flex-1 p-4">
         <div className="mx-auto max-w-7xl">
           <h1 className="text-2xl font-bold mb-4">Learning Center</h1>

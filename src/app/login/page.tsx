@@ -14,6 +14,7 @@ import { useAuth, useUser } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { Loader2, LogIn } from 'lucide-react';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
@@ -39,7 +40,7 @@ export default function LoginPage() {
   if (isUserLoading) {
     return (
       <div className="flex flex-col min-h-screen">
-        <Header />
+        <Header rightContent={<SidebarTrigger />} />
         <main className="flex-1 flex items-center justify-center">
           <Loader2 className="w-12 h-12 animate-spin text-primary" />
         </main>
@@ -89,7 +90,7 @@ export default function LoginPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
+      <Header rightContent={<SidebarTrigger />} />
       <main className="flex-1 flex items-center justify-center p-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">

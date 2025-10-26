@@ -1,3 +1,4 @@
+
 'use client';
 import { useState } from 'react';
 import { Bot, Loader2, Send, User } from 'lucide-react';
@@ -9,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent } from '@/components/ui/card';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 
 type Message = {
   role: 'user' | 'assistant';
@@ -55,7 +57,7 @@ export default function AssistantPage() {
 
   return (
     <div className="flex flex-col h-screen">
-      <Header />
+      <Header rightContent={<SidebarTrigger />} />
       <main className="flex-1 flex flex-col p-4 gap-4">
         <Card className="flex-1 flex flex-col">
           <CardContent className="flex-1 p-0">
