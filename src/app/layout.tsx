@@ -26,7 +26,7 @@ export default function RootLayout({
             src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjcm9wJTIwZmllbGRzfGVufDB8fHx8MTY5OTM0NjA0N3ww&ixlib=rb-4.1.0&q=80&w=1080"
             alt="Colorful grass fields"
             fill
-            className="object-cover brightness-75"
+            className="object-cover brightness-50"
             data-ai-hint="grass fields"
           />
         </div>

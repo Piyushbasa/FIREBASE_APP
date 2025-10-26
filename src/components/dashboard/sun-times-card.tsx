@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Sunrise, Sunset } from 'lucide-react';
 
 export function SunTimesCard() {
@@ -8,7 +8,7 @@ export function SunTimesCard() {
         <CardTitle className="flex items-center gap-2">
           Sunrise & Sunset
         </CardTitle>
-        <p className="text-sm text-muted-foreground">Plan your day effectively</p>
+        <CardDescription>Plan your day effectively</CardDescription>
       </CardHeader>
       <CardContent className="grid grid-cols-2 gap-4">
         <div className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg bg-secondary/50">

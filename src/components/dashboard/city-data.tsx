@@ -96,6 +96,8 @@ export function CityData() {
     getWeatherData(selectedCity);
   }, [selectedCity, getWeatherData]);
 
+  const isAlertActive = weatherData && weatherData.alert.alert.toLowerCase() !== 'no critical alerts' && weatherData.alert.alert.toLowerCase() !== 'none';
+
   return (
     <Card>
       <CardHeader>
@@ -118,7 +120,7 @@ export function CityData() {
         {isLoading && (
             <div className="space-y-6">
                  <div>
-                    <h3 className="text-base font-medium mb-2 text-accent">Current Weather</h3>
+                    <h3 className="text-base font-medium mb-2 text-primary">Current Weather</h3>
                     <div className="grid grid-cols-2 gap-4">
                         <Skeleton className="h-[68px] rounded-lg" />
                         <Skeleton className="h-[68px] rounded-lg" />
@@ -127,11 +129,11 @@ export function CityData() {
                     </div>
                 </div>
                 <div>
-                    <h3 className="text-base font-medium mb-2 text-accent">Air Quality Index (AQI)</h3>
+                    <h3 className="text-base font-medium mb-2 text-primary">Air Quality Index (AQI)</h3>
                     <Skeleton className="h-[72px] rounded-lg" />
                 </div>
                 <div>
-                    <h3 className="text-base font-medium mb-2 text-accent">Weather Alerts</h3>
+                    <h3 className="text-base font-medium mb-2 text-primary">Weather Alerts</h3>
                     <Skeleton className="h-[72px] rounded-lg" />
                 </div>
             </div>
@@ -140,7 +142,7 @@ export function CityData() {
         {weatherData && !isLoading && (
           <>
             <div>
-                <h3 className="text-base font-medium mb-2 text-accent">Current Weather</h3>
+                <h3 className="text-base font-medium mb-2 text-primary">Current Weather</h3>
                 <div className="grid grid-cols-2 gap-4">
                      <div className="flex items-center gap-2 p-2 rounded-lg bg-secondary/50">
                         <Thermometer className="w-6 h-6 text-accent" />
@@ -173,7 +175,7 @@ export function CityData() {
                 </div>
             </div>
             <div>
-                <h3 className="text-base font-medium mb-2 text-accent">Air Quality Index (AQI)</h3>
+                <h3 className="text-base font-medium mb-2 text-primary">Air Quality Index (AQI)</h3>
                 <div className="flex items-center gap-4 p-4 rounded-lg bg-secondary/50">
                     <Gauge className="w-8 h-8 text-accent" />
                     <div>
@@ -183,9 +185,9 @@ export function CityData() {
                 </div>
             </div>
              <div>
-                <h3 className="text-base font-medium mb-2 text-accent">Weather Alerts</h3>
-                <div className="flex items-center gap-4 p-4 rounded-lg bg-secondary/50">
-                    <Siren className="w-8 h-8 text-destructive" />
+                <h3 className="text-base font-medium mb-2 text-primary">Weather Alerts</h3>
+                <div className={`flex items-center gap-4 p-4 rounded-lg ${isAlertActive ? 'bg-destructive/20' : 'bg-secondary/50'}`}>
+                    <Siren className={`w-8 h-8 ${isAlertActive ? 'text-destructive' : 'text-accent'}`} />
                     <div>
                         <p className="text-sm text-muted-foreground">Active Alert</p>
                         <p className="text-lg font-semibold">{weatherData.alert.alert}</p>

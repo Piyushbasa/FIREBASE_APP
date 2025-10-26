@@ -210,7 +210,7 @@ export function CommodityPrices() {
                 )}
               />
             </FormItem>
-            <Button type="submit" disabled={isLoading} className="w-full">
+            <Button type="submit" disabled={isLoading || selectedCommodities.length === 0} className="w-full">
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Get Prices
             </Button>
@@ -229,7 +229,7 @@ export function CommodityPrices() {
           <div>
             <h3 className="text-base font-semibold mb-2">Price Results from Indian Markets</h3>
             <ScrollArea className="h-64">
-              <div className="rounded-md border pr-4">
+              <div className="rounded-md border">
               <Table>
                 <TableHeader>
                   <TableRow>

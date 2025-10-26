@@ -194,17 +194,17 @@ export function CropSuggestionCard() {
 
         {suggestion && (
           <div className="mt-6 space-y-4">
-            <h3 className="text-base font-semibold">AI Recommendations</h3>
+            <h3 className="text-base font-semibold text-primary">AI Recommendations</h3>
             <div className="space-y-3">
               {suggestion.suggestedCrops.map((crop, index) => (
-                <div key={index} className="p-3 rounded-md border bg-black/20">
-                  <p className="font-semibold text-primary">{crop.name}</p>
+                <div key={index} className="p-3 rounded-md border bg-secondary/50">
+                  <p className="font-semibold text-white">{crop.name}</p>
                   <p className="text-sm text-muted-foreground">{crop.reasoning}</p>
                 </div>
               ))}
             </div>
             <div>
-                <h4 className="font-semibold">Planting Advice</h4>
+                <h4 className="font-semibold text-primary">Planting Advice</h4>
                 <p className="text-sm text-muted-foreground">{suggestion.plantingAdvice}</p>
             </div>
           </div>
