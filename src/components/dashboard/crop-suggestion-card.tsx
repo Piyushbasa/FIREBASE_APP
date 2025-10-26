@@ -20,7 +20,7 @@ const FormSchema = z.object({
   soilType: z.string().min(1, { message: "Soil type is required." }),
   season: z.string().min(1, { message: "Season is required." }),
   temperature: z.string().min(1, { message: "Temperature is required." }),
-  weatherAlerts: z.string().default("None"),
+  weatherAlerts: z.string().default("No Rain"),
   fieldLength: z.coerce.number().optional(),
   fieldWidth: z.coerce.number().optional(),
 });
@@ -37,7 +37,7 @@ export function CropSuggestionCard() {
       soilType: "Loam",
       season: "Summer",
       temperature: "25°C",
-      weatherAlerts: "None",
+      weatherAlerts: "No Rain",
       fieldLength: undefined,
       fieldWidth: undefined,
     },
@@ -156,9 +156,19 @@ export function CropSuggestionCard() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Weather Alerts</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g., Heatwave warning" {...field} />
-                  </FormControl>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a weather alert" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="Cyclone">Cyclone</SelectItem>
+                          <SelectItem value="Dryness">Dryness</SelectItem>
+                          <SelectItem value="Hurricane">Hurricane</SelectItem>
+                          <SelectItem value="No Rain">No Rain</SelectItem>
+                        </SelectContent>
+                      </Select>
                   <FormMessage />
                 </FormItem>
               )}
