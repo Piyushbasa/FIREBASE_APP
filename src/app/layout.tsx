@@ -23,11 +23,11 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased">
         <Image
-            src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1932&auto=format&fit=crop"
-            alt="Green field background"
+            src="https://images.unsplash.com/photo-1444927714506-8492d91b4b60?q=80&w=2070&auto=format&fit=crop"
+            alt="Green grass field background"
             fill
             className="object-cover -z-10"
-            data-ai-hint="green field"
+            data-ai-hint="green grass field"
           />
         <main className="relative flex-1 pb-24">{children}</main>
         <BottomNavbar />
