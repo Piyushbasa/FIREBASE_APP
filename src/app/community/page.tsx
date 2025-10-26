@@ -2,11 +2,13 @@ import { Header } from '@/components/dashboard/header';
 
 export default function CommunityPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-primary">
-       <Header />
-      <main className="flex-1 bg-card rounded-t-[2rem] p-6">
-        <h1 className="text-3xl font-bold">Community</h1>
-        <p className="text-muted-foreground">Farmer discussions & updates coming soon.</p>
+    <div className="flex flex-col min-h-screen font-body text-foreground">
+      <Header />
+      <main className="flex-1 p-4">
+        <div className="mx-auto max-w-7xl">
+          <h1 className="text-2xl font-bold">Community</h1>
+          <p className="text-muted-foreground">Farmer discussions & updates coming soon.</p>
+        </div>
       </main>
     </div>
   );
