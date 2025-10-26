@@ -3,6 +3,7 @@ import { WeatherCard } from '@/components/dashboard/weather-card';
 import { SunTimesCard } from '@/components/dashboard/sun-times-card';
 import { CommodityPrices } from '@/components/dashboard/commodity-prices';
 import { PlantHealthCard } from '@/components/dashboard/plant-health-card';
+import { CropSuggestionCard } from '@/components/dashboard/crop-suggestion-card';
 
 export default function Home() {
   return (
@@ -14,8 +15,11 @@ export default function Home() {
             <WeatherCard />
             <SunTimesCard />
           </div>
-          <div className="grid grid-cols-1 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <CommodityPrices />
+            <CropSuggestionCard />
+          </div>
+          <div className="grid grid-cols-1 gap-6">
             <PlantHealthCard />
           </div>
         </div>
