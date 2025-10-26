@@ -29,10 +29,8 @@ export default function RootLayout({
             className="object-cover -z-10"
             data-ai-hint="green field"
           />
-        <div className="relative flex flex-col min-h-screen">
-          <main className="flex-1 pb-24">{children}</main>
-          <BottomNavbar />
-        </div>
+        <main className="relative flex-1 pb-24">{children}</main>
+        <BottomNavbar />
         <Toaster />
       </body>
     </html>
