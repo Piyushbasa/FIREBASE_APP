@@ -1,8 +1,8 @@
 import { Header } from '@/components/dashboard/header';
 import { WeatherCard } from '@/components/dashboard/weather-card';
 import { SunTimesCard } from '@/components/dashboard/sun-times-card';
-import { FieldMonitoringCard } from '@/components/dashboard/field-monitoring-card';
 import { CommodityPrices } from '@/components/dashboard/commodity-prices';
+import { PlantHealthCard } from '@/components/dashboard/plant-health-card';
 
 export default function Home() {
   return (
@@ -16,7 +16,7 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-1 gap-6">
             <CommodityPrices />
-            <FieldMonitoringCard />
+            <PlantHealthCard />
           </div>
         </div>
       </main>
