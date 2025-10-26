@@ -23,6 +23,12 @@
       "description": "Drone shot of an olive grove on a sunny day",
       "imageUrl": "https://images.unsplash.com/photo-1650481424286-9d30bcc140e1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxvbGl2ZSUyMGdyb3ZlfGVufDB8fHx8MTc2MTQ1NzgyNHww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "olive grove"
+    },
+    {
+      "id": "plant-leaf",
+      "description": "A healthy green plant leaf with water droplets.",
+      "imageUrl": "https://images.unsplash.com/photo-1639328310196-1112c4a3a959?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwbGFudCUyMGxlYWZ8ZW58MHx8fHwxNzYxNDc1NjkzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "plant leaf"
     }
   ]
 }

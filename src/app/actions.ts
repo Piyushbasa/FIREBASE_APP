@@ -4,6 +4,7 @@ import { suggestCrop, SuggestCropInput, SuggestCropOutput } from '@/ai/flows/sug
 import { getWeatherData, WeatherDataInput, WeatherDataOutput } from '@/ai/flows/get-weather-data';
 import { assistant, AssistantInput, AssistantOutput } from '@/ai/flows/assistant-flow';
 import { getCommodityPrices, CommodityPricesInput, CommodityPricesOutput } from '@/ai/flows/commodity-price-tracking';
+import { diagnosePlant, DiagnosePlantInput, DiagnosePlantOutput } from '@/ai/flows/diagnose-plant-flow';
 
 
 export async function fetchCropSuggestion(input: SuggestCropInput): Promise<{ data: SuggestCropOutput | null; error: string | null }> {
@@ -47,5 +48,16 @@ export async function fetchCommodityPrices(input: CommodityPricesInput): Promise
         console.error(e);
         const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
         return { data: null, error: `Failed to fetch commodity prices: ${errorMessage}` };
+    }
+}
+
+export async function diagnosePlantAction(input: DiagnosePlantInput): Promise<{ data: DiagnosePlantOutput | null; error: string | null }> {
+    try {
+        const result = await diagnosePlant(input);
+        return { data: result, error: null };
+    } catch (e) {
+        console.error(e);
+        const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
+        return { data: null, error: `Failed to diagnose plant: ${errorMessage}` };
     }
 }
