@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Thermometer, Droplets, Wind, CloudRain, Gauge } from 'lucide-react';
 
 const indianCities = [
+    "Bhubaneswar", "Cuttack", "Rourkela", "Puri", "Sambalpur",
     "Mumbai", "Delhi", "Bangalore", "Hyderabad", "Ahmedabad", "Chennai", "Kolkata", "Surat", "Pune", "Jaipur"
 ];
 

@@ -15,6 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import { fetchCommodityPrices } from "@/app/actions";
 import type { CommodityPricesOutput } from "@/ai/flows/commodity-price-tracking";
 import { ScrollArea } from "../ui/scroll-area";
+import { Input } from "../ui/input";
 
 const commodities = [
   { id: "arhar (tur/red gram)", label: "Arhar (Tur/Red Gram)" },
@@ -55,6 +56,7 @@ const FormSchema = z.object({
   commodities: z.array(z.string()).refine((value) => value.some((item) => item), {
     message: "You have to select at least one commodity.",
   }),
+  location: z.string().min(1, { message: "Location is required." }),
 });
 
 export function CommodityPrices() {
@@ -66,13 +68,14 @@ export function CommodityPrices() {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       commodities: [],
+      location: "Odisha"
     },
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     setIsLoading(true);
     setPriceData(null);
-    const result = await fetchCommodityPrices({ ...data, location: "all India" });
+    const result = await fetchCommodityPrices(data);
 
     if (result.error) {
       toast({
@@ -95,6 +98,20 @@ export function CommodityPrices() {
       <CardContent className="flex flex-col flex-grow">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <FormField
+              control={form.control}
+              name="location"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Location</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g., Odisha or all India" {...field} />
+                  </FormControl>
+                   <FormDescription>Enter a state or "all India".</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="commodities"
@@ -150,7 +167,7 @@ export function CommodityPrices() {
         {isLoading && (
           <div className="flex justify-center items-center flex-col gap-4 text-center h-full">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            <p className="text-muted-foreground text-sm">Our AI is analyzing markets across India... <br/>This may take a moment.</p>
+            <p className="text-muted-foreground text-sm">Our AI is analyzing markets... <br/>This may take a moment.</p>
           </div>
         )}
 

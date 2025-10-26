@@ -12,7 +12,7 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const CommodityPricesInputSchema = z.object({
-  location: z.string().describe('The location for which to retrieve commodity prices. Can be "all India" for a summary from major markets.'),
+  location: z.string().describe('The location for which to retrieve commodity prices. Can be a state (e.g., Odisha) or "all India" for a national summary.'),
   commodities: z
     .array(z.string())
     .describe('The commodities for which to retrieve prices (e.g., rice, wheat, cotton).'),
@@ -43,7 +43,7 @@ const prompt = ai.definePrompt({
 
 If the location is "all India", provide a representative price from three different major mandis (markets) for each commodity requested. For example, for wheat, you could provide prices from markets in Punjab, Uttar Pradesh, and Madhya Pradesh.
 
-If a specific location in India is provided, retrieve prices from the main market in that location.
+If a specific Indian state (e.g., Odisha) is provided, retrieve prices from three different main markets within that state.
 
 Use real, up-to-date Indian market data and price units like INR per quintal.
 
