@@ -1,5 +1,4 @@
 import { Header } from '@/components/dashboard/header';
-import { CommodityPrices } from '@/components/dashboard/commodity-prices';
 
 export default function MarketPage() {
   return (
@@ -7,7 +6,8 @@ export default function MarketPage() {
       <Header />
       <main className="flex-1 p-4">
         <div className="mx-auto max-w-7xl">
-          <CommodityPrices />
+          <h1 className="text-2xl font-bold">Market Prices</h1>
+          <p className="text-muted-foreground">The commodity price tracker has been removed.</p>
         </div>
       </main>
     </div>
