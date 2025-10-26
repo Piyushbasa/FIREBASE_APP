@@ -1,28 +1,25 @@
 import { Header } from '@/components/dashboard/header';
-import { CityData } from '@/components/dashboard/city-data';
-import { SunTimesCard } from '@/components/dashboard/sun-times-card';
-import { CommodityPrices } from '@/components/dashboard/commodity-prices';
-import { PlantHealthCard } from '@/components/dashboard/plant-health-card';
-import { CropSuggestionCard } from '@/components/dashboard/crop-suggestion-card';
+import { LocationSelector } from '@/components/dashboard/location-selector';
+import { WeatherCard } from '@/components/dashboard/weather-card';
+import { SoilHealthCard } from '@/components/dashboard/soil-health-card';
+import { CropInfoCard } from '@/components/dashboard/crop-info-card';
+import { QuickActions } from '@/components/dashboard/quick-actions';
+import { MarketPricesCard } from '@/components/dashboard/market-prices-card';
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen font-body text-foreground">
+    <div className="flex flex-col min-h-screen bg-primary">
       <Header />
-      <main className="flex-1 p-4">
-        <div className="mx-auto max-w-7xl grid gap-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <CityData />
-            <SunTimesCard />
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <CommodityPrices />
-            <CropSuggestionCard />
-          </div>
-          <div className="grid grid-cols-1 gap-6">
-            <PlantHealthCard />
-          </div>
+      <main className="flex-1 bg-card rounded-t-[2rem] p-6 space-y-6">
+        <h1 className="text-3xl font-bold text-foreground">Home</h1>
+        <LocationSelector />
+        <div className="grid grid-cols-2 gap-4">
+          <WeatherCard />
+          <SoilHealthCard />
         </div>
+        <CropInfoCard />
+        <QuickActions />
+        <MarketPricesCard />
       </main>
     </div>
   );
