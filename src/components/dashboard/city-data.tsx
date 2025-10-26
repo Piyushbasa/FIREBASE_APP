@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Thermometer, Droplets, Wind, CloudRain, Gauge } from 'lucide-react';
+import { Thermometer, Droplets, Wind, CloudRain, Gauge, Siren } from 'lucide-react';
 
 const indianCities = [
     "Bhubaneswar", "Cuttack", "Rourkela", "Puri", "Sambalpur",
@@ -20,6 +20,11 @@ const mockWeatherData = {
 const mockAqiData = {
     value: 78,
     level: "Moderate",
+};
+
+const mockAlertData = {
+    alert: "Heatwave warning for coastal areas.",
+    source: "IMD"
 };
 
 export function CityData() {
@@ -84,6 +89,16 @@ export function CityData() {
                 <div>
                     <p className="text-sm text-muted-foreground">AQI Value</p>
                     <p className="text-lg font-semibold">{mockAqiData.value} - <span className="text-base font-normal">{mockAqiData.level}</span></p>
+                </div>
+            </div>
+        </div>
+         <div>
+            <h3 className="text-base font-medium mb-2 text-accent">Weather Alerts</h3>
+            <div className="flex items-center gap-4 p-4 rounded-lg bg-secondary/50">
+                <Siren className="w-8 h-8 text-destructive" />
+                <div>
+                    <p className="text-sm text-muted-foreground">Active Alert</p>
+                    <p className="text-lg font-semibold">{mockAlertData.alert}</p>
                 </div>
             </div>
         </div>
