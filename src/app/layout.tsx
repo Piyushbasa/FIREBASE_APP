@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import Image from 'next/image';
+import { BottomNavbar } from '@/components/dashboard/bottom-navbar';
 
 export const metadata: Metadata = {
   title: 'AgriAssist',
@@ -30,7 +31,10 @@ export default function RootLayout({
             data-ai-hint="grass fields"
           />
         </div>
-        {children}
+        <div className="relative flex flex-col min-h-screen">
+          <main className="flex-1 pb-20">{children}</main>
+          <BottomNavbar />
+        </div>
         <Toaster />
       </body>
     </html>
