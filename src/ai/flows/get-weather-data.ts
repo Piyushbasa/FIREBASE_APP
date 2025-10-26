@@ -30,6 +30,8 @@ const WeatherDataOutputSchema = z.object({
   alert: z.object({
     alert: z.string().describe('The active weather alert. Should be "None" if there are no alerts.'),
     source: z.string().describe('The source of the alert (e.g., IMD).'),
+    whatToDo: z.string().describe('Actionable advice for farmers on what to do based on the weather alert.'),
+    whatNotToDo: z.string().describe('Actionable advice for farmers on what not to do based on the weather alert.'),
   }),
 });
 export type WeatherDataOutput = z.infer<typeof WeatherDataOutputSchema>;
@@ -42,16 +44,22 @@ const prompt = ai.definePrompt({
   name: 'getWeatherDataPrompt',
   input: { schema: WeatherDataInputSchema },
   output: { schema: WeatherDataOutputSchema },
-  prompt: `You are a real-time weather and environmental data service for Indian farmers.
-Your primary task is to retrieve current weather conditions, the Air Quality Index (AQI), and any early warnings or active weather alerts that are critical for agriculture.
-Use the most up-to-date information available from official sources like the IMD (Indian Meteorological Department) and other relevant government agencies.
+  prompt: `You are a real-time weather and agricultural advisory service for Indian farmers.
+Your primary task is to retrieve current weather conditions, the Air Quality Index (AQI), and any critical weather alerts.
+Based on the alert, you must provide actionable advice for farmers on "what to do" and "what not to do".
+
+Use the most up-to-date information available from official sources like the IMD (Indian Meteorological Department).
 
 City: {{{city}}}
 
 Provide the data in a structured JSON format.
 - For weather, provide the current temperature, humidity, wind, and precipitation.
 - For AQI, provide the numerical value and a descriptive level.
-- For alerts, provide specific, actionable, and timely warnings (e.g., "Cyclone Yaas making landfall in 24 hours", "Heatwave conditions expected for the next 48 hours", "Warning for heavy to very heavy rainfall"). If there are no active or upcoming critical alerts, the alert message should be "No critical alerts".
+- For alerts, provide specific, actionable, and timely warnings (e.g., "Cyclone Yaas making landfall in 24 hours", "Heatwave conditions expected for the next 48 hours", "Warning for heavy to very heavy rainfall").
+- If there are no critical alerts, the alert message should be "No critical alerts", and the "whatToDo" and "whatNotToDo" fields should be empty strings.
+- If there is an alert, provide practical advice. For example, for a heatwave:
+  - whatToDo: "Ensure frequent irrigation for crops, especially during early morning or late evening. Provide shade for young or sensitive plants."
+  - whatNotToDo: "Avoid spraying pesticides or fertilizers during peak sun hours as it can scorch the plants. Do not perform strenuous fieldwork during midday."
 `,
 });
 

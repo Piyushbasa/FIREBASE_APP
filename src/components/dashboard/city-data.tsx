@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Thermometer, Droplets, Wind, CloudRain, Gauge, Siren, Loader2 } from 'lucide-react';
+import { Thermometer, Droplets, Wind, CloudRain, Gauge, Siren, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { fetchWeatherData } from "@/app/actions";
 import type { WeatherDataOutput } from "@/ai/flows/get-weather-data";
 import { useToast } from "@/hooks/use-toast";
@@ -97,6 +97,7 @@ export function CityData() {
   }, [selectedCity, getWeatherData]);
 
   const isAlertActive = weatherData && weatherData.alert.alert.toLowerCase() !== 'no critical alerts' && weatherData.alert.alert.toLowerCase() !== 'none';
+  const hasAdvice = isAlertActive && weatherData.alert.whatToDo && weatherData.alert.whatNotToDo;
 
   return (
     <Card>
@@ -194,6 +195,28 @@ export function CityData() {
                     </div>
                 </div>
             </div>
+
+            {hasAdvice && (
+              <div>
+                <h3 className="text-base font-medium mb-2 text-primary">Kisan Weather Forecast System</h3>
+                <div className="space-y-4">
+                  <div className="flex items-start gap-4 p-4 rounded-lg bg-green-500/20">
+                    <ThumbsUp className="w-6 h-6 text-green-400 mt-1" />
+                    <div>
+                      <h4 className="font-semibold text-green-400">What to Do</h4>
+                      <p className="text-sm text-muted-foreground">{weatherData.alert.whatToDo}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4 p-4 rounded-lg bg-red-500/20">
+                    <ThumbsDown className="w-6 h-6 text-red-400 mt-1" />
+                    <div>
+                      <h4 className="font-semibold text-red-400">What Not to Do</h4>
+                      <p className="text-sm text-muted-foreground">{weatherData.alert.whatNotToDo}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </>
         )}
       </CardContent>
