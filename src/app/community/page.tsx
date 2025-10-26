@@ -1,6 +1,6 @@
 
 'use client';
-import { useMemo } from 'react';
+import { useMemoFirebase } from '@/firebase/provider';
 import { Header } from '@/components/dashboard/header';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -18,7 +18,7 @@ export default function CommunityPage() {
     const { user, isUserLoading } = useUser();
     const firestore = useFirestore();
 
-    const postsQuery = useMemo(() => {
+    const postsQuery = useMemoFirebase(() => {
         if (!firestore) return null;
         return query(collection(firestore, 'posts'), orderBy('createdAt', 'desc'));
     }, [firestore]);
