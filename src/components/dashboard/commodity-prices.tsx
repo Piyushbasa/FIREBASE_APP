@@ -4,7 +4,7 @@ import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Loader2 } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,6 +16,7 @@ import { fetchCommodityPrices } from "@/app/actions";
 import type { CommodityPricesOutput } from "@/ai/flows/commodity-price-tracking";
 import { ScrollArea } from "../ui/scroll-area";
 import { Input } from "../ui/input";
+import { Badge } from "../ui/badge";
 
 const commodities = [
   { id: "arhar (tur/red gram)", label: "Arhar (Tur/Red Gram)" },
@@ -63,6 +64,7 @@ export function CommodityPrices() {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = React.useState(false);
   const [priceData, setPriceData] = React.useState<CommodityPricesOutput | null>(null);
+  const [customCommodity, setCustomCommodity] = React.useState("");
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -71,6 +73,19 @@ export function CommodityPrices() {
       location: "Odisha"
     },
   });
+
+  const handleAddCustomCommodity = () => {
+    const currentCommodities = form.getValues("commodities");
+    if (customCommodity && !currentCommodities.includes(customCommodity.toLowerCase())) {
+      form.setValue("commodities", [...currentCommodities, customCommodity.toLowerCase()]);
+      setCustomCommodity("");
+    }
+  };
+  
+  const handleRemoveCommodity = (commodityToRemove: string) => {
+    const currentCommodities = form.getValues("commodities");
+    form.setValue("commodities", currentCommodities.filter(c => c !== commodityToRemove));
+  };
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     setIsLoading(true);
@@ -88,6 +103,8 @@ export function CommodityPrices() {
     }
     setIsLoading(false);
   }
+
+  const selectedCommodities = form.watch("commodities");
 
   return (
     <Card className="h-full flex flex-col">
@@ -112,50 +129,87 @@ export function CommodityPrices() {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="commodities"
-              render={() => (
-                <FormItem>
-                  <div className="mb-4">
-                    <FormLabel>Commodities</FormLabel>
-                    <FormDescription>Select the commodities you want to track.</FormDescription>
-                  </div>
-                  <ScrollArea className="h-40">
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pr-4">
-                  {commodities.map((item) => (
-                    <FormField
-                      key={item.id}
-                      control={form.control}
-                      name="commodities"
-                      render={({ field }) => {
-                        return (
-                          <FormItem
-                            key={item.id}
-                            className="flex flex-row items-start space-x-3 space-y-0"
+            <FormItem>
+              <div className="mb-2">
+                <FormLabel>Commodities</FormLabel>
+                <FormDescription>Select from the list or add your own.</FormDescription>
+              </div>
+              <div className="flex gap-2">
+                <Input 
+                  placeholder="Enter a commodity"
+                  value={customCommodity}
+                  onChange={(e) => setCustomCommodity(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleAddCustomCommodity();
+                    }
+                  }}
+                />
+                <Button type="button" variant="secondary" onClick={handleAddCustomCommodity}>Add</Button>
+              </div>
+               {selectedCommodities.length > 0 && (
+                <div className="flex flex-wrap gap-2 pt-2">
+                  {selectedCommodities.map((commodity) => {
+                      const staticCommodity = commodities.find(c => c.id === commodity);
+                      return (
+                        <Badge key={commodity} variant="secondary" className="capitalize flex items-center gap-1">
+                          {staticCommodity ? staticCommodity.label : commodity}
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveCommodity(commodity)}
+                            className="rounded-full hover:bg-destructive/20"
+                            aria-label={`Remove ${commodity}`}
                           >
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value?.includes(item.id)}
-                                onCheckedChange={(checked) => {
-                                  return checked
-                                    ? field.onChange([...field.value, item.id])
-                                    : field.onChange(field.value?.filter((value) => value !== item.id));
-                                }}
-                              />
-                            </FormControl>
-                            <FormLabel className="font-normal text-sm">{item.label}</FormLabel>
-                          </FormItem>
-                        );
-                      }}
-                    />
-                  ))}
-                  </div>
-                  </ScrollArea>
-                  <FormMessage />
-                </FormItem>
+                            <X className="w-3 h-3" />
+                          </button>
+                        </Badge>
+                      );
+                  })}
+                </div>
               )}
-            />
+              <FormField
+                control={form.control}
+                name="commodities"
+                render={() => (
+                  <FormItem>
+                    <FormLabel className="text-xs text-muted-foreground pt-2 block">Or select from this list:</FormLabel>
+                    <ScrollArea className="h-32">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pr-4">
+                    {commodities.map((item) => (
+                      <FormField
+                        key={item.id}
+                        control={form.control}
+                        name="commodities"
+                        render={({ field }) => {
+                          return (
+                            <FormItem
+                              key={item.id}
+                              className="flex flex-row items-start space-x-3 space-y-0"
+                            >
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value?.includes(item.id)}
+                                  onCheckedChange={(checked) => {
+                                    return checked
+                                      ? field.onChange([...field.value, item.id])
+                                      : field.onChange(field.value?.filter((value) => value !== item.id));
+                                  }}
+                                />
+                              </FormControl>
+                              <FormLabel className="font-normal text-sm">{item.label}</FormLabel>
+                            </FormItem>
+                          );
+                        }}
+                      />
+                    ))}
+                    </div>
+                    </ScrollArea>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </FormItem>
             <Button type="submit" disabled={isLoading} className="w-full">
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Get Prices
