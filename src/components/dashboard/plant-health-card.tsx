@@ -1,3 +1,4 @@
+
 'use client';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
@@ -119,19 +120,19 @@ export function PlantHealthCard({ userLanguage }: { userLanguage?: string; }) {
             </div>
 
             {isLoading && (
-              <div className="flex flex-col items-center justify-center text-center p-4 rounded-lg bg-secondary/50">
+              <div className="flex flex-col items-center justify-center text-center p-4 rounded-lg bg-background/20">
                   <Loader2 className="h-8 w-8 animate-spin text-primary mb-2" />
                   <p className="font-semibold">AI is analyzing the plant...</p>
-                  <p className="text-sm text-muted-foreground">This may take a moment.</p>
+                  <p className="text-sm">This may take a moment.</p>
               </div>
             )}
 
             {diagnosisResult && (
-              <div className="space-y-4 p-4 rounded-lg bg-secondary/50 animate-in fade-in-50">
+              <div className="space-y-4 p-4 rounded-lg bg-background/20 animate-in fade-in-50">
                 {!diagnosisResult.identification.isPlant ? (
                    <div className="text-center">
                      <p className="font-bold text-lg">Not a Plant</p>
-                     <p className="text-muted-foreground text-sm">The uploaded image doesn't seem to be a plant. Please try another one.</p>
+                     <p className="text-sm">The uploaded image doesn't seem to be a plant. Please try another one.</p>
                    </div>
                 ): (
                   <>
@@ -165,21 +166,21 @@ export function PlantHealthCard({ userLanguage }: { userLanguage?: string; }) {
          
           {!isLoading && !diagnosisResult && (
              <div className="grid gap-4 sm:grid-cols-3 mt-4">
-                <div className="flex items-center gap-4 p-4 rounded-lg bg-secondary/50">
+                <div className="flex items-center gap-4 p-4 rounded-lg bg-background/20 backdrop-blur-sm">
                   <HeartPulse className="w-8 h-8 text-accent" />
                   <div>
                     <p className="text-sm text-muted-foreground">Current Health</p>
                     <p className="text-lg font-semibold">Excellent</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-4 p-4 rounded-lg bg-secondary/50">
+                <div className="flex items-center gap-4 p-4 rounded-lg bg-background/20 backdrop-blur-sm">
                   <Droplets className="w-8 h-8 text-accent" />
                   <div>
                     <p className="text-sm text-muted-foreground">Last Watering</p>
                     <p className="text-lg font-semibold">Yesterday</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-4 p-4 rounded-lg bg-secondary/50">
+                <div className="flex items-center gap-4 p-4 rounded-lg bg-background/20 backdrop-blur-sm">
                   <ShieldCheck className="w-8 h-8 text-accent" />
                   <div>
                     <p className="text-sm text-muted-foreground">Last Pesticides</p>
@@ -194,3 +195,5 @@ export function PlantHealthCard({ userLanguage }: { userLanguage?: string; }) {
     </Card>
   );
 }
+
+    

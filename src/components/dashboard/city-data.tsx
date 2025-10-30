@@ -9,6 +9,7 @@ import { fetchWeatherData } from "@/app/actions";
 import type { WeatherDataOutput } from "@/ai/flows/get-weather-data";
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "../ui/skeleton";
+import { cn } from "@/lib/utils";
 
 const indianCities = [
     // Andhra Pradesh
@@ -69,11 +70,14 @@ const indianCities = [
     "Kolkata", "Asansol", "Siliguri", "Durgapur",
     // Union Territories
     "New Delhi", "Delhi", "Chandigarh", "Puducherry", "Srinagar", "Jammu", "Leh", "Port Blair", "Kavaratti", "Daman"
-].sort();
+];
+
+const uniqueIndianCities = [...new Set(indianCities)].sort();
+
 
 export function CityData({ defaultCity, userLanguage }: { defaultCity?: string; userLanguage?: string }) {
   const { toast } = useToast();
-  const [selectedCity, setSelectedCity] = React.useState(defaultCity || indianCities.find(c => c === "Bhubaneswar") || indianCities[0]);
+  const [selectedCity, setSelectedCity] = React.useState(defaultCity || uniqueIndianCities.find(c => c === "Bhubaneswar") || uniqueIndianCities[0]);
   const [weatherData, setWeatherData] = React.useState<WeatherDataOutput | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
 
@@ -109,6 +113,15 @@ export function CityData({ defaultCity, userLanguage }: { defaultCity?: string; 
 
   const isAlertActive = weatherData && weatherData.alert.alert.toLowerCase() !== 'no critical alerts' && weatherData.alert.alert.toLowerCase() !== 'none';
   const hasAdvice = isAlertActive && weatherData.alert.whatToDo && weatherData.alert.whatNotToDo;
+  
+  const getAqiColorClass = (value: number) => {
+    if (value <= 50) return 'text-green-500';
+    if (value <= 100) return 'text-yellow-500';
+    if (value <= 150) return 'text-orange-500';
+    if (value <= 200) return 'text-red-500';
+    if (value <= 300) return 'text-purple-500';
+    return 'text-rose-700';
+  };
 
   return (
     <Card>
@@ -120,7 +133,7 @@ export function CityData({ defaultCity, userLanguage }: { defaultCity?: string; 
                 <SelectValue placeholder="Select a city" />
               </SelectTrigger>
               <SelectContent>
-                {indianCities.map(city => (
+                {uniqueIndianCities.map(city => (
                     <SelectItem key={city} value={city}>{city}</SelectItem>
                 ))}
               </SelectContent>
@@ -156,29 +169,29 @@ export function CityData({ defaultCity, userLanguage }: { defaultCity?: string; 
             <div>
                 <h3 className="text-base font-medium mb-2 text-primary">Current Weather</h3>
                 <div className="grid grid-cols-2 gap-4">
-                     <div className="flex items-center gap-2 p-2 rounded-lg bg-secondary/50">
-                        <Thermometer className="w-6 h-6 text-accent" />
+                     <div className="flex items-center gap-2 p-2 rounded-lg bg-orange-500/10">
+                        <Thermometer className="w-6 h-6 text-orange-500" />
                         <div>
                             <p className="text-sm text-muted-foreground">Temperature</p>
                             <p className="text-lg font-semibold">{weatherData.weather.temperature}</p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-2 p-2 rounded-lg bg-secondary/50">
-                        <Droplets className="w-6 h-6 text-accent" />
+                    <div className="flex items-center gap-2 p-2 rounded-lg bg-blue-500/10">
+                        <Droplets className="w-6 h-6 text-blue-500" />
                         <div>
                             <p className="text-sm text-muted-foreground">Humidity</p>
                             <p className="text-lg font-semibold">{weatherData.weather.humidity}</p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-2 p-2 rounded-lg bg-secondary/50">
-                        <Wind className="w-6 h-6 text-accent" />
+                    <div className="flex items-center gap-2 p-2 rounded-lg bg-gray-500/10">
+                        <Wind className="w-6 h-6 text-gray-500" />
                         <div>
                             <p className="text-sm text-muted-foreground">Wind</p>
                             <p className="text-lg font-semibold">{weatherData.weather.wind}</p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-2 p-2 rounded-lg bg-secondary/50">
-                        <CloudRain className="w-6 h-6 text-accent" />
+                    <div className="flex items-center gap-2 p-2 rounded-lg bg-cyan-500/10">
+                        <CloudRain className="w-6 h-6 text-cyan-500" />
                         <div>
                             <p className="text-sm text-muted-foreground">Precipitation</p>
                             <p className="text-lg font-semibold">{weatherData.weather.precipitation}</p>
@@ -189,7 +202,7 @@ export function CityData({ defaultCity, userLanguage }: { defaultCity?: string; 
             <div>
                 <h3 className="text-base font-medium mb-2 text-primary">Air Quality Index (AQI)</h3>
                 <div className="flex items-center gap-4 p-4 rounded-lg bg-secondary/50">
-                    <Gauge className="w-8 h-8 text-accent" />
+                    <Gauge className={cn("w-8 h-8", getAqiColorClass(weatherData.aqi.value))} />
                     <div>
                         <p className="text-sm text-muted-foreground">AQI Value</p>
                         <p className="text-lg font-semibold">{weatherData.aqi.value} - <span className="text-base font-normal">{weatherData.aqi.level}</span></p>
@@ -237,3 +250,5 @@ export function CityData({ defaultCity, userLanguage }: { defaultCity?: string; 
     </Card>
   );
 }
+
+    
