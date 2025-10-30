@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -64,14 +65,10 @@ const indianCities = [
     "Lucknow", "Kanpur", "Agra", "Varanasi", "Meerut", "Allahabad", "Ghaziabad", "Noida",
     // Uttarakhand
     "Dehradun", "Haridwar", "Nainital", "Rishikesh",
--   // West Bengal
--   "Kolkata", "Asansol", "Siliguri",
--   // Union Territories
--   "Delhi", "Chandigarh", "Puducherry", "Srinagar", "Jammu", "Leh", "Port Blair"
-+    // West Bengal
-+    "Kolkata", "Asansol", "Siliguri", "Durgapur",
-+    // Union Territories
-+    "New Delhi", "Delhi", "Chandigarh", "Puducherry", "Srinagar", "Jammu", "Leh", "Port Blair", "Kavaratti", "Daman"
+    // West Bengal
+    "Kolkata", "Asansol", "Siliguri", "Durgapur",
+    // Union Territories
+    "New Delhi", "Delhi", "Chandigarh", "Puducherry", "Srinagar", "Jammu", "Leh", "Port Blair", "Kavaratti", "Daman"
 ].sort();
 
 export function CityData({ defaultCity, userLanguage }: { defaultCity?: string; userLanguage?: string }) {
