@@ -53,8 +53,10 @@ export default function LoginPage() {
     return (
       <div className="flex flex-col min-h-screen">
         <Header rightContent={<SidebarTrigger />} />
-        <main className="flex-1 flex items-center justify-center">
-          <Loader2 className="w-12 h-12 animate-spin text-primary" />
+        <main className="flex-1 flex items-center justify-center p-4">
+          <Card className="w-full max-w-md h-[550px] flex items-center justify-center">
+             <Loader2 className="w-12 h-12 animate-spin text-primary" />
+          </Card>
         </main>
       </div>
     );
@@ -96,7 +98,7 @@ export default function LoginPage() {
           email: newUser.email,
           language: 'English',
           location: '',
-        }, { merge: true });
+        });
         toast({ title: 'Success', description: 'Account created successfully! You are now logged in.' });
         router.push('/profile');
     } catch (error: any) {
