@@ -6,7 +6,7 @@ import { Header } from '@/components/dashboard/header';
 import { useAuth, useFirestore, useUser } from '@/firebase';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2, LogIn, LogOut, User as UserIcon, Save, Languages } from 'lucide-react';
+import { Loader2, LogIn, LogOut, User as UserIcon, Save, Languages, MapPin } from 'lucide-react';
 import { signOut } from 'firebase/auth';
 import Link from 'next/link';
 import { doc } from 'firebase/firestore';
@@ -113,7 +113,10 @@ export default function ProfilePage() {
                 
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="location">Your Location</Label>
+                    <Label htmlFor="location" className="flex items-center gap-2">
+                        <MapPin className="w-4 h-4" />
+                        Your Location
+                    </Label>
                     <Input 
                       id="location" 
                       placeholder="e.g., Pune, Maharashtra" 
@@ -123,7 +126,10 @@ export default function ProfilePage() {
                     <p className="text-xs text-muted-foreground">This helps personalize weather and market data.</p>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="language">Preferred Language</Label>
+                    <Label htmlFor="language" className="flex items-center gap-2">
+                        <Languages className="w-4 h-4" />
+                        Preferred Language
+                    </Label>
                     <Select value={language} onValueChange={setLanguage}>
                       <SelectTrigger id="language">
                         <SelectValue placeholder="Select language" />
