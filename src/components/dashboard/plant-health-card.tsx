@@ -1,25 +1,72 @@
 
 'use client';
 import Image from 'next/image';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { HeartPulse, Droplets, ShieldCheck, Upload, Loader2, Microscope, Sparkles, XCircle, Leaf } from 'lucide-react';
+import { HeartPulse, Droplets, ShieldCheck, Upload, Loader2, Microscope, Sparkles, XCircle, Leaf, Camera } from 'lucide-react';
 import { Button } from '../ui/button';
 import { diagnosePlantAction } from '@/app/actions';
 import type { DiagnosePlantOutput } from '@/ai/flows/diagnose-plant-flow';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '../ui/badge';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
 
 export function PlantHealthCard({ userLanguage }: { userLanguage?: string; }) {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [diagnosisResult, setDiagnosisResult] = useState<DiagnosePlantOutput | null>(null);
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
   
   const defaultImage = PlaceHolderImages.find(p => p.id === 'plant-leaf');
   const imageUrl = uploadedImage || defaultImage?.imageUrl || "https://picsum.photos/seed/plant-leaf/1974/1200";
+
+  useEffect(() => {
+    if (isCameraOpen) {
+      const getCameraPermission = async () => {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+           toast({
+              variant: 'destructive',
+              title: 'Camera Not Supported',
+              description: 'Your browser does not support camera access.',
+            });
+            setHasCameraPermission(false);
+            return;
+        }
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          setHasCameraPermission(true);
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+          }
+        } catch (error) {
+          console.error('Error accessing camera:', error);
+          setHasCameraPermission(false);
+          toast({
+            variant: 'destructive',
+            title: 'Camera Access Denied',
+            description: 'Please enable camera permissions in your browser settings.',
+          });
+        }
+      };
+      getCameraPermission();
+    } else {
+        // Stop camera stream when dialog is closed
+        if (videoRef.current && videoRef.current.srcObject) {
+            const stream = videoRef.current.srcObject as MediaStream;
+            stream.getTracks().forEach(track => track.stop());
+        }
+    }
+  }, [isCameraOpen, toast]);
+
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -33,12 +80,29 @@ export function PlantHealthCard({ userLanguage }: { userLanguage?: string; }) {
     }
   };
 
+  const handleCapture = () => {
+    if (videoRef.current && canvasRef.current) {
+      const video = videoRef.current;
+      const canvas = canvasRef.current;
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const context = canvas.getContext('2d');
+      if (context) {
+        context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+        const dataUrl = canvas.toDataURL('image/jpeg');
+        setUploadedImage(dataUrl);
+        setDiagnosisResult(null);
+        setIsCameraOpen(false);
+      }
+    }
+  };
+
   const handleDiagnose = async () => {
     if (!uploadedImage) {
       toast({
         variant: 'destructive',
-        title: 'No Image Uploaded',
-        description: 'Please upload an image of a plant leaf to diagnose.',
+        title: 'No Image',
+        description: 'Please upload or capture an image of a plant leaf to diagnose.',
       });
       return;
     }
@@ -79,8 +143,8 @@ export function PlantHealthCard({ userLanguage }: { userLanguage?: string; }) {
     }
   };
 
-
   return (
+    <>
     <Card className="relative overflow-hidden">
       <Image
         src={imageUrl}
@@ -93,11 +157,11 @@ export function PlantHealthCard({ userLanguage }: { userLanguage?: string; }) {
       <div className="relative z-10 flex flex-col h-full">
         <CardHeader>
           <CardTitle className="flex items-center gap-2"><Microscope /> AI Plant Health Diagnosis</CardTitle>
-          <CardDescription>Upload a photo of a plant leaf to get an AI-powered diagnosis.</CardDescription>
+          <CardDescription>Upload a photo or use your camera to get an AI-powered diagnosis.</CardDescription>
         </CardHeader>
         <CardContent className="flex-grow flex flex-col justify-between">
           <div className="space-y-4">
-            <div className="flex gap-2">
+            <div className="grid grid-cols-2 gap-2">
               <input
                 type="file"
                 ref={fileInputRef}
@@ -105,12 +169,18 @@ export function PlantHealthCard({ userLanguage }: { userLanguage?: string; }) {
                 accept="image/*"
                 className="hidden"
               />
-              <Button onClick={() => fileInputRef.current?.click()} disabled={isLoading} variant="secondary" className="flex-1">
-                <Upload className="mr-2" /> {uploadedImage ? 'Change Image' : 'Upload Image'}
+              <Button onClick={() => fileInputRef.current?.click()} disabled={isLoading} variant="secondary">
+                <Upload className="mr-2" /> {uploadedImage ? 'Change' : 'Upload'}
               </Button>
-              <Button onClick={handleDiagnose} disabled={isLoading || !uploadedImage}>
+               <Button onClick={() => setIsCameraOpen(true)} disabled={isLoading} variant="secondary">
+                <Camera className="mr-2" /> Use Camera
+              </Button>
+            </div>
+            
+            <div className="flex gap-2">
+              <Button onClick={handleDiagnose} disabled={isLoading || !uploadedImage} className="flex-1">
                 {isLoading ? <Loader2 className="animate-spin" /> : <Sparkles />}
-                Diagnose
+                Diagnose Plant
               </Button>
                {uploadedImage && (
                 <Button onClick={handleClear} disabled={isLoading} variant="destructive" size="icon">
@@ -189,10 +259,42 @@ export function PlantHealthCard({ userLanguage }: { userLanguage?: string; }) {
                 </div>
               </div>
           )}
-
         </CardContent>
       </div>
     </Card>
+
+    <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Live Camera</DialogTitle>
+            <DialogDescription>
+              Position the plant leaf in the frame and capture a clear photo.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="relative">
+            <video ref={videoRef} className="w-full aspect-video rounded-md bg-muted" autoPlay muted playsInline />
+            <canvas ref={canvasRef} className="hidden" />
+             {hasCameraPermission === false && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-md">
+                    <Alert variant="destructive" className="w-auto">
+                        <AlertTitle>Camera Access Required</AlertTitle>
+                        <AlertDescription>
+                            Please allow camera access in your browser to use this feature.
+                        </AlertDescription>
+                    </Alert>
+                </div>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsCameraOpen(false)}>Cancel</Button>
+            <Button onClick={handleCapture} disabled={!hasCameraPermission}>
+              <Camera className="mr-2" />
+              Capture Photo
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 
