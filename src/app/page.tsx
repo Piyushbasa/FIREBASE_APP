@@ -36,11 +36,11 @@ export default function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               <div className="lg:col-span-2 space-y-4">
                 <CityData defaultCity={userProfile?.location} userLanguage={userProfile?.language} />
+                <SunTimesCard />
                 <PlantHealthCard userLanguage={userProfile?.language} />
               </div>
               <div className="space-y-4">
                 <CropSuggestionCard defaultLocation={userProfile?.location} userLanguage={userProfile?.language} />
-                <SunTimesCard />
               </div>
             </div>
         </div>
