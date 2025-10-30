@@ -25,17 +25,15 @@ export function BottomNavbar() {
         {navItems.map((item) => {
           const isActive = pathname === item.href;
           return (
-            <Link href={item.href} key={item.href} className="flex-1">
-              <div className="flex flex-col items-center justify-center p-2">
-                <item.icon className={cn(
-                  "w-6 h-6 mb-1 transition-colors",
-                  isActive ? "text-primary" : "text-muted-foreground"
-                )} />
+            <Link href={item.href} key={item.href} className={cn(
+              "flex-1 flex flex-col items-center justify-center p-2 transition-colors duration-200",
+              isActive ? "text-primary" : "text-muted-foreground hover:text-primary/80"
+            )}>
+                <item.icon className="w-6 h-6 mb-1" />
                 <span className={cn(
-                  "text-xs font-medium transition-colors",
-                   isActive ? "text-primary" : "text-muted-foreground"
+                  "text-xs font-medium transition-all duration-200 ease-in-out",
+                  isActive ? "opacity-100 max-h-4" : "opacity-0 max-h-0"
                 )}>{item.label}</span>
-              </div>
             </Link>
           );
         })}
