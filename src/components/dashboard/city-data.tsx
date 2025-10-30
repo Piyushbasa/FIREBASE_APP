@@ -11,33 +11,33 @@ import { Skeleton } from "../ui/skeleton";
 
 const indianCities = [
     // Andhra Pradesh
-    "Visakhapatnam", "Vijayawada", "Tirupati",
+    "Visakhapatnam", "Vijayawada", "Tirupati", "Guntur", "Nellore", "Kurnool", "Rajahmundry", "Kakinada", "Anantapur", "Eluru",
     // Arunachal Pradesh
-    "Itanagar",
+    "Itanagar", "Tawang",
     // Assam
-    "Guwahati", "Dibrugarh",
+    "Guwahati", "Dibrugarh", "Silchar", "Jorhat", "Tezpur",
     // Bihar
-    "Patna", "Gaya",
+    "Patna", "Gaya", "Bhagalpur", "Muzaffarpur", "Purnia", "Darbhanga",
     // Chhattisgarh
-    "Raipur", "Bhilai",
+    "Raipur", "Bhilai", "Bilaspur", "Korba",
     // Goa
-    "Panaji",
+    "Panaji", "Margao", "Vasco da Gama",
     // Gujarat
-    "Ahmedabad", "Surat", "Vadodara", "Rajkot",
+    "Ahmedabad", "Surat", "Vadodara", "Rajkot", "Bhavnagar", "Jamnagar",
     // Haryana
-    "Faridabad", "Gurugram",
+    "Faridabad", "Gurugram", "Panipat", "Ambala", "Hisar", "Rohtak",
     // Himachal Pradesh
-    "Shimla",
+    "Shimla", "Manali", "Dharamshala", "Solan",
     // Jharkhand
-    "Ranchi", "Jamshedpur",
+    "Ranchi", "Jamshedpur", "Dhanbad", "Bokaro",
     // Karnataka
-    "Bangalore", "Mysore", "Mangalore",
+    "Bangalore", "Mysore", "Mangalore", "Hubli", "Belgaum", "Gulbarga",
     // Kerala
-    "Thiruvananthapuram", "Kochi", "Kozhikode",
+    "Thiruvananthapuram", "Kochi", "Kozhikode", "Thrissur", "Kollam",
     // Madhya Pradesh
-    "Indore", "Bhopal", "Jabalpur",
+    "Indore", "Bhopal", "Jabalpur", "Gwalior", "Ujjain", "Sagar",
     // Maharashtra
-    "Mumbai", "Pune", "Nagpur", "Nashik",
+    "Mumbai", "Pune", "Nagpur", "Nashik", "Aurangabad", "Solapur", "Kolhapur",
     // Manipur
     "Imphal",
     // Meghalaya
@@ -47,27 +47,31 @@ const indianCities = [
     // Nagaland
     "Kohima", "Dimapur",
     // Odisha
-    "Bhubaneswar", "Cuttack", "Rourkela", "Puri", "Sambalpur",
+    "Bhubaneswar", "Cuttack", "Rourkela", "Puri", "Sambalpur", "Berhampur", "Balasore",
     // Punjab
-    "Ludhiana", "Amritsar",
+    "Ludhiana", "Amritsar", "Jalandhar", "Patiala", "Bathinda",
     // Rajasthan
-    "Jaipur", "Jodhpur", "Udaipur",
+    "Jaipur", "Jodhpur", "Udaipur", "Kota", "Bikaner", "Ajmer",
     // Sikkim
     "Gangtok",
     // Tamil Nadu
-    "Chennai", "Coimbatore", "Madurai",
+    "Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", "Salem", "Tirunelveli",
     // Telangana
-    "Hyderabad", "Warangal",
+    "Hyderabad", "Warangal", "Nizamabad", "Karimnagar", "Khammam",
     // Tripura
     "Agartala",
     // Uttar Pradesh
-    "Lucknow", "Kanpur", "Agra", "Varanasi",
+    "Lucknow", "Kanpur", "Agra", "Varanasi", "Meerut", "Allahabad", "Ghaziabad", "Noida",
     // Uttarakhand
-    "Dehradun", "Haridwar",
-    // West Bengal
-    "Kolkata", "Asansol", "Siliguri",
-    // Union Territories
-    "Delhi", "Chandigarh", "Puducherry", "Srinagar", "Jammu", "Leh", "Port Blair"
+    "Dehradun", "Haridwar", "Nainital", "Rishikesh",
+-   // West Bengal
+-   "Kolkata", "Asansol", "Siliguri",
+-   // Union Territories
+-   "Delhi", "Chandigarh", "Puducherry", "Srinagar", "Jammu", "Leh", "Port Blair"
++    // West Bengal
++    "Kolkata", "Asansol", "Siliguri", "Durgapur",
++    // Union Territories
++    "New Delhi", "Delhi", "Chandigarh", "Puducherry", "Srinagar", "Jammu", "Leh", "Port Blair", "Kavaratti", "Daman"
 ].sort();
 
 export function CityData({ defaultCity, userLanguage }: { defaultCity?: string; userLanguage?: string }) {
