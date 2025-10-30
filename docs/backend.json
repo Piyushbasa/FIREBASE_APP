@@ -183,7 +183,7 @@
           "description": "The location for which the weather data is recorded (e.g., latitude, longitude)."
         },
         "temperature": {
-          "type": "number",_
+          "type": "number",
           "description": "The temperature in Celsius or Fahrenheit."
         },
         "humidity": {
@@ -225,6 +225,61 @@
         "sunriseTime",
         "sunsetTime"
       ]
+    },
+    "PesticideInfo": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "PesticideInfo",
+      "description": "Provides information about pesticides for a specific crop and pest.",
+      "type": "object",
+      "properties": {
+        "crop": {
+          "type": "string",
+          "description": "The crop that needs treatment."
+        },
+        "pestOrDisease": {
+          "type": "string",
+          "description": "The specific pest or disease affecting the crop."
+        },
+        "fieldArea": {
+          "type": "number",
+          "description": "The area of the field in acres."
+        },
+        "recommendations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "pesticideName": {
+                "type": "string",
+                "description": "The commercial name of the recommended pesticide."
+              },
+              "chemicalName": {
+                "type": "string",
+                "description": "The active chemical ingredient in the pesticide."
+              },
+              "type": {
+                "type": "string",
+                "enum": ["Insecticide", "Fungicide", "Herbicide", "Organic"],
+                "description": "The type of pesticide."
+              },
+              "applicationRate": {
+                "type": "string",
+                "description": "The recommended application rate (e.g., 'ml/acre' or 'g/acre')."
+              },
+              "totalAmount": {
+                "type": "string",
+                "description": "The total calculated amount needed for the specified field area."
+              },
+              "safetyPrecautions": {
+                "type": "string",
+                "description": "Key safety precautions to follow during application."
+              }
+            },
+            "required": ["pesticideName", "chemicalName", "type", "applicationRate", "totalAmount", "safetyPrecautions"]
+          }
+        }
+      },
+      "required": ["crop", "pestOrDisease", "fieldArea", "recommendations"]
     }
   },
   "auth": {

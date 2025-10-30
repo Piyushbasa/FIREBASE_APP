@@ -5,6 +5,7 @@ import { getWeatherData, WeatherDataInput, WeatherDataOutput } from '@/ai/flows/
 import { assistant, AssistantInput, AssistantOutput } from '@/ai/flows/assistant-flow';
 import { getCommodityPrices, CommodityPricesInput, CommodityPricesOutput } from '@/ai/flows/commodity-price-tracking';
 import { diagnosePlant, DiagnosePlantInput, DiagnosePlantOutput } from '@/ai/flows/diagnose-plant-flow';
+import { getPesticideInfo, PesticideInfoInput, PesticideInfoOutput } from '@/ai/flows/pesticide-info-flow';
 
 
 export async function fetchCropSuggestion(input: SuggestCropInput): Promise<{ data: SuggestCropOutput | null; error: string | null }> {
@@ -59,5 +60,16 @@ export async function diagnosePlantAction(input: DiagnosePlantInput): Promise<{ 
         console.error(e);
         const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
         return { data: null, error: `Failed to diagnose plant: ${errorMessage}` };
+    }
+}
+
+export async function fetchPesticideInfo(input: PesticideInfoInput): Promise<{ data: PesticideInfoOutput | null; error: string | null }> {
+    try {
+        const result = await getPesticideInfo(input);
+        return { data: result, error: null };
+    } catch (e) {
+        console.error(e);
+        const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
+        return { data: null, error: `Failed to fetch pesticide info: ${errorMessage}` };
     }
 }
