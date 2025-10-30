@@ -1,75 +1,89 @@
 /**
- * @fileoverview Firestore Security Rules for AgriAssist.
+ * @fileoverview Firestore Security Rules for the application.
  *
  * Core Philosophy:
- * This ruleset prioritizes a balance between data accessibility and security.
- * It enforces ownership for write operations on most collections, ensuring
- * that users can only modify their own data. Public read access is granted
- * where appropriate to facilitate data sharing and community interaction.
+ * This ruleset prioritizes a secure, owner-centric model for user data while allowing public read access to community forum posts. User profiles are private and only accessible to the owning user.
  *
  * Data Structure:
- * - /posts: A top-level collection for community forum posts, publicly readable.
- * - /users/{userId}: A top-level collection for user profiles.
- * - /users/{userId}/...: Subcollections under a user's profile for private user data.
+ * - `/posts/{postId}`: Community forum posts, readable by all, but writable only by authenticated users who are the authors.
+ * - `/userProfile/{userId}`: User profiles, only readable and writable by the owning user.
  *
  * Key Security Decisions:
- * - Public read access to /posts allows open access to forum content.
- * - Write access to /posts is restricted to authenticated users, with owner-only editing and deletion.
- * - User profiles (/users/{userId}) are only accessible to the owning user.
- * - Data validation is relaxed in this prototyping phase to allow for rapid iteration.
- * - Denormalization is used on `posts` to avoid costly `get()` operations for ownership checks.
+ * - Posts are publicly readable to foster community engagement.
+ * - User profiles are private and only accessible/modifiable by the corresponding user.
+ * - Listing of user profiles is disallowed for privacy.
+ *
+ * Denormalization for Authorization:
+ * - Posts denormalize `authorId` onto each post document to simplify ownership checks for updates and deletes.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Allows anyone to read posts, but only authenticated users can create, update, or delete them. Users can only modify their own posts.
-     * @path /databases/{database}/documents/posts/{postId}
-     * @allow (get, list): Any user can read posts.
-     * @allow (create): Authenticated user can create posts with `authorId` matching their `uid`.
-     * @allow (update, delete): Only the author of the post (`authorId` matches `request.auth.uid`) can update or delete.
-     * @deny (create): An unauthenticated user attempts to create a post.
-     * @deny (update, delete): A user attempts to modify a post they don't own.
-     * @principle Allows public read access to forum posts while enforcing ownership for write operations.
+     * @description Defines if the user is signed in
+     * @path N/A
+     * @allow N/A
+     * @deny N/A
+     * @principle N/A
      */
-    match /posts/{postId} {
-      allow get: if true;
-      allow list: if true;
-      allow create: if isSignedIn() && request.resource.data.authorId == request.auth.uid;
-      allow update: if isExistingOwner(resource.data.authorId);
-      allow delete: if isExistingOwner(resource.data.authorId);
-    }
-
-    /**
-     * @description Restricts access to user profiles to the owning user.
-     * @path /databases/{database}/documents/users/{userId}
-     * @allow (get): The user can read their own profile.
-     * @allow (create): The user can create their own profile if the userId matches their auth UID.
-     * @allow (update, delete): The user can update or delete their own profile.
-     * @deny (get): A different user attempts to read this profile.
-     * @deny (create): A different user attempts to create this profile.
-     * @deny (update, delete): A different user attempts to update or delete this profile.
-     * @principle Enforces strict user-ownership for profile data.
-     */
-    match /users/{userId} {
-      allow get: if isOwner(userId);
-      allow create: if isOwner(userId) && request.resource.data.id == request.auth.uid;
-      allow update: if isOwner(userId) && resource.data.id == request.resource.data.id;
-      allow delete: if isExistingOwner(userId);
-      allow list: if false;
-    }
-
     function isSignedIn() {
       return request.auth != null;
     }
 
+    /**
+     * @description Defines if the user owns the resource
+     * @path N/A
+     * @allow N/A
+     * @deny N/A
+     * @principle N/A
+     */
     function isOwner(userId) {
       return request.auth.uid == userId;
     }
 
+    /**
+     * @description Defines if the user owns the resource and the resource exists
+     * @path N/A
+     * @allow N/A
+     * @deny N/A
+     * @principle N/A
+     */
     function isExistingOwner(userId) {
-      return isSignedIn() && isOwner(userId) && resource != null;
+        return isOwner(userId) && resource != null;
+    }
+
+    /**
+     * @description Security rules for the 'posts' collection.
+     * @path /posts/{postId}
+     * @allow (get, list) - Any user can read any post.
+     * @allow (create) - An authenticated user can create a post with their UID as the authorId.
+     * @allow (update, delete) - Only the author of the post can update or delete it.
+     * @deny (create) - An unauthenticated user cannot create a post.
+     * @deny (update, delete) - A user cannot update or delete a post they did not author.
+     * @principle Allows public read access while restricting write access to authenticated owners. Enforces document ownership for writes.
+     */
+    match /posts/{postId} {
+      allow get, list: if true;
+      allow create: if isSignedIn() && request.resource.data.authorId == request.auth.uid;
+      allow update, delete: if isExistingOwner(resource.data.authorId);
+    }
+
+    /**
+     * @description Security rules for the 'userProfile' collection.
+     * @path /userProfile/{userId}
+     * @allow (get, update, delete) - Only the user with matching {userId} can read, update or delete their profile.
+     * @allow (create) - An authenticated user can create a profile with their UID as the userId.
+     * @deny (get, update, delete) - Other users cannot access a user's profile.
+     * @deny (list) - Listing of user profiles is not allowed.
+     * @principle Enforces user-ownership, restricting access to a user's own data.
+     */
+    match /userProfile/{userId} {
+      allow get: if isOwner(userId);
+      allow list: if false;
+      allow create: if isOwner(userId);
+      allow update: if isExistingOwner(userId);
+      allow delete: if isExistingOwner(userId);
     }
   }
 }

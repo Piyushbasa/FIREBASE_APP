@@ -62,7 +62,7 @@ export default function ProfilePage() {
     if (!user || !firestore || !userProfileRef) return;
     setIsSaving(true);
     try {
-        const profileData: UserProfile = {
+        const profileData: Partial<UserProfile> = {
             email: user.email!,
             location: location,
             language: language,
@@ -74,6 +74,7 @@ export default function ProfilePage() {
             description: 'Your preferences have been saved successfully.',
         });
     } catch (error) {
+        // This catch block is for client-side errors, not Firestore permission errors.
         console.error("Error saving profile:", error);
         toast({
             variant: 'destructive',

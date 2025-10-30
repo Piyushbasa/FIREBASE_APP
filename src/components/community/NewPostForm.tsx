@@ -40,7 +40,7 @@ export function NewPostForm() {
 
     try {
         const postsCollection = collection(firestore, 'posts');
-        await addDocumentNonBlocking(postsCollection, {
+        addDocumentNonBlocking(postsCollection, {
             content: values.content,
             authorId: user.uid,
             authorName: user.email || 'Anonymous',
@@ -49,6 +49,8 @@ export function NewPostForm() {
         toast({ title: 'Success', description: 'Your post has been published.'});
         form.reset();
     } catch (error) {
+        // This catch block is for client-side errors during form processing,
+        // not for Firestore permission errors, which are now handled globally.
         toast({ variant: 'destructive', title: 'Error', description: 'Failed to publish post. Please try again.' });
     } finally {
         setIsLoading(false);
