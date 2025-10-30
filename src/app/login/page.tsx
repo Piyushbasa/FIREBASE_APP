@@ -1,6 +1,6 @@
 
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -49,7 +49,14 @@ export default function LoginPage() {
     defaultValues: { email: '', password: '' },
   });
 
-  if (isUserLoading) {
+  useEffect(() => {
+    // Redirect if user is already logged in and not loading
+    if (!isUserLoading && user) {
+      router.push('/profile');
+    }
+  }, [user, isUserLoading, router]);
+
+  if (isUserLoading || user) {
     return (
       <div className="flex flex-col min-h-screen">
         <Header rightContent={<SidebarTrigger />} />
@@ -60,11 +67,6 @@ export default function LoginPage() {
         </main>
       </div>
     );
-  }
-
-  if (user) {
-    router.push('/profile');
-    return null;
   }
 
   const handleLogin = async (values: z.infer<typeof loginSchema>) => {
