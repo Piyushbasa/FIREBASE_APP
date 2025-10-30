@@ -4,7 +4,7 @@
  *
  * - suggestCrop - A function that handles the crop suggestion process.
  * - SuggestCropInput - The input type for the suggestCrop function.
- * - SuggestCropOutput - The return type for the suggestCrop function.
+ * - SuggestCropOutput - The return type for the suggestCropOutput function.
  */
 
 import {ai} from '@/ai/genkit';
@@ -17,6 +17,7 @@ const SuggestCropInputSchema = z.object({
   temperature: z.string().describe('The current or average temperature (e.g., "25°C").'),
   fieldLength: z.coerce.number().optional(),
   fieldWidth: z.coerce.number().optional(),
+  language: z.string().optional().default('English').describe('The language for the response.'),
 });
 export type SuggestCropInput = z.infer<typeof SuggestCropInputSchema>;
 
@@ -40,6 +41,7 @@ const prompt = ai.definePrompt({
   input: {schema: SuggestCropInputSchema},
   output: {schema: SuggestCropOutputSchema},
   prompt: `You are an expert agricultural advisor with a specialization in Indian agriculture. Based on the parameters provided, suggest optimal crops to plant. Provide a short reasoning for each suggestion and some general planting advice.
+Your entire response MUST be in the user's preferred language: {{{language}}}.
 
 Location: {{{location}}}
 Soil Type: {{{soilType}}}

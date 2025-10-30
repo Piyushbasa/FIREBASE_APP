@@ -17,6 +17,7 @@ const DiagnosePlantInputSchema = z.object({
       "A photo of a plant, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
     ),
   description: z.string().describe('The description of the plant.'),
+  language: z.string().optional().default('English').describe('The language for the response.'),
 });
 export type DiagnosePlantInput = z.infer<typeof DiagnosePlantInputSchema>;
 
@@ -43,6 +44,7 @@ const prompt = ai.definePrompt({
   input: {schema: DiagnosePlantInputSchema},
   output: {schema: DiagnosePlantOutputSchema},
   prompt: `You are an expert botanist specializing diagnosing plant illnesses, with a focus on Indian agriculture.
+Your entire response MUST be in the user's preferred language: {{{language}}}.
 
 You will use this information to identify the plant, diagnose any issues it has, and suggest a remedy.
 1.  First, determine if the image contains a plant. If not, set 'isPlant' to false and provide an appropriate message in the diagnosis fields.

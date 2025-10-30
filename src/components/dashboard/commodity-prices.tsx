@@ -17,6 +17,10 @@ import type { CommodityPricesOutput } from "@/ai/flows/commodity-price-tracking"
 import { ScrollArea } from "../ui/scroll-area";
 import { Input } from "../ui/input";
 import { Badge } from "../ui/badge";
+import { useUser, useDoc, useFirestore } from '@/firebase';
+import { doc } from 'firebase/firestore';
+import { useMemoFirebase } from '@/firebase/provider';
+
 
 const commodities = [
   { id: "arhar (tur/red gram)", label: "Arhar (Tur/Red Gram)" },
@@ -60,11 +64,24 @@ const FormSchema = z.object({
   location: z.string().min(1, { message: "Location is required." }),
 });
 
+type UserProfile = {
+  language?: string;
+};
+
 export function CommodityPrices({ defaultLocation }: { defaultLocation?: string }) {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = React.useState(false);
   const [priceData, setPriceData] = React.useState<CommodityPricesOutput | null>(null);
   const [customCommodity, setCustomCommodity] = React.useState("");
+  const { user } = useUser();
+  const firestore = useFirestore();
+
+  const userProfileRef = useMemoFirebase(() => {
+    if (!firestore || !user) return null;
+    return doc(firestore, 'userProfile', user.uid);
+  }, [firestore, user]);
+
+  const { data: userProfile } = useDoc<UserProfile>(userProfileRef);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -96,7 +113,10 @@ export function CommodityPrices({ defaultLocation }: { defaultLocation?: string 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     setIsLoading(true);
     setPriceData(null);
-    const result = await fetchCommodityPrices(data);
+    const result = await fetchCommodityPrices({
+      ...data,
+      language: userProfile?.language || 'English',
+    });
 
 
     if (result.error) {

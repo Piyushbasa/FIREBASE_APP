@@ -18,6 +18,9 @@ import { fetchPesticideInfo } from '@/app/actions';
 import type { PesticideInfoOutput } from "@/ai/flows/pesticide-info-flow";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
+import { useUser, useDoc, useFirestore } from '@/firebase';
+import { doc } from 'firebase/firestore';
+import { useMemoFirebase } from '@/firebase/provider';
 
 const FormSchema = z.object({
   crop: z.string().min(2, { message: "Crop name is required." }),
@@ -25,11 +28,23 @@ const FormSchema = z.object({
   fieldArea: z.coerce.number().min(0.1, { message: "Field area must be at least 0.1 acres." }),
 });
 
+type UserProfile = {
+  language?: string;
+};
 
 export default function ToolsPage() {
     const { toast } = useToast();
     const [isLoading, setIsLoading] = React.useState(false);
     const [pesticideInfo, setPesticideInfo] = React.useState<PesticideInfoOutput | null>(null);
+    const { user } = useUser();
+    const firestore = useFirestore();
+
+    const userProfileRef = useMemoFirebase(() => {
+        if (!firestore || !user) return null;
+        return doc(firestore, 'userProfile', user.uid);
+    }, [firestore, user]);
+
+    const { data: userProfile } = useDoc<UserProfile>(userProfileRef);
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -43,7 +58,10 @@ export default function ToolsPage() {
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         setIsLoading(true);
         setPesticideInfo(null);
-        const result = await fetchPesticideInfo(data);
+        const result = await fetchPesticideInfo({
+            ...data,
+            language: userProfile?.language || 'English',
+        });
 
         if (result.error) {
             toast({

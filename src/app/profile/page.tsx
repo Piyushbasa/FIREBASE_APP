@@ -6,10 +6,10 @@ import { Header } from '@/components/dashboard/header';
 import { useAuth, useFirestore, useUser } from '@/firebase';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2, LogIn, LogOut, User as UserIcon, Save } from 'lucide-react';
+import { Loader2, LogIn, LogOut, User as UserIcon, Save, Languages } from 'lucide-react';
 import { signOut } from 'firebase/auth';
 import Link from 'next/link';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc } from 'firebase/firestore';
 import { useDoc } from '@/firebase';
 import { useMemoFirebase } from '@/firebase/provider';
 import { Input } from '@/components/ui/input';
@@ -17,10 +17,12 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { setDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 type UserProfile = {
   email: string;
   location?: string;
+  language?: string;
 };
 
 export default function ProfilePage() {
@@ -30,6 +32,7 @@ export default function ProfilePage() {
   const { toast } = useToast();
 
   const [location, setLocation] = useState('');
+  const [language, setLanguage] = useState('English');
   const [isSaving, setIsSaving] = useState(false);
 
   const userProfileRef = useMemoFirebase(() => {
@@ -42,6 +45,9 @@ export default function ProfilePage() {
   useEffect(() => {
     if (userProfile?.location) {
       setLocation(userProfile.location);
+    }
+    if (userProfile?.language) {
+      setLanguage(userProfile.language);
     }
   }, [userProfile]);
 
@@ -59,12 +65,13 @@ export default function ProfilePage() {
         const profileData: UserProfile = {
             email: user.email!,
             location: location,
+            language: language,
         };
         // Using non-blocking update
         setDocumentNonBlocking(userProfileRef, profileData, { merge: true });
         toast({
             title: 'Profile Updated',
-            description: 'Your location has been saved successfully.',
+            description: 'Your preferences have been saved successfully.',
         });
     } catch (error) {
         console.error("Error saving profile:", error);
@@ -104,15 +111,33 @@ export default function ProfilePage() {
                   <p className="font-semibold text-lg break-all">{user.email}</p>
                 </div>
                 
-                <div className="space-y-2">
-                  <Label htmlFor="location">Your Location</Label>
-                  <Input 
-                    id="location" 
-                    placeholder="e.g., Pune, Maharashtra" 
-                    value={location} 
-                    onChange={(e) => setLocation(e.target.value)}
-                  />
-                   <p className="text-xs text-muted-foreground">This will be used to personalize your experience.</p>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="location">Your Location</Label>
+                    <Input 
+                      id="location" 
+                      placeholder="e.g., Pune, Maharashtra" 
+                      value={location} 
+                      onChange={(e) => setLocation(e.target.value)}
+                    />
+                    <p className="text-xs text-muted-foreground">This helps personalize weather and market data.</p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="language">Preferred Language</Label>
+                    <Select value={language} onValueChange={setLanguage}>
+                      <SelectTrigger id="language">
+                        <SelectValue placeholder="Select language" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="English">English</SelectItem>
+                        <SelectItem value="Hindi">Hindi (हिन्दी)</SelectItem>
+                        <SelectItem value="Odia">Odia (ଓଡ଼ିଆ)</SelectItem>
+                        <SelectItem value="Bengali">Bengali (বাংলা)</SelectItem>
+                        <SelectItem value="Tamil">Tamil (தமிழ்)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                     <p className="text-xs text-muted-foreground">AI responses will be in your chosen language.</p>
+                  </div>
                 </div>
 
                 <div className='space-y-2'>

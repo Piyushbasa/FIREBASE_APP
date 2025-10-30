@@ -10,7 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Badge } from '../ui/badge';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
-export function PlantHealthCard() {
+export function PlantHealthCard({ userLanguage }: { userLanguage?: string; }) {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
@@ -48,6 +48,7 @@ export function PlantHealthCard() {
     const result = await diagnosePlantAction({
       photoDataUri: uploadedImage,
       description: 'A close-up photo of a plant leaf.',
+      language: userLanguage || 'English',
     });
 
     if (result.error) {

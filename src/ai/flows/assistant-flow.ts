@@ -11,7 +11,8 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const AssistantInputSchema = z.object({
-  prompt: z.string().describe('The user\'s question or prompt.'),
+  prompt: z.string().describe("The user's question or prompt."),
+  language: z.string().optional().default('English').describe('The language for the response.'),
 });
 export type AssistantInput = z.infer<typeof AssistantInputSchema>;
 
@@ -31,7 +32,7 @@ export async function assistant(input: AssistantInput): Promise<AssistantOutput>
   return assistantFlow({...input, currentDate});
 }
 
-// Define an internal schema that includes the currentDate.
+// Define an internal schema that includes the currentDate and language.
 const AssistantPromptInputSchema = AssistantInputSchema.extend({
   currentDate: z.string(),
 });
@@ -43,6 +44,8 @@ const prompt = ai.definePrompt({
   prompt: `You are a helpful and knowledgeable AI assistant for farmers in India, powered by Gemini.
   Your goal is to provide accurate, concise, and easy-to-understand answers to questions related to Indian agriculture.
   
+  The user's preferred language is {{{language}}}. You MUST provide your entire response in this language.
+
   Today's date is {{{currentDate}}}. Use this for any time-sensitive queries.
 
   When answering, cover topics such as:

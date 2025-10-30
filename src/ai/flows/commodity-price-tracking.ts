@@ -16,6 +16,7 @@ const CommodityPricesInputSchema = z.object({
   commodities: z
     .array(z.string())
     .describe('The commodities for which to retrieve prices (e.g., rice, wheat, cotton).'),
+  language: z.string().optional().default('English').describe('The language for the response.'),
 });
 export type CommodityPricesInput = z.infer<typeof CommodityPricesInputSchema>;
 
@@ -48,6 +49,8 @@ If the location is "all India", provide a representative national price.
 If a specific Indian state is provided, retrieve a representative price from a main market within that state.
 
 Use real, up-to-date Indian market data and price units like INR per quintal.
+
+The user's preferred language is {{{language}}}. You MUST provide the commodity name and market in this language if appropriate, but keep the price and unit in standard format.
 
 Location: {{{location}}}
 Commodities: {{#each commodities}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}

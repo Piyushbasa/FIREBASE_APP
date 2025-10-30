@@ -70,7 +70,7 @@ const indianCities = [
     "Delhi", "Chandigarh", "Puducherry", "Srinagar", "Jammu", "Leh", "Port Blair"
 ].sort();
 
-export function CityData({ defaultCity }: { defaultCity?: string }) {
+export function CityData({ defaultCity, userLanguage }: { defaultCity?: string; userLanguage?: string }) {
   const { toast } = useToast();
   const [selectedCity, setSelectedCity] = React.useState(defaultCity || indianCities.find(c => c === "Bhubaneswar") || indianCities[0]);
   const [weatherData, setWeatherData] = React.useState<WeatherDataOutput | null>(null);
@@ -89,7 +89,7 @@ export function CityData({ defaultCity }: { defaultCity?: string }) {
     };
     setIsLoading(true);
     setWeatherData(null);
-    const result = await fetchWeatherData({ city });
+    const result = await fetchWeatherData({ city, language: userLanguage || 'English' });
     if (result.error) {
       toast({
         variant: "destructive",
@@ -100,7 +100,7 @@ export function CityData({ defaultCity }: { defaultCity?: string }) {
       setWeatherData(result.data);
     }
     setIsLoading(false);
-  }, [toast]);
+  }, [toast, userLanguage]);
 
   React.useEffect(() => {
     getWeatherData(selectedCity);

@@ -9,10 +9,11 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { z } from 'genkit';
+import { z } from 'zod';
 
 const WeatherDataInputSchema = z.object({
   city: z.string().describe('The city for which to retrieve weather data.'),
+  language: z.string().optional().default('English').describe('The language for the response.'),
 });
 export type WeatherDataInput = z.infer<typeof WeatherDataInputSchema>;
 
@@ -47,6 +48,8 @@ const prompt = ai.definePrompt({
   prompt: `You are a real-time weather and agricultural advisory service for Indian farmers.
 Your primary task is to retrieve current weather conditions, the Air Quality Index (AQI), and any critical weather alerts.
 Based on the alert, you must provide actionable advice for farmers on "what to do" and "what not to do".
+
+The user's preferred language is {{{language}}}. You MUST provide your entire response in this language, except for the numerical values for weather and AQI.
 
 Use the most up-to-date information available from official sources like the IMD (Indian Meteorological Department).
 

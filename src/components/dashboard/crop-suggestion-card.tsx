@@ -24,7 +24,7 @@ const FormSchema = z.object({
   fieldWidth: z.coerce.number().optional(),
 });
 
-export function CropSuggestionCard({ defaultLocation }: { defaultLocation?: string }) {
+export function CropSuggestionCard({ defaultLocation, userLanguage }: { defaultLocation?: string; userLanguage?: string; }) {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = React.useState(false);
   const [suggestion, setSuggestion] = React.useState<SuggestCropOutput | null>(null);
@@ -51,7 +51,10 @@ export function CropSuggestionCard({ defaultLocation }: { defaultLocation?: stri
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     setIsLoading(true);
     setSuggestion(null);
-    const result = await fetchCropSuggestion(data);
+    const result = await fetchCropSuggestion({
+      ...data,
+      language: userLanguage || 'English',
+    });
 
     if (result.error) {
       toast({

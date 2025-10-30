@@ -40,6 +40,11 @@
         "location": {
           "type": "string",
           "description": "The user's primary location for farming activities."
+        },
+        "language": {
+          "type": "string",
+          "description": "The user's preferred language for AI interactions.",
+          "enum": ["English", "Hindi", "Odia", "Bengali", "Tamil"]
         }
       },
       "required": ["email"]

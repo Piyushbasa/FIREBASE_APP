@@ -11,10 +11,17 @@ import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent } from '@/components/ui/card';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import { useUser, useDoc, useFirestore } from '@/firebase';
+import { doc } from 'firebase/firestore';
+import { useMemoFirebase } from '@/firebase/provider';
 
 type Message = {
   role: 'user' | 'assistant';
   content: string;
+};
+
+type UserProfile = {
+  language?: string;
 };
 
 export default function AssistantPage() {
@@ -22,6 +29,15 @@ export default function AssistantPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const { user } = useUser();
+  const firestore = useFirestore();
+
+  const userProfileRef = useMemoFirebase(() => {
+    if (!firestore || !user) return null;
+    return doc(firestore, 'userProfile', user.uid);
+  }, [firestore, user]);
+
+  const { data: userProfile } = useDoc<UserProfile>(userProfileRef);
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,7 +48,10 @@ export default function AssistantPage() {
     setInput('');
     setIsLoading(true);
 
-    const result = await askAssistant({ prompt: input });
+    const result = await askAssistant({ 
+      prompt: input,
+      language: userProfile?.language || 'English',
+    });
 
     if (result.error) {
       toast({

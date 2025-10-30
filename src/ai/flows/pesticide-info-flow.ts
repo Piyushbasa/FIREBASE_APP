@@ -8,12 +8,13 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { z } from 'genkit';
+import { z } from 'zod';
 
 const PesticideInfoInputSchema = z.object({
   crop: z.string().describe('The specific crop that needs treatment (e.g., Rice, Cotton, Tomato).'),
   pestOrDisease: z.string().describe('The name of the pest or disease to be controlled (e.g., Aphids, Powdery Mildew, Bollworm).'),
   fieldArea: z.coerce.number().describe('The area of the field in acres.'),
+  language: z.string().optional().default('English').describe('The language for the response.'),
 });
 export type PesticideInfoInput = z.infer<typeof PesticideInfoInputSchema>;
 
@@ -43,6 +44,7 @@ const prompt = ai.definePrompt({
     output: { schema: PesticideInfoOutputSchema },
     prompt: `You are an expert agricultural entomologist and plant pathologist specializing in Indian farming conditions.
 Your task is to provide pesticide recommendations for a given crop, pest/disease, and field area.
+Your entire response MUST be in the user's preferred language: {{{language}}}.
 
 Crop: {{{crop}}}
 Pest or Disease: {{{pestOrDisease}}}

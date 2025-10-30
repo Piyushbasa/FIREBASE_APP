@@ -14,6 +14,7 @@ import { SidebarTrigger } from '@/components/ui/sidebar';
 
 type UserProfile = {
   location?: string;
+  language?: string;
 }
 
 export default function Home() {
@@ -34,11 +35,11 @@ export default function Home() {
         <div className="mx-auto max-w-7xl">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               <div className="lg:col-span-2 space-y-4">
-                <CityData defaultCity={userProfile?.location} />
-                <PlantHealthCard />
+                <CityData defaultCity={userProfile?.location} userLanguage={userProfile?.language} />
+                <PlantHealthCard userLanguage={userProfile?.language} />
               </div>
               <div className="space-y-4">
-                <CropSuggestionCard defaultLocation={userProfile?.location} />
+                <CropSuggestionCard defaultLocation={userProfile?.location} userLanguage={userProfile?.language} />
                 <SunTimesCard />
               </div>
             </div>
