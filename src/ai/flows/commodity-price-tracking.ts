@@ -24,9 +24,13 @@ const CommodityPricesOutputSchema = z.object({
   prices: z.array(
     z.object({
       commodity: z.string().describe('The name of the commodity.'),
-      price: z.string().describe('The current price of the commodity.'),
-      unit: z.string().describe('The unit of measurement for the price (e.g., INR/quintal).'),
       market: z.string().describe('The market (mandi) where this price was recorded.'),
+      unit: z.string().describe("The unit for all prices (e.g., 'INR/quintal')."),
+      priceTiers: z.object({
+        low: z.string().describe("The price for the low-quality or fair average quality (FAQ) grade. Should be a string representing a number, e.g., '1800'."),
+        medium: z.string().describe("The price for the medium-quality grade. Should be a string representing a number, e.g., '2000'."),
+        high: z.string().describe("The price for the high-quality or finest grade. Should be a string representing a number, e.g., '2200'."),
+      }).describe('An object containing prices for different quality tiers.')
     })
   ),
 });
@@ -42,11 +46,10 @@ const prompt = ai.definePrompt({
   output: {schema: CommodityPricesOutputSchema},
   prompt: `You are an expert agricultural economist specializing in Indian markets. Your task is to retrieve the current price for each of the following commodities.
 
-For each commodity, provide a single, representative price from a major mandi (market).
+For each commodity, provide a representative price from a major mandi (market). Your response MUST include prices for three quality tiers: low, medium, and high.
 
-If the location is "all India", provide a representative national price.
-
-If a specific Indian state is provided, retrieve a representative price from a main market within that state.
+- If the location is "all India", provide a representative national price.
+- If a specific Indian state is provided, retrieve a representative price from a main market within that state.
 
 Use real, up-to-date Indian market data and price units like INR per quintal.
 
@@ -55,7 +58,7 @@ The user's preferred language is {{{language}}}. You MUST provide the commodity 
 Location: {{{location}}}
 Commodities: {{#each commodities}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}
 
-Provide the prices in a structured JSON format, including the commodity name, a single price, unit of measurement, and the market (mandi) it was sourced from.
+Provide the prices in a structured JSON format, including the commodity name, market, unit, and an object with prices for 'low', 'medium', and 'high' quality tiers.
 `,
 });
 

@@ -56,6 +56,9 @@ const commodities = [
   { id: "olives", label: "Olives" },
 ] as const;
 
+const indianStates = [
+    "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal", "all India"
+];
 
 const FormSchema = z.object({
   commodities: z.array(z.string()).refine((value) => value.some((item) => item), {
@@ -137,7 +140,7 @@ export function CommodityPrices({ defaultLocation }: { defaultLocation?: string 
     <Card className="h-full flex flex-col">
       <CardHeader>
         <CardTitle>Commodity Price Tracker</CardTitle>
-        <CardDescription>Get prices for key commodities from markets across India.</CardDescription>
+        <CardDescription>Get quality-based prices for key commodities from markets across India.</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col flex-grow">
         <Form {...form}>
@@ -149,9 +152,12 @@ export function CommodityPrices({ defaultLocation }: { defaultLocation?: string 
                 <FormItem>
                   <FormLabel>Location</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Odisha or all India" {...field} />
+                    <Input placeholder="e.g., Odisha or all India" {...field} list="indian-states" />
                   </FormControl>
-                   <FormDescription>Enter a state or "all India".</FormDescription>
+                  <datalist id="indian-states">
+                    {indianStates.map(state => <option key={state} value={state} />)}
+                  </datalist>
+                   <FormDescription>Enter a state name or "all India".</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -262,7 +268,9 @@ export function CommodityPrices({ defaultLocation }: { defaultLocation?: string 
                   <TableRow>
                     <TableHead>Commodity</TableHead>
                     <TableHead>Market</TableHead>
-                    <TableHead className="text-right">Price</TableHead>
+                    <TableHead className="text-right">Low Quality</TableHead>
+                    <TableHead className="text-right">Medium Quality</TableHead>
+                    <TableHead className="text-right">High Quality</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -270,7 +278,9 @@ export function CommodityPrices({ defaultLocation }: { defaultLocation?: string 
                     <TableRow key={`${price.commodity}-${index}`}>
                       <TableCell className="font-medium capitalize">{price.commodity}</TableCell>
                        <TableCell>{price.market}</TableCell>
-                      <TableCell className="text-right">{`${price.price} / ${price.unit}`}</TableCell>
+                      <TableCell className="text-right">{`${price.priceTiers.low} / ${price.unit}`}</TableCell>
+                      <TableCell className="text-right">{`${price.priceTiers.medium} / ${price.unit}`}</TableCell>
+                      <TableCell className="text-right">{`${price.priceTiers.high} / ${price.unit}`}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
