@@ -8,11 +8,12 @@ import { Toaster } from '@/components/ui/toaster';
 import { BottomNavbar } from '@/components/dashboard/bottom-navbar';
 import { FirebaseClientProvider } from '@/firebase';
 import { ThemeProvider } from '@/components/theme-provider';
-import { SidebarProvider, Sidebar, SidebarInset, SidebarTrigger, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarHeader, SidebarContent } from '@/components/ui/sidebar';
+import { SidebarProvider, Sidebar, SidebarInset, SidebarTrigger, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarHeader, SidebarContent, SidebarFooter } from '@/components/ui/sidebar';
 import { BarChart2, Bot, GraduationCap, Home, Leaf, MessageSquare, User, Wrench } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { LanguageSelector } from '@/components/dashboard/language-selector';
 
 
 const backgroundImage = "https://images.unsplash.com/photo-1492944548512-5a90181354d5?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
@@ -55,6 +56,9 @@ function AppSidebar() {
                     ))}
                 </SidebarMenu>
             </SidebarContent>
+            <SidebarFooter>
+                <LanguageSelector />
+            </SidebarFooter>
         </Sidebar>
     );
 }
