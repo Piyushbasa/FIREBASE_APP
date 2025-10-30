@@ -56,10 +56,6 @@ const commodities = [
   { id: "olives", label: "Olives" },
 ] as const;
 
-const indianStates = [
-    "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal", "all India"
-];
-
 const FormSchema = z.object({
   commodities: z.array(z.string()).refine((value) => value.some((item) => item), {
     message: "You have to select at least one commodity.",
@@ -152,12 +148,9 @@ export function CommodityPrices({ defaultLocation }: { defaultLocation?: string 
                 <FormItem>
                   <FormLabel>Location</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Odisha or all India" {...field} list="indian-states" />
+                    <Input placeholder="e.g., Cuttack, Odisha or all India" {...field} />
                   </FormControl>
-                  <datalist id="indian-states">
-                    {indianStates.map(state => <option key={state} value={state} />)}
-                  </datalist>
-                   <FormDescription>Enter a state name or "all India".</FormDescription>
+                   <FormDescription>Enter a city, district, state or "all India".</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -278,9 +271,9 @@ export function CommodityPrices({ defaultLocation }: { defaultLocation?: string 
                     <TableRow key={`${price.commodity}-${index}`}>
                       <TableCell className="font-medium capitalize">{price.commodity}</TableCell>
                        <TableCell>{price.market}</TableCell>
-                      <TableCell className="text-right">{`${price.priceTiers.low} / ${price.unit}`}</TableCell>
-                      <TableCell className="text-right">{`${price.priceTiers.medium} / ${price.unit}`}</TableCell>
-                      <TableCell className="text-right">{`${price.priceTiers.high} / ${price.unit}`}</TableCell>
+                      <TableCell className="text-right">{`₹${price.priceTiers.low} / ${price.unit}`}</TableCell>
+                      <TableCell className="text-right">{`₹${price.priceTiers.medium} / ${price.unit}`}</TableCell>
+                      <TableCell className="text-right">{`₹${price.priceTiers.high} / ${price.unit}`}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
