@@ -10,11 +10,13 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth, useUser } from '@/firebase';
+import { useAuth, useUser, useFirestore } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { Loader2, LogIn } from 'lucide-react';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import { setDocumentNonBlocking } from '@/firebase/non-blocking-updates';
+import { doc } from 'firebase/firestore';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
@@ -24,6 +26,7 @@ const formSchema = z.object({
 export default function LoginPage() {
   const { toast } = useToast();
   const auth = useAuth();
+  const firestore = useFirestore();
   const { user, isUserLoading } = useUser();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -54,7 +57,7 @@ export default function LoginPage() {
   }
 
   const handleAuthAction = async (values: z.infer<typeof formSchema>) => {
-    if (!auth) {
+    if (!auth || !firestore) {
         toast({ variant: 'destructive', title: 'Error', description: 'Firebase not initialized.' });
         return;
     }
@@ -62,7 +65,17 @@ export default function LoginPage() {
     setIsLoading(true);
     try {
         if (isSigningUp) {
-            await createUserWithEmailAndPassword(auth, values.email, values.password);
+            const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
+            const newUser = userCredential.user;
+
+            // Create a user profile document in Firestore immediately after signup
+            const userProfileRef = doc(firestore, 'userProfile', newUser.uid);
+            await setDocumentNonBlocking(userProfileRef, {
+              email: newUser.email,
+              language: 'English',
+              location: '',
+            }, { merge: true });
+
             toast({ title: 'Success', description: 'Account created successfully! You are now logged in.' });
         } else {
             await signInWithEmailAndPassword(auth, values.email, values.password);
