@@ -104,10 +104,7 @@ export default function LoginPage() {
         toast({ title: 'Success', description: 'Account created successfully! You are now logged in.' });
         router.push('/profile');
     } catch (error: any) {
-        const errorMessage = error.code === 'auth/email-already-in-use' 
-            ? 'This email is already in use. Please sign in instead.' 
-            : `An error occurred: ${error.message}`;
-        toast({ variant: 'destructive', title: 'Sign Up Failed', description: errorMessage });
+        toast({ variant: 'destructive', title: 'Sign Up Failed', description: 'Could not create account. Please check your details and try again.' });
     } finally {
         setIsLoading(false);
     }
