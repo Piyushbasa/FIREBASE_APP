@@ -6,6 +6,7 @@ import { assistant, AssistantInput, AssistantOutput } from '@/ai/flows/assistant
 import { getCommodityPrices, CommodityPricesInput, CommodityPricesOutput } from '@/ai/flows/commodity-price-tracking';
 import { diagnosePlant, DiagnosePlantInput, DiagnosePlantOutput } from '@/ai/flows/diagnose-plant-flow';
 import { getPesticideInfo, PesticideInfoInput, PesticideInfoOutput } from '@/ai/flows/pesticide-info-flow';
+import { getQuizQuestion, QuizQuestionInput, QuizQuestionOutput } from '@/ai/flows/quiz-flow';
 
 
 export async function fetchCropSuggestion(input: SuggestCropInput): Promise<{ data: SuggestCropOutput | null; error: string | null }> {
@@ -71,5 +72,16 @@ export async function fetchPesticideInfo(input: PesticideInfoInput): Promise<{ d
         console.error(e);
         const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
         return { data: null, error: `Failed to fetch pesticide info: ${errorMessage}` };
+    }
+}
+
+export async function fetchQuizQuestion(input: QuizQuestionInput): Promise<{ data: QuizQuestionOutput | null; error: string | null }> {
+    try {
+        const result = await getQuizQuestion(input);
+        return { data: result, error: null };
+    } catch (e) {
+        console.error(e);
+        const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
+        return { data: null, error: `Failed to fetch quiz question: ${errorMessage}` };
     }
 }
