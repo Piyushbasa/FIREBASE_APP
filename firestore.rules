@@ -10,6 +10,7 @@
  * - `/userProfile/{userId}`: User profiles, private to the owner.
  * - `/userProfile/{userId}/fields/{fieldId}`: User-specific fields, private to the owner.
  * - `/userProfile/{userId}/transactions/{transactionId}`: User's financial records, private to the owner.
+ * - `/userProfile/{userId}/traces/{traceId}`: User's product traceability logs, private to the owner.
  *
  * Key Security Decisions:
  * - Posts are publicly readable to foster community engagement.
@@ -20,6 +21,7 @@
  * - Posts denormalize `authorId` onto each post document to simplify ownership checks.
  * - UserField documents denormalize `userId` for the same purpose.
  * - Transaction documents denormalize `userId` for the same purpose.
+ * - ProductTrace documents denormalize `userId` for the same purpose.
  */
 rules_version = '2';
 service cloud.firestore {
@@ -85,6 +87,16 @@ service cloud.firestore {
        * @path /userProfile/{userId}/transactions/{transactionId}
        */
        match /transactions/{transactionId} {
+        allow list, get: if isOwner(userId);
+        allow create: if isOwner(userId) && request.resource.data.userId == userId;
+        allow update, delete: if isExistingOwner(userId) && resource.data.userId == userId;
+       }
+
+      /**
+       * @description Security rules for the 'traces' subcollection.
+       * @path /userProfile/{userId}/traces/{traceId}
+       */
+       match /traces/{traceId} {
         allow list, get: if isOwner(userId);
         allow create: if isOwner(userId) && request.resource.data.userId == userId;
         allow update, delete: if isExistingOwner(userId) && resource.data.userId == userId;

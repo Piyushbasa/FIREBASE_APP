@@ -425,6 +425,61 @@
         }
       },
       "required": ["fieldName", "vegetationIndex", "moistureLevel", "analysis", "recommendations"]
+    },
+    "CarbonSequestration": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "CarbonSequestration",
+      "description": "Estimates the carbon sequestration potential of a farm based on various factors.",
+      "type": "object",
+      "properties": {
+        "cropType": {
+          "type": "string",
+          "description": "The primary type of crop being grown."
+        },
+        "fieldSize": {
+          "type": "number",
+          "description": "The size of the field in acres."
+        },
+        "practices": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "A list of sustainable farming practices being used."
+        },
+        "estimatedSequestration": {
+          "type": "number",
+          "description": "The estimated tons of CO2 equivalent sequestered per year."
+        },
+        "analysis": {
+          "type": "string",
+          "description": "A brief analysis of the carbon impact and suggestions for improvement."
+        }
+      },
+      "required": ["cropType", "fieldSize", "practices", "estimatedSequestration", "analysis"]
+    },
+    "ProductTrace": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ProductTrace",
+      "description": "Represents a traceability log for a batch of agricultural produce.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "productName": { "type": "string" },
+        "batchId": { "type": "string" },
+        "harvestDate": { "type": "object" },
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "eventName": { "type": "string" },
+              "date": { "type": "object" },
+              "notes": { "type": "string" }
+            },
+            "required": ["eventName", "date"]
+          }
+        }
+      },
+      "required": ["userId", "productName", "batchId", "harvestDate", "events"]
     }
   },
   "auth": {
@@ -460,6 +515,12 @@
                   "$ref": "#/entities/Transaction"
                 },
                 "description": "Stores the financial transactions for a specific user."
+              },
+              "traces": {
+                "schema": {
+                  "$ref": "#/entities/ProductTrace"
+                },
+                "description": "Stores traceability logs for a user's products."
               }
             }
           }
@@ -468,5 +529,3 @@
     }
   }
 }
-
-    

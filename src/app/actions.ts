@@ -9,6 +9,7 @@ import { diagnosePlant, DiagnosePlantInput, DiagnosePlantOutput } from '@/ai/flo
 import { getPesticideInfo, PesticideInfoInput, PesticideInfoOutput } from '@/ai/flows/pesticide-info-flow';
 import { getQuizQuestion, QuizQuestionInput, QuizQuestionOutput } from '@/ai/flows/quiz-flow';
 import { analyzeField, AnalyzeFieldInput, AnalyzeFieldOutput } from '@/ai/flows/analyze-field-flow';
+import { getCarbonSequestration, CarbonSequestrationInput, CarbonSequestrationOutput } from '@/ai/flows/carbon-tracking-flow';
 
 
 export async function fetchCropSuggestion(input: SuggestCropInput): Promise<{ data: SuggestCropOutput | null; error: string | null }> {
@@ -96,5 +97,16 @@ export async function fetchFieldAnalysis(input: AnalyzeFieldInput): Promise<{ da
         console.error(e);
         const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
         return { data: null, error: `Failed to fetch field analysis: ${errorMessage}` };
+    }
+}
+
+export async function fetchCarbonSequestration(input: CarbonSequestrationInput): Promise<{ data: CarbonSequestrationOutput | null; error: string | null }> {
+    try {
+        const result = await getCarbonSequestration(input);
+        return { data: result, error: null };
+    } catch (e) {
+        console.error(e);
+        const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
+        return { data: null, error: `Failed to fetch carbon sequestration: ${errorMessage}` };
     }
 }

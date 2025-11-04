@@ -5,7 +5,7 @@ import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { FlaskConical, Loader2, Info, ShieldAlert, Thermometer, Droplets, Leaf, Bluetooth, X } from "lucide-react";
+import { FlaskConical, Loader2, Info, ShieldAlert, Thermometer, Droplets, Leaf, Bluetooth, X, Recycle } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 
@@ -16,19 +16,29 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { fetchPesticideInfo } from '@/app/actions';
+import { fetchPesticideInfo, fetchCarbonSequestration } from '@/app/actions';
 import type { PesticideInfoOutput } from "@/ai/flows/pesticide-info-flow";
+import type { CarbonSequestrationOutput } from "@/ai/flows/carbon-tracking-flow";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { useUser, useDoc, useFirestore } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { useMemoFirebase } from '@/firebase/provider';
 import { Progress } from "@/components/ui/progress";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-const FormSchema = z.object({
+
+const pesticideFormSchema = z.object({
   crop: z.string().min(2, { message: "Crop name is required." }),
   pestOrDisease: z.string().min(2, { message: "Pest or disease name is required." }),
   fieldArea: z.coerce.number().min(0.1, { message: "Field area must be at least 0.1 acres." }),
+});
+
+const carbonFormSchema = z.object({
+  cropType: z.string().min(2, { message: "Crop type is required." }),
+  fieldSize: z.coerce.number().min(0.1, { message: "Field size is required." }),
+  practices: z.array(z.string()),
 });
 
 type UserProfile = {
@@ -254,6 +264,191 @@ function LiveFieldMonitor() {
     );
 }
 
+const sustainablePractices = [
+  { id: "no-till", label: "No-Till Farming" },
+  { id: "cover-cropping", label: "Cover Cropping" },
+  { id: "crop-rotation", label: "Crop Rotation" },
+  { id: "agroforestry", label: "Agroforestry" },
+  { id: "composting", label: "Composting" },
+];
+
+function CarbonCalculator() {
+    const { toast } = useToast();
+    const [isLoading, setIsLoading] = React.useState(false);
+    const [carbonResult, setCarbonResult] = React.useState<CarbonSequestrationOutput | null>(null);
+    const { user } = useUser();
+    const firestore = useFirestore();
+
+    const userProfileRef = useMemoFirebase(() => {
+        if (!firestore || !user) return null;
+        return doc(firestore, 'userProfile', user.uid);
+    }, [firestore, user]);
+
+    const { data: userProfile } = useDoc<UserProfile>(userProfileRef);
+
+    const form = useForm<z.infer<typeof carbonFormSchema>>({
+        resolver: zodResolver(carbonFormSchema),
+        defaultValues: {
+            cropType: "Wheat",
+            fieldSize: 1,
+            practices: ["no-till", "cover-cropping"],
+        },
+    });
+
+    async function onSubmit(data: z.infer<typeof carbonFormSchema>) {
+        setIsLoading(true);
+        setCarbonResult(null);
+        const result = await fetchCarbonSequestration({
+            ...data,
+            language: userProfile?.language || 'English',
+        });
+
+        if (result.error) {
+            toast({
+                variant: "destructive",
+                title: "Error",
+                description: result.error,
+            });
+        } else {
+            setCarbonResult(result.data);
+        }
+        setIsLoading(false);
+    }
+    
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                    <Recycle className="w-6 h-6 text-primary" />
+                    AI Carbon Sequestration Calculator
+                </CardTitle>
+                <CardDescription>Estimate your farm's carbon footprint and potential for carbon capture.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                 <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <FormField
+                                control={form.control}
+                                name="cropType"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Primary Crop Type</FormLabel>
+                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select a crop" />
+                                            </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                <SelectItem value="Wheat">Wheat</SelectItem>
+                                                <SelectItem value="Rice">Rice</SelectItem>
+                                                <SelectItem value="Maize">Maize</SelectItem>
+                                                <SelectItem value="Cotton">Cotton</SelectItem>
+                                                <SelectItem value="Sugarcane">Sugarcane</SelectItem>
+                                                <SelectItem value="Soyabean">Soyabean</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="fieldSize"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Field Size (Acres)</FormLabel>
+                                        <FormControl>
+                                            <Input type="number" step="0.1" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+
+                         <FormField
+                            control={form.control}
+                            name="practices"
+                            render={() => (
+                            <FormItem>
+                                <div className="mb-4">
+                                <FormLabel>Sustainable Practices</FormLabel>
+                                <FormMessage />
+                                </div>
+                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                                {sustainablePractices.map((item) => (
+                                <FormField
+                                    key={item.id}
+                                    control={form.control}
+                                    name="practices"
+                                    render={({ field }) => {
+                                    return (
+                                        <FormItem
+                                        key={item.id}
+                                        className="flex flex-row items-start space-x-3 space-y-0"
+                                        >
+                                        <FormControl>
+                                            <Checkbox
+                                            checked={field.value?.includes(item.id)}
+                                            onCheckedChange={(checked) => {
+                                                return checked
+                                                ? field.onChange([...field.value, item.id])
+                                                : field.onChange(
+                                                    field.value?.filter(
+                                                        (value) => value !== item.id
+                                                    )
+                                                    )
+                                            }}
+                                            />
+                                        </FormControl>
+                                        <FormLabel className="font-normal text-sm">
+                                            {item.label}
+                                        </FormLabel>
+                                        </FormItem>
+                                    )
+                                    }}
+                                />
+                                ))}
+                                </div>
+                            </FormItem>
+                            )}
+                        />
+
+                        <Button type="submit" disabled={isLoading} className="w-full">
+                            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            Calculate Carbon Impact
+                        </Button>
+                    </form>
+                </Form>
+            </CardContent>
+            {isLoading && (
+                 <CardFooter className="flex flex-col items-center justify-center text-center p-4 rounded-lg">
+                    <Loader2 className="h-8 w-8 animate-spin text-primary mb-2" />
+                    <p className="font-semibold">AI is analyzing your farm's climate impact...</p>
+                </CardFooter>
+            )}
+            {carbonResult && (
+                <CardFooter className="flex flex-col items-start gap-4 p-6 rounded-b-lg bg-secondary/30">
+                     <h3 className="text-lg font-semibold text-primary">AI Carbon Analysis</h3>
+                     <div className="w-full space-y-4">
+                        <div className="p-4 rounded-lg border bg-background">
+                            <p className="text-sm font-medium text-muted-foreground">Estimated Annual Sequestration</p>
+                            <p className="text-2xl font-bold text-green-600">{carbonResult.estimatedSequestration.toFixed(2)} tons CO2e / year</p>
+                        </div>
+                         <div className="p-4 rounded-lg border bg-background">
+                            <h4 className="font-semibold">Analysis</h4>
+                            <p className="text-sm text-muted-foreground">{carbonResult.analysis}</p>
+                        </div>
+                     </div>
+                </CardFooter>
+            )}
+        </Card>
+    )
+}
+
+
 export default function ToolsPage() {
     const { toast } = useToast();
     const [isLoading, setIsLoading] = React.useState(false);
@@ -268,8 +463,8 @@ export default function ToolsPage() {
 
     const { data: userProfile } = useDoc<UserProfile>(userProfileRef);
 
-    const form = useForm<z.infer<typeof FormSchema>>({
-        resolver: zodResolver(FormSchema),
+    const form = useForm<z.infer<typeof pesticideFormSchema>>({
+        resolver: zodResolver(pesticideFormSchema),
         defaultValues: {
             crop: "",
             pestOrDisease: "",
@@ -277,7 +472,7 @@ export default function ToolsPage() {
         },
     });
 
-    async function onSubmit(data: z.infer<typeof FormSchema>) {
+    async function onSubmit(data: z.infer<typeof pesticideFormSchema>) {
         setIsLoading(true);
         setPesticideInfo(null);
         const result = await fetchPesticideInfo({
@@ -303,6 +498,8 @@ export default function ToolsPage() {
       <main className="flex-1 p-4">
         <div className="mx-auto max-w-4xl space-y-6">
             <LiveFieldMonitor />
+
+            <CarbonCalculator />
 
             <Card>
                 <CardHeader>
