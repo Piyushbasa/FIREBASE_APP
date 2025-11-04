@@ -54,6 +54,13 @@ function LiveFieldMonitor() {
 
     const lastDataPoint = chartData[chartData.length - 1];
 
+    const stopSimulation = React.useCallback(() => {
+        if (simulationIntervalRef.current) {
+            clearInterval(simulationIntervalRef.current);
+            simulationIntervalRef.current = null;
+        }
+    }, []);
+
     const startSimulation = React.useCallback(() => {
         stopSimulation(); // Ensure no multiple intervals are running
         simulationIntervalRef.current = setInterval(() => {
@@ -72,20 +79,12 @@ function LiveFieldMonitor() {
                 return newData.map((d, i) => ({...d, time: `${(newData.length - 1 - i) * 2}s ago`}));
             });
         }, 2000);
-    }, []);
-
-    const stopSimulation = React.useCallback(() => {
-        if (simulationIntervalRef.current) {
-            clearInterval(simulationIntervalRef.current);
-            simulationIntervalRef.current = null;
-        }
-    }, []);
+    }, [stopSimulation]);
     
     React.useEffect(() => {
         startSimulation();
         return () => stopSimulation();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [startSimulation, stopSimulation]);
 
 
     const handleNotifications = (event: Event) => {
@@ -97,8 +96,8 @@ function LiveFieldMonitor() {
         // and Humidity (0x2A6F) returns an unsigned 16-bit integer (in 0.01 %)
         const characteristicUUID = (event.target as BluetoothRemoteGATTCharacteristic).uuid;
         
-        let newTemp = lastDataPoint.temp;
-        let newMoisture = lastDataPoint.moisture;
+        let newTemp = chartData[chartData.length - 1].temp;
+        let newMoisture = chartData[chartData.length - 1].moisture;
 
         if (characteristicUUID.includes('2a6e')) { // Temperature
             newTemp = value.getInt16(0, true) / 100;
@@ -111,7 +110,7 @@ function LiveFieldMonitor() {
                 time: 'now',
                 temp: newTemp,
                 moisture: newMoisture,
-                nitrogen: lastDataPoint.nitrogen, // Nitrogen not from standard BT service
+                nitrogen: prevData[prevData.length-1].nitrogen, // Nitrogen not from standard BT service, keep it from simulation
             }];
             return newData.map((d, i) => ({...d, time: `${(newData.length - 1 - i) * 2}s ago`}));
         });
@@ -137,24 +136,26 @@ function LiveFieldMonitor() {
             
             setBluetoothDevice(device);
             const server = await device.gatt.connect();
+            device.addEventListener('gattserverdisconnected', onDisconnected);
+
             const service = await server.getPrimaryService('environmental_sensing');
             
-            const characteristics = await service.getCharacteristics();
-            
-            for (const characteristic of characteristics) {
-                if (characteristic.properties.notify) {
-                    await characteristic.startNotifications();
-                    characteristic.addEventListener('characteristicvaluechanged', handleNotifications);
-                }
-            }
+            // Specifically get Temperature and Humidity characteristics
+            const tempChar = await service.getCharacteristic('temperature'); // 0x2A6E
+            const humidityChar = await service.getCharacteristic('humidity'); // 0x2A6F
 
-            device.addEventListener('gattserverdisconnected', onDisconnected);
+            // Subscribe to notifications for each
+            await tempChar.startNotifications();
+            tempChar.addEventListener('characteristicvaluechanged', handleNotifications);
+            
+            await humidityChar.startNotifications();
+            humidityChar.addEventListener('characteristicvaluechanged', handleNotifications);
             
             setIsConnected(true);
             toast({ title: "Connected!", description: `Now receiving data from ${device.name || 'your device'}.` });
 
         } catch (error: any) {
-            toast({ variant: "destructive", title: "Connection Failed", description: error.message || "Could not connect to device." });
+            toast({ variant: "destructive", title: "Connection Failed", description: error.message || "Could not connect to device. Ensure it's discoverable and supports Environmental Sensing." });
             startSimulation(); // Restart simulation if connection fails
         } finally {
             setIsConnecting(false);
