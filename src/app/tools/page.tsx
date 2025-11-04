@@ -5,7 +5,7 @@ import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { FlaskConical, Loader2, Info, ShieldAlert, Thermometer, Droplets, Leaf, Bluetooth, X } from "lucide-react";
+import { FlaskConical, Loader2, Info, ShieldAlert, Thermometer, Droplets, Leaf, Bluetooth, X, Camera } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 
@@ -76,47 +76,58 @@ function LiveFieldMonitor() {
                     moisture: newMoisture,
                     nitrogen: newNitrogen,
                 }];
+                // Correctly update time labels
                 return newData.map((d, i) => ({...d, time: `${(newData.length - 1 - i) * 2}s ago`}));
             });
         }, 2000);
     }, [stopSimulation]);
     
     React.useEffect(() => {
-        startSimulation();
+        if (!isConnected) {
+            startSimulation();
+        }
         return () => stopSimulation();
-    }, [startSimulation, stopSimulation]);
+    }, [isConnected, startSimulation, stopSimulation]);
 
 
-    const handleNotifications = (event: Event) => {
+    const handleNotifications = React.useCallback((event: Event) => {
         const value = (event.target as BluetoothRemoteGATTCharacteristic).value;
         if (!value) return;
 
-        // This part is highly device-specific.
-        // Assuming Temperature (0x2A6E) returns a signed 16-bit integer (in 0.01 C)
-        // and Humidity (0x2A6F) returns an unsigned 16-bit integer (in 0.01 %)
         const characteristicUUID = (event.target as BluetoothRemoteGATTCharacteristic).uuid;
         
         let newTemp = chartData[chartData.length - 1].temp;
         let newMoisture = chartData[chartData.length - 1].moisture;
 
-        if (characteristicUUID.includes('2a6e')) { // Temperature
+        // Standard UUIDs for Temperature and Humidity
+        const tempUUID = '00002a6e-0000-1000-8000-00805f9b34fb';
+        const humidityUUID = '00002a6f-0000-1000-8000-00805f9b34fb';
+
+        if (characteristicUUID.includes(tempUUID)) { 
             newTemp = value.getInt16(0, true) / 100;
-        } else if (characteristicUUID.includes('2a6f')) { // Humidity
+        } else if (characteristicUUID.includes(humidityUUID)) { 
             newMoisture = value.getUint16(0, true) / 100;
         }
 
         setChartData(prevData => {
+            const lastPoint = prevData[prevData.length - 1];
             const newData = [...prevData.slice(1), {
                 time: 'now',
                 temp: newTemp,
                 moisture: newMoisture,
-                nitrogen: prevData[prevData.length-1].nitrogen, // Nitrogen not from standard BT service, keep it from simulation
+                nitrogen: lastPoint.nitrogen, // Nitrogen not from standard BT service, keep it from simulation
             }];
             return newData.map((d, i) => ({...d, time: `${(newData.length - 1 - i) * 2}s ago`}));
         });
-    };
+    }, [chartData]);
+    
+    const onDisconnected = React.useCallback(() => {
+        setIsConnected(false);
+        setBluetoothDevice(null);
+        toast({ title: "Device Disconnected", description: "The connection to the IoT device was lost." });
+    }, [toast]);
 
-    const handleConnect = async () => {
+    const handleConnect = React.useCallback(async () => {
         if (!navigator.bluetooth) {
             toast({ variant: "destructive", title: "Web Bluetooth not supported", description: "Your browser doesn't support Web Bluetooth. Try Chrome on desktop or Android." });
             return;
@@ -135,16 +146,14 @@ function LiveFieldMonitor() {
             }
             
             setBluetoothDevice(device);
-            const server = await device.gatt.connect();
             device.addEventListener('gattserverdisconnected', onDisconnected);
-
+            const server = await device.gatt.connect();
+            
             const service = await server.getPrimaryService('environmental_sensing');
             
-            // Specifically get Temperature and Humidity characteristics
-            const tempChar = await service.getCharacteristic('temperature'); // 0x2A6E
-            const humidityChar = await service.getCharacteristic('humidity'); // 0x2A6F
+            const tempChar = await service.getCharacteristic('temperature'); // UUID 0x2A6E
+            const humidityChar = await service.getCharacteristic('humidity'); // UUID 0x2A6F
 
-            // Subscribe to notifications for each
             await tempChar.startNotifications();
             tempChar.addEventListener('characteristicvaluechanged', handleNotifications);
             
@@ -155,25 +164,19 @@ function LiveFieldMonitor() {
             toast({ title: "Connected!", description: `Now receiving data from ${device.name || 'your device'}.` });
 
         } catch (error: any) {
-            toast({ variant: "destructive", title: "Connection Failed", description: error.message || "Could not connect to device. Ensure it's discoverable and supports Environmental Sensing." });
+            toast({ variant: "destructive", title: "Connection Failed", description: error.message || "Could not connect to device. Ensure it's discoverable." });
             startSimulation(); // Restart simulation if connection fails
         } finally {
             setIsConnecting(false);
         }
-    };
+    }, [toast, stopSimulation, startSimulation, onDisconnected, handleNotifications]);
     
-    const onDisconnected = () => {
-        setIsConnected(false);
-        setBluetoothDevice(null);
-        toast({ title: "Device Disconnected", description: "The connection to the IoT device was lost." });
-        startSimulation();
-    };
 
-    const handleDisconnect = async () => {
+    const handleDisconnect = React.useCallback(() => {
         if (bluetoothDevice && bluetoothDevice.gatt) {
             bluetoothDevice.gatt.disconnect();
         }
-    };
+    }, [bluetoothDevice]);
 
     return (
         <Card>
@@ -429,3 +432,5 @@ export default function ToolsPage() {
     </div>
   );
 }
+
+    

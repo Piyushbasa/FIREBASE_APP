@@ -1,7 +1,7 @@
 
 'use client';
 import Image from 'next/image';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { HeartPulse, Droplets, ShieldCheck, Upload, Loader2, Microscope, Sparkles, XCircle, Leaf, Camera } from 'lucide-react';
 import { Button } from '../ui/button';
@@ -29,34 +29,35 @@ export function PlantHealthCard({ userLanguage }: { userLanguage?: string; }) {
   const defaultImage = PlaceHolderImages.find(p => p.id === 'plant-leaf');
   const imageUrl = uploadedImage || defaultImage?.imageUrl || "https://picsum.photos/seed/plant-leaf/1974/1200";
 
+  const getCameraPermission = useCallback(async () => {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+       toast({
+          variant: 'destructive',
+          title: 'Camera Not Supported',
+          description: 'Your browser does not support camera access.',
+        });
+        setHasCameraPermission(false);
+        return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      setHasCameraPermission(true);
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+    } catch (error) {
+      console.error('Error accessing camera:', error);
+      setHasCameraPermission(false);
+      toast({
+        variant: 'destructive',
+        title: 'Camera Access Denied',
+        description: 'Please enable camera permissions in your browser settings.',
+      });
+    }
+  }, [toast]);
+
   useEffect(() => {
     if (isCameraOpen) {
-      const getCameraPermission = async () => {
-        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-           toast({
-              variant: 'destructive',
-              title: 'Camera Not Supported',
-              description: 'Your browser does not support camera access.',
-            });
-            setHasCameraPermission(false);
-            return;
-        }
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-          setHasCameraPermission(true);
-          if (videoRef.current) {
-            videoRef.current.srcObject = stream;
-          }
-        } catch (error) {
-          console.error('Error accessing camera:', error);
-          setHasCameraPermission(false);
-          toast({
-            variant: 'destructive',
-            title: 'Camera Access Denied',
-            description: 'Please enable camera permissions in your browser settings.',
-          });
-        }
-      };
       getCameraPermission();
     } else {
         // Stop camera stream when dialog is closed
@@ -65,7 +66,7 @@ export function PlantHealthCard({ userLanguage }: { userLanguage?: string; }) {
             stream.getTracks().forEach(track => track.stop());
         }
     }
-  }, [isCameraOpen, toast]);
+  }, [isCameraOpen, getCameraPermission]);
 
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -287,7 +288,7 @@ export function PlantHealthCard({ userLanguage }: { userLanguage?: string; }) {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsCameraOpen(false)}>Cancel</Button>
-            <Button onClick={handleCapture} disabled={!hasCameraPermission}>
+            <Button onClick={handleCapture} disabled={hasCameraPermission === false}>
               <Camera className="mr-2" />
               Capture Photo
             </Button>
