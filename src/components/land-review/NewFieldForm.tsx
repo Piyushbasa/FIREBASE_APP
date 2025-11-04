@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -25,6 +25,21 @@ export function NewFieldForm() {
   const { user } = useUser();
   const firestore = useFirestore();
   const [isLoading, setIsLoading] = useState(false);
+
+  // State to hold client-side generated random values
+  const [mockData, setMockData] = useState({
+    vegetationIndex: 0.75,
+    moistureLevel: 60,
+  });
+
+  // Generate random values on the client after mount to avoid hydration errors
+  useEffect(() => {
+    setMockData({
+      vegetationIndex: Math.random() * (0.9 - 0.6) + 0.6,
+      moistureLevel: Math.floor(Math.random() * (75 - 45 + 1) + 45),
+    });
+  }, []);
+
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -52,14 +67,20 @@ export function NewFieldForm() {
         fieldName: values.fieldName,
         fieldSize: values.fieldSize,
         createdAt: serverTimestamp(),
-        // Add mock analysis data
+        // Use client-side generated mock data
         imageUrl: randomImage.imageUrl,
-        vegetationIndex: Math.random() * (0.9 - 0.6) + 0.6,
-        moistureLevel: Math.floor(Math.random() * (75 - 45 + 1) + 45),
+        vegetationIndex: mockData.vegetationIndex,
+        moistureLevel: mockData.moistureLevel,
       });
 
       toast({ title: 'Success', description: 'Your new field has been added.' });
       form.reset();
+      // Re-generate mock data for the next potential entry
+      setMockData({
+        vegetationIndex: Math.random() * (0.9 - 0.6) + 0.6,
+        moistureLevel: Math.floor(Math.random() * (75 - 45 + 1) + 45),
+      });
+
     } catch (error) {
       toast({ variant: 'destructive', title: 'Error', description: 'Failed to add field. Please try again.' });
     } finally {
@@ -106,5 +127,3 @@ export function NewFieldForm() {
     </Form>
   );
 }
-
-    
