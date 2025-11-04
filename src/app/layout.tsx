@@ -25,7 +25,6 @@ const sidebarNavItems = [
   { href: '/learn', label: 'Learn', icon: GraduationCap },
   { href: '/community', label: 'Forum', icon: MessageSquare },
   { href: '/tools', label: 'Tools', icon: Wrench },
-  { href: 'https://farmer.gov.in/', label: 'Govt. Schemes', icon: Landmark, external: true },
   { href: '/profile', label: 'Profile', icon: User },
 ];
 
