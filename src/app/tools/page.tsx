@@ -83,11 +83,11 @@ function LiveFieldMonitor() {
     }, [stopSimulation]);
     
     React.useEffect(() => {
-        if (!isConnected) {
-            startSimulation();
-        }
+        // Start simulation by default
+        startSimulation();
+        // Cleanup on unmount
         return () => stopSimulation();
-    }, [isConnected, startSimulation, stopSimulation]);
+    }, [startSimulation, stopSimulation]);
 
 
     const handleNotifications = React.useCallback((event: Event) => {
@@ -125,7 +125,8 @@ function LiveFieldMonitor() {
         setIsConnected(false);
         setBluetoothDevice(null);
         toast({ title: "Device Disconnected", description: "The connection to the IoT device was lost." });
-    }, [toast]);
+        startSimulation();
+    }, [toast, startSimulation]);
 
     const handleConnect = React.useCallback(async () => {
         if (!navigator.bluetooth) {
@@ -432,5 +433,3 @@ export default function ToolsPage() {
     </div>
   );
 }
-
-    
