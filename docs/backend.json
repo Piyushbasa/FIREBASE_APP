@@ -1,6 +1,40 @@
 
 {
   "entities": {
+    "Transaction": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Transaction",
+      "type": "object",
+      "description": "Represents a single financial transaction (income or expense).",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The UID of the user who recorded the transaction."
+        },
+        "type": {
+          "type": "string",
+          "enum": ["income", "expense"],
+          "description": "The type of transaction."
+        },
+        "category": {
+          "type": "string",
+          "description": "The category of the transaction (e.g., Seed Purchase, Crop Sale)."
+        },
+        "amount": {
+          "type": "number",
+          "description": "The amount of the transaction."
+        },
+        "date": {
+          "type": "object",
+          "description": "The timestamp when the transaction occurred."
+        },
+        "description": {
+          "type": "string",
+          "description": "A brief description of the transaction."
+        }
+      },
+      "required": ["userId", "type", "category", "amount", "date"]
+    },
     "Post": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Post",
@@ -384,6 +418,12 @@
                   "$ref": "#/entities/UserField"
                 },
                 "description": "Stores the fields belonging to a specific user."
+              },
+               "transactions": {
+                "schema": {
+                  "$ref": "#/entities/Transaction"
+                },
+                "description": "Stores the financial transactions for a specific user."
               }
             }
           }
@@ -392,5 +432,3 @@
     }
   }
 }
-
-    
