@@ -20,7 +20,7 @@ const features = [
     description: "Access and visualize satellite imagery from ISRO's vast archives, including IRS, Resourcesat, and Cartosat data.",
     image: PlaceHolderImages.find(p => p.id === 'uva-map'),
     link: "https://bhoonidhi.nrsc.gov.in/bhoonidhi/index.html",
-    linkText: "Visit Official Site",
+    linkText: "Explore Geoportal",
     icon: Map
   },
   {
@@ -29,7 +29,7 @@ const features = [
     description: "Track crop health, growth stages, and vegetation stress using near real-time Normalized Difference Vegetation Index (NDVI) data.",
     image: PlaceHolderImages.find(p => p.id === 'vegetation-monitoring'),
     link: "https://vedas.sac.gov.in/",
-    linkText: "Visit Official Site",
+    linkText: "Explore VEDAS",
     icon: Leaf
   },
   {
@@ -38,7 +38,7 @@ const features = [
     description: "Utilize near real-time weather and atmospheric data including temperature, wind speed, and humidity from ISRO's meteorological satellites.",
     image: PlaceHolderImages.find(p => p.id === 'drought-portal'),
     link: "https://mosdac.gov.in/",
-    linkText: "Visit Official Site",
+    linkText: "View Weather Data",
     icon: CloudDrizzle
   },
   {
@@ -47,7 +47,7 @@ const features = [
     description: "Assess solar and wind energy potential for your location to support sustainable farming practices and energy independence.",
     image: PlaceHolderImages.find(p => p.id === 'renewable-energy'),
     link: "https://vedas.sac.gov.in/vedas/en/energy.html",
-    linkText: "Visit Official Site",
+    linkText: "Analyze Energy Potential",
     icon: Sun,
   }
 ];
