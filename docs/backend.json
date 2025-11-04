@@ -323,6 +323,38 @@
         }
       },
       "required": ["crop", "pestOrDisease", "fieldArea", "recommendations"]
+    },
+    "AnalyzeField": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "AnalyzeField",
+      "description": "Provides an AI-powered analysis of a user's field based on simulated sensor data.",
+      "type": "object",
+      "properties": {
+        "fieldName": {
+          "type": "string",
+          "description": "The name of the user's field."
+        },
+        "vegetationIndex": {
+          "type": "number",
+          "description": "The simulated Normalized Difference Vegetation Index (NDVI) of the field. Ranges from 0 to 1."
+        },
+        "moistureLevel": {
+          "type": "number",
+          "description": "The simulated soil moisture percentage."
+        },
+        "analysis": {
+          "type": "string",
+          "description": "A concise, one or two-sentence summary of the field's current condition."
+        },
+        "recommendations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "A list of 2-3 actionable recommendations for the farmer based on the data."
+        }
+      },
+      "required": ["fieldName", "vegetationIndex", "moistureLevel", "analysis", "recommendations"]
     }
   },
   "auth": {
