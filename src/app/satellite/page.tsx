@@ -17,7 +17,7 @@ const features = [
     title: "Unified Visualization and Analysis (UVA)",
     description: "Access and visualize satellite imagery from ISRO's vast archives, including IRS, Resourcesat, and Cartosat data.",
     image: PlaceHolderImages.find(p => p.id === 'uva-map'),
-    link: "/field-analysis",
+    link: "/land-review",
     linkText: "Analyze Fields",
     icon: Map
   },
@@ -25,7 +25,7 @@ const features = [
     title: "Vegetation and Crop Monitoring",
     description: "Track crop health, growth stages, and vegetation stress using near real-time Normalized Difference Vegetation Index (NDVI) data.",
     image: PlaceHolderImages.find(p => p.id === 'vegetation-monitoring'),
-    link: "/field-analysis",
+    link: "/land-review",
     linkText: "Monitor Crops",
     icon: Leaf
   },
@@ -100,7 +100,7 @@ export default function SatellitePage() {
                    )}
                 </CardContent>
                 <CardFooter className="p-4 bg-secondary/30">
-                  <Link href={feature.link} className="w-full" target={feature.link.startsWith('/') && !feature.link.startsWith('/field-analysis') ? '_blank' : '_self'}>
+                  <Link href={feature.link} className="w-full" target={feature.link.startsWith('/') && !feature.link.startsWith('/land-review') ? '_blank' : '_self'}>
                     <Button className="w-full" disabled={feature.isComingSoon}>
                       {feature.linkText}
                       {!feature.isComingSoon && <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />}
