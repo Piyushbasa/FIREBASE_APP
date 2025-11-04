@@ -19,13 +19,9 @@ import { LanguageSelector } from '@/components/dashboard/language-selector';
 const backgroundImage = "https://images.unsplash.com/photo-1492944548512-5a90181354d5?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
 const sidebarNavItems = [
-  { href: '/', label: 'Home', icon: Home },
-  { href: '/market', label: 'Market', icon: BarChart2 },
   { href: '/assistant', label: 'Assistant', icon: Bot },
   { href: '/learn', label: 'Learn', icon: GraduationCap },
   { href: '/community', label: 'Forum', icon: MessageSquare },
-  { href: '/tools', label: 'Tools', icon: Wrench },
-  { href: '/profile', label: 'Profile', icon: User },
 ];
 
 function AppSidebar() {
