@@ -1,20 +1,23 @@
+
 /**
  * @fileoverview Firestore Security Rules for the application.
  *
  * Core Philosophy:
- * This ruleset prioritizes a secure, owner-centric model for user data while allowing public read access to community forum posts. User profiles are private and only accessible to the owning user.
+ * This ruleset prioritizes a secure, owner-centric model for user data while allowing public read access to community forum posts. User profiles and their associated data (like fields) are private and only accessible to the owning user.
  *
  * Data Structure:
- * - `/posts/{postId}`: Community forum posts, readable by all, but writable only by authenticated users who are the authors.
- * - `/userProfile/{userId}`: User profiles, only readable and writable by the owning user.
+ * - `/posts/{postId}`: Community forum posts, readable by all, writable only by authenticated authors.
+ * - `/userProfile/{userId}`: User profiles, private to the owner.
+ * - `/userProfile/{userId}/fields/{fieldId}`: User-specific fields, private to the owner.
  *
  * Key Security Decisions:
  * - Posts are publicly readable to foster community engagement.
- * - User profiles are private and only accessible/modifiable by the corresponding user.
+ * - User profiles and all subcollections are private and only accessible/modifiable by the corresponding user.
  * - Listing of user profiles is disallowed for privacy.
  *
  * Denormalization for Authorization:
- * - Posts denormalize `authorId` onto each post document to simplify ownership checks for updates and deletes.
+ * - Posts denormalize `authorId` onto each post document to simplify ownership checks.
+ * - UserField documents denormalize `userId` for the same purpose.
  */
 rules_version = '2';
 service cloud.firestore {
@@ -23,9 +26,6 @@ service cloud.firestore {
     /**
      * @description Defines if the user is signed in
      * @path N/A
-     * @allow N/A
-     * @deny N/A
-     * @principle N/A
      */
     function isSignedIn() {
       return request.auth != null;
@@ -34,9 +34,6 @@ service cloud.firestore {
     /**
      * @description Defines if the user owns the resource
      * @path N/A
-     * @allow N/A
-     * @deny N/A
-     * @principle N/A
      */
     function isOwner(userId) {
       return request.auth.uid == userId;
@@ -45,9 +42,6 @@ service cloud.firestore {
     /**
      * @description Defines if the user owns the resource and the resource exists
      * @path N/A
-     * @allow N/A
-     * @deny N/A
-     * @principle N/A
      */
     function isExistingOwner(userId) {
         return isOwner(userId) && resource != null;
@@ -56,12 +50,6 @@ service cloud.firestore {
     /**
      * @description Security rules for the 'posts' collection.
      * @path /posts/{postId}
-     * @allow (get, list) - Any user can read any post.
-     * @allow (create) - An authenticated user can create a post with their UID as the authorId.
-     * @allow (update, delete) - Only the author of the post can update or delete it.
-     * @deny (create) - An unauthenticated user cannot create a post.
-     * @deny (update, delete) - A user cannot update or delete a post they did not author.
-     * @principle Allows public read access while restricting write access to authenticated owners. Enforces document ownership for writes.
      */
     match /posts/{postId} {
       allow get, list: if true;
@@ -70,13 +58,8 @@ service cloud.firestore {
     }
 
     /**
-     * @description Security rules for the 'userProfile' collection.
+     * @description Security rules for the 'userProfile' collection and its subcollections.
      * @path /userProfile/{userId}
-     * @allow (get, update, delete) - Only the user with matching {userId} can read, update or delete their profile.
-     * @allow (create) - An authenticated user can create a profile with their UID as the userId.
-     * @deny (get, update, delete) - Other users cannot access a user's profile.
-     * @deny (list) - Listing of user profiles is not allowed.
-     * @principle Enforces user-ownership, restricting access to a user's own data.
      */
     match /userProfile/{userId} {
       allow get: if isOwner(userId);
@@ -84,6 +67,18 @@ service cloud.firestore {
       allow create: if isOwner(userId);
       allow update: if isExistingOwner(userId);
       allow delete: if isExistingOwner(userId);
+
+      /**
+       * @description Security rules for the 'fields' subcollection.
+       * @path /userProfile/{userId}/fields/{fieldId}
+       */
+      match /fields/{fieldId} {
+        allow list, get: if isOwner(userId);
+        allow create: if isOwner(userId) && request.resource.data.userId == userId;
+        allow update, delete: if isExistingOwner(userId) && resource.data.userId == userId;
+      }
     }
   }
 }
+
+    
