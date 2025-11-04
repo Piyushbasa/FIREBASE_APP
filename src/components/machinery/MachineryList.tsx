@@ -17,6 +17,7 @@ export type UserMachinery = {
   hourlyRate: number;
   imageUrl: string;
   imageHint: string;
+  features: string[];
 };
 
 interface MachineryListProps {
@@ -52,10 +53,15 @@ export function MachineryList({ machinery }: MachineryListProps) {
             <CardTitle>{item.name}</CardTitle>
             <CardDescription>{item.dealer}</CardDescription>
           </CardHeader>
-          <CardContent className="flex-grow">
+          <CardContent className="flex-grow space-y-4">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <MapPin className="w-4 h-4" />
               <span>{item.location}</span>
+            </div>
+             <div className="flex flex-wrap gap-2">
+                {item.features?.map((feature) => (
+                    <Badge key={feature} variant="outline">{feature}</Badge>
+                ))}
             </div>
           </CardContent>
           <CardFooter className="flex justify-between items-center bg-secondary/30 p-4">

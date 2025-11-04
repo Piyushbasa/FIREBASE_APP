@@ -23,6 +23,7 @@ const allMachinery: UserMachinery[] = [
     hourlyRate: 800,
     imageUrl: 'https://picsum.photos/seed/jd5050d/600/400',
     imageHint: 'John Deere tractor',
+    features: ['Tillage', 'Hauling', 'Seeding'],
   },
   {
     id: '2',
@@ -33,6 +34,7 @@ const allMachinery: UserMachinery[] = [
     hourlyRate: 750,
     imageUrl: 'https://picsum.photos/seed/mahindra555/600/400',
     imageHint: 'Mahindra tractor',
+    features: ['Plowing', 'Rotavating', 'Transport'],
   },
   {
     id: '3',
@@ -43,6 +45,7 @@ const allMachinery: UserMachinery[] = [
     hourlyRate: 2500,
     imageUrl: 'https://picsum.photos/seed/claas150/600/400',
     imageHint: 'combine harvester',
+    features: ['Grain Harvesting', 'Threshing', 'Cleaning'],
   },
   {
     id: '4',
@@ -53,6 +56,7 @@ const allMachinery: UserMachinery[] = [
     hourlyRate: 500,
     imageUrl: 'https://picsum.photos/seed/shaktiman/600/400',
     imageHint: 'rotary tiller',
+    features: ['Soil Preparation', 'Weed Control'],
   },
   {
     id: '5',
@@ -63,6 +67,7 @@ const allMachinery: UserMachinery[] = [
     hourlyRate: 600,
     imageUrl: 'https://picsum.photos/seed/gaspardo/600/400',
     imageHint: 'seed drill',
+    features: ['Precision Sowing', 'Fertilizer Drilling'],
   },
   {
     id: '6',
@@ -73,6 +78,29 @@ const allMachinery: UserMachinery[] = [
     hourlyRate: 780,
     imageUrl: 'https://picsum.photos/seed/swaraj744/600/400',
     imageHint: 'Swaraj tractor',
+    features: ['Puddling', 'Hauling', 'Mowing'],
+  },
+    {
+    id: '7',
+    name: 'New Holland 3630 TX',
+    type: 'Tractor',
+    dealer: 'Holland Rent-a-Farm',
+    location: 'Jaipur, Rajasthan',
+    hourlyRate: 820,
+    imageUrl: 'https://picsum.photos/seed/newholland/600/400',
+    imageHint: 'New Holland tractor',
+    features: ['Heavy Haulage', 'Plowing', 'Baling'],
+  },
+  {
+    id: '8',
+    name: 'Kubota MU4501',
+    type: 'Tractor',
+    dealer: 'Kubota Partners',
+    location: 'Bangalore, Karnataka',
+    hourlyRate: 850,
+    imageUrl: 'https://picsum.photos/seed/kubota/600/400',
+    imageHint: 'Kubota tractor',
+    features: ['Front Loader Work', 'Tillage', 'Spraying'],
   },
 ];
 
