@@ -9,7 +9,7 @@ import { BottomNavbar } from '@/components/dashboard/bottom-navbar';
 import { FirebaseClientProvider } from '@/firebase';
 import { ThemeProvider } from '@/components/theme-provider';
 import { SidebarProvider, Sidebar, SidebarInset, SidebarTrigger, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarHeader, SidebarContent, SidebarFooter } from '@/components/ui/sidebar';
-import { BarChart2, Bot, GraduationCap, Home, Leaf, MessageSquare, User, Wrench, Landmark } from 'lucide-react';
+import { BarChart2, Bot, GraduationCap, Home, Leaf, MessageSquare, User, Wrench } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -44,7 +44,7 @@ function AppSidebar() {
                 <SidebarMenu>
                     {sidebarNavItems.map((item) => (
                          <SidebarMenuItem key={item.href}>
-                             <Link href={item.href} className='w-full' target={item.external ? '_blank' : undefined} rel={item.external ? 'noopener noreferrer' : undefined}>
+                             <Link href={item.href} className='w-full'>
                                 <SidebarMenuButton isActive={pathname === item.href} tooltip={item.label}>
                                     <item.icon />
                                     <span>{item.label}</span>
