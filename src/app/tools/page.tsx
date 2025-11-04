@@ -49,13 +49,14 @@ function LiveFieldMonitor() {
     const [isConnected, setIsConnected] = React.useState(false);
     const [isConnecting, setIsConnecting] = React.useState(false);
     const [bluetoothDevice, setBluetoothDevice] = React.useState<BluetoothDevice | null>(null);
-    const [simulationInterval, setSimulationInterval] = React.useState<NodeJS.Timeout | null>(null);
+    const simulationIntervalRef = React.useRef<NodeJS.Timeout | null>(null);
     const { toast } = useToast();
 
     const lastDataPoint = chartData[chartData.length - 1];
 
     const startSimulation = React.useCallback(() => {
-        const interval = setInterval(() => {
+        stopSimulation(); // Ensure no multiple intervals are running
+        simulationIntervalRef.current = setInterval(() => {
             setChartData(prevData => {
                 const lastPoint = prevData[prevData.length - 1];
                 const newTemp = parseFloat((lastPoint.temp + (Math.random() - 0.5) * 0.2).toFixed(1));
@@ -71,31 +72,26 @@ function LiveFieldMonitor() {
                 return newData.map((d, i) => ({...d, time: `${(newData.length - 1 - i) * 2}s ago`}));
             });
         }, 2000);
-        setSimulationInterval(interval);
     }, []);
 
     const stopSimulation = React.useCallback(() => {
-        if (simulationInterval) {
-            clearInterval(simulationInterval);
-            setSimulationInterval(null);
+        if (simulationIntervalRef.current) {
+            clearInterval(simulationIntervalRef.current);
+            simulationIntervalRef.current = null;
         }
-    }, [simulationInterval]);
+    }, []);
     
     React.useEffect(() => {
         startSimulation();
         return () => stopSimulation();
-    }, [startSimulation, stopSimulation]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
 
     const handleNotifications = (event: Event) => {
         const value = (event.target as BluetoothRemoteGATTCharacteristic).value;
         if (!value) return;
 
-        const a = [];
-        for (let i = 0; i < value.byteLength; i++) {
-            a.push('0x' + ('00' + value.getUint8(i).toString(16)).slice(-2));
-        }
-        
         // This part is highly device-specific.
         // Assuming Temperature (0x2A6E) returns a signed 16-bit integer (in 0.01 C)
         // and Humidity (0x2A6F) returns an unsigned 16-bit integer (in 0.01 %)
@@ -432,7 +428,3 @@ export default function ToolsPage() {
     </div>
   );
 }
-
-    
-
-    
