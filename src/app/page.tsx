@@ -11,6 +11,7 @@ import { doc, Firestore } from 'firebase/firestore';
 import { useFirestore } from '@/firebase';
 import { useMemoFirebase } from '@/firebase/provider';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import { LiveFieldMonitorPreview } from '@/components/dashboard/live-field-monitor-preview';
 
 type UserProfile = {
   location?: string;
@@ -37,6 +38,7 @@ export default function Home() {
               <div className="lg:col-span-2 space-y-4">
                 <CityData defaultCity={userProfile?.location} userLanguage={userProfile?.language} />
                 <SunTimesCard />
+                <LiveFieldMonitorPreview />
                 <PlantHealthCard userLanguage={userProfile?.language} />
               </div>
               <div className="space-y-4">
