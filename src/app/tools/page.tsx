@@ -5,7 +5,7 @@ import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { FlaskConical, Loader2, Info, ShieldAlert, Thermometer, Droplets, Leaf, Bluetooth, X, Camera } from "lucide-react";
+import { FlaskConical, Loader2, Info, ShieldAlert, Thermometer, Droplets, Leaf, Bluetooth, X } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 
