@@ -16,39 +16,39 @@ import { Skeleton } from "@/components/ui/skeleton";
 const fields = [
   { 
     id: "field-1", 
-    name: "Vineyard Plot A", 
-    size: "12.5 Acres",
+    name: "Paddy Field, Punjab", 
+    size: "15 Acres",
     lastUpdate: "Today, 10:30 AM",
-    vegetationIndex: 0.82,
-    moistureLevel: "45%",
-    image: PlaceHolderImages.find(p => p.id === 'field-1')
+    vegetationIndex: 0.85,
+    moistureLevel: "65%",
+    image: PlaceHolderImages.find(p => p.id === 'paddy-field')
   },
   { 
     id: "field-2", 
-    name: "Cornfield North", 
-    size: "30 Acres",
+    name: "Cotton Field, Gujarat", 
+    size: "25 Acres",
     lastUpdate: "Today, 10:45 AM",
-    vegetationIndex: 0.75,
-    moistureLevel: "52%",
-    image: PlaceHolderImages.find(p => p.id === 'field-2')
+    vegetationIndex: 0.72,
+    moistureLevel: "48%",
+    image: PlaceHolderImages.find(p => p.id === 'cotton-field')
   },
   { 
     id: "field-3", 
-    name: "Potato Patch", 
-    size: "5 Acres",
+    name: "Sugarcane Farm, U.P.", 
+    size: "50 Acres",
     lastUpdate: "Yesterday, 4:00 PM",
-    vegetationIndex: 0.68,
-    moistureLevel: "60%",
-    image: PlaceHolderImages.find(p => p.id === 'field-3')
+    vegetationIndex: 0.91,
+    moistureLevel: "72%",
+    image: PlaceHolderImages.find(p => p.id === 'sugarcane-farm')
   },
   {
     id: "field-4",
-    name: "Olive Grove West",
-    size: "22 Acres",
+    name: "Wheat Field, Haryana",
+    size: "20 Acres",
     lastUpdate: "Today, 11:00 AM",
-    vegetationIndex: 0.88,
-    moistureLevel: "38%",
-    image: PlaceHolderImages.find(p => p.id === 'field-4')
+    vegetationIndex: 0.78,
+    moistureLevel: "55%",
+    image: PlaceHolderImages.find(p => p.id === 'wheat-field')
   }
 ];
 
@@ -92,7 +92,7 @@ export default function LandReviewPage() {
               <CardTitle className="flex items-center justify-between">
                 Review Your Land
                 <Select value={selectedFieldId} onValueChange={handleFieldChange}>
-                  <SelectTrigger className="w-[200px]">
+                  <SelectTrigger className="w-[250px]">
                     <SelectValue placeholder="Select a field" />
                   </SelectTrigger>
                   <SelectContent>

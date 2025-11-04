@@ -1,28 +1,28 @@
 {
   "placeholderImages": [
     {
-      "id": "field-1",
-      "description": "Aerial view of a lush green vineyard",
-      "imageUrl": "https://images.unsplash.com/photo-1572548027168-9778de00bb60?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx2aW5leWFyZCUyMGFlcmlhbHxlbnwwfHx8fDE3NjE0NTc4MjV8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "vineyard aerial"
+      "id": "paddy-field",
+      "description": "Aerial view of a lush green paddy field in Punjab, India",
+      "imageUrl": "https://images.unsplash.com/photo-1605799148493-057a113a37c9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxwYWRkeSUyMGZpZWxkJTIwaW5kaWF8ZW58MHx8fHwxNzYxNTU0Mzg2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "paddy field"
     },
     {
-      "id": "field-2",
-      "description": "A field of golden corn ready for harvest",
-      "imageUrl": "https://images.unsplash.com/photo-1655891186244-8cd3a9047a53?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Y29ybiUyMGZpZWxkfGVufDB8fHx8MTc2MTQ1NzcyNnww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "corn field"
+      "id": "cotton-field",
+      "description": "A field of cotton plants in Gujarat, ready for harvest",
+      "imageUrl": "https://images.unsplash.com/photo-1620755939844-965768502574?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjb3R0b24lMjBmaWVsZCUyMGluZGlhfGVufDB8fHx8MTc2MTU1NDM4Nnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cotton field"
     },
     {
-      "id": "field-3",
-      "description": "Rows of potato plants in a field under a clear sky",
-      "imageUrl": "https://images.unsplash.com/photo-1590165482129-1b8b27698780?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxwb3RhdG8lMjBmYXJtfGVufDB8fHx8MTc2MTQ1NzgyNHww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "potato farm"
+      "id": "sugarcane-farm",
+      "description": "Tall sugarcane stalks in a farm in Uttar Pradesh, India",
+      "imageUrl": "https://images.unsplash.com/photo-1595701962363-a68136b6c15e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdWdhcmNhbmUlMjBmaWVsZCUyMGluZGlhfGVufDB8fHx8MTc2MTU1NDM4Nnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "sugarcane farm"
     },
     {
-      "id": "field-4",
-      "description": "Drone shot of an olive grove on a sunny day",
-      "imageUrl": "https://images.unsplash.com/photo-1650481424286-9d30bcc140e1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxvbGl2ZSUyMGdyb3ZlfGVufDB8fHx8MTc2MTQ1NzgyNHww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "olive grove"
+      "id": "wheat-field",
+      "description": "Golden wheat field in Haryana under a sunny sky",
+      "imageUrl": "https://images.unsplash.com/photo-1592911299302-9a3d4a04d241?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxiaW5kaWFuJTIwd2hlYXQlMjBmaWVsZHxlbnwwfHx8fDE3NjE1NTQzODd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "wheat field"
     },
     {
       "id": "plant-leaf",
