@@ -3,17 +3,15 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, BarChart2, Bot, GraduationCap, MessageSquare, User, Wrench } from 'lucide-react';
+import { Home, BarChart2, Bot, GraduationCap, Wrench } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const navItems = [
+const bottomNavItems = [
   { href: '/', label: 'Home', icon: Home },
   { href: '/market', label: 'Market', icon: BarChart2 },
   { href: '/assistant', label: 'Assistant', icon: Bot },
   { href: '/learn', label: 'Learn', icon: GraduationCap },
-  { href: '/community', label: 'Forum', icon: MessageSquare },
   { href: '/tools', label: 'Tools', icon: Wrench },
-  { href: '/profile', label: 'Profile', icon: User },
 ];
 
 export function BottomNavbar() {
@@ -22,7 +20,7 @@ export function BottomNavbar() {
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-background/80 border-t z-50 backdrop-blur-sm md:hidden">
       <div className="flex justify-around max-w-7xl mx-auto">
-        {navItems.map((item) => {
+        {bottomNavItems.map((item) => {
           const isActive = pathname === item.href;
           return (
             <Link href={item.href} key={item.href} className={cn(
