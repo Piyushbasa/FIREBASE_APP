@@ -212,7 +212,7 @@ export function CityData({ defaultCity, userLanguage }: { defaultCity?: string; 
              <div>
                 <h3 className="text-base font-medium mb-2 text-primary">Weather Alerts</h3>
                 <div className={`flex items-center gap-4 p-4 rounded-lg ${isAlertActive ? 'bg-destructive/20' : 'bg-secondary/50'}`}>
-                    <Siren className={`w-8 h-8 ${isAlertActive ? 'text-destructive' : 'text-accent'}`} />
+                    <Siren className={`w-8 h-8 ${isAlertActive ? 'text-destructive' : 'text-accent-foreground'}`} />
                     <div>
                         <p className="text-sm text-muted-foreground">Active Alert</p>
                         <p className="text-lg font-semibold">{weatherData.alert.alert}</p>
@@ -223,16 +223,16 @@ export function CityData({ defaultCity, userLanguage }: { defaultCity?: string; 
             {hasAdvice && (
               <div className="space-y-4">
                 <div className="flex items-start gap-4 p-4 rounded-lg bg-green-500/20">
-                  <ThumbsUp className="w-6 h-6 text-green-400 mt-1" />
+                  <ThumbsUp className="w-6 h-6 text-green-600 mt-1 flex-shrink-0" />
                   <div>
-                    <h4 className="font-semibold text-green-400">What to Do</h4>
+                    <h4 className="font-semibold text-green-700 dark:text-green-300">What to Do</h4>
                     <p className="text-sm text-muted-foreground">{weatherData.alert.whatToDo}</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4 p-4 rounded-lg bg-red-500/20">
-                  <ThumbsDown className="w-6 h-6 text-red-400 mt-1" />
+                  <ThumbsDown className="w-6 h-6 text-red-600 mt-1 flex-shrink-0" />
                   <div>
-                    <h4 className="font-semibold text-red-400">What Not to Do</h4>
+                    <h4 className="font-semibold text-red-700 dark:text-red-300">What Not to Do</h4>
                     <p className="text-sm text-muted-foreground">{weatherData.alert.whatNotToDo}</p>
                   </div>
                 </div>
@@ -250,5 +250,3 @@ export function CityData({ defaultCity, userLanguage }: { defaultCity?: string; 
     </Card>
   );
 }
-
-    
