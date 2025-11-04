@@ -5,7 +5,7 @@ import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { FlaskConical, Loader2, Info, ShieldAlert, Thermometer, Droplets, Leaf } from "lucide-react";
+import { FlaskConical, Loader2, Info, ShieldAlert, Thermometer, Droplets, Leaf, Bluetooth, X } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 
@@ -46,9 +46,15 @@ const initialChartData = [
 
 function LiveFieldMonitor() {
     const [chartData, setChartData] = React.useState(initialChartData);
+    const [isConnected, setIsConnected] = React.useState(false);
+    const [isConnecting, setIsConnecting] = React.useState(false);
+    const [bluetoothDevice, setBluetoothDevice] = React.useState<BluetoothDevice | null>(null);
+    const [simulationInterval, setSimulationInterval] = React.useState<NodeJS.Timeout | null>(null);
+    const { toast } = useToast();
+
     const lastDataPoint = chartData[chartData.length - 1];
 
-    React.useEffect(() => {
+    const startSimulation = React.useCallback(() => {
         const interval = setInterval(() => {
             setChartData(prevData => {
                 const lastPoint = prevData[prevData.length - 1];
@@ -62,23 +68,144 @@ function LiveFieldMonitor() {
                     moisture: newMoisture,
                     nitrogen: newNitrogen,
                 }];
-
-                // Update time labels
                 return newData.map((d, i) => ({...d, time: `${(newData.length - 1 - i) * 2}s ago`}));
             });
         }, 2000);
-
-        return () => clearInterval(interval);
+        setSimulationInterval(interval);
     }, []);
+
+    const stopSimulation = React.useCallback(() => {
+        if (simulationInterval) {
+            clearInterval(simulationInterval);
+            setSimulationInterval(null);
+        }
+    }, [simulationInterval]);
+    
+    React.useEffect(() => {
+        startSimulation();
+        return () => stopSimulation();
+    }, [startSimulation, stopSimulation]);
+
+
+    const handleNotifications = (event: Event) => {
+        const value = (event.target as BluetoothRemoteGATTCharacteristic).value;
+        if (!value) return;
+
+        const a = [];
+        for (let i = 0; i < value.byteLength; i++) {
+            a.push('0x' + ('00' + value.getUint8(i).toString(16)).slice(-2));
+        }
+        
+        // This part is highly device-specific.
+        // Assuming Temperature (0x2A6E) returns a signed 16-bit integer (in 0.01 C)
+        // and Humidity (0x2A6F) returns an unsigned 16-bit integer (in 0.01 %)
+        const characteristicUUID = (event.target as BluetoothRemoteGATTCharacteristic).uuid;
+        
+        let newTemp = lastDataPoint.temp;
+        let newMoisture = lastDataPoint.moisture;
+
+        if (characteristicUUID.includes('2a6e')) { // Temperature
+            newTemp = value.getInt16(0, true) / 100;
+        } else if (characteristicUUID.includes('2a6f')) { // Humidity
+            newMoisture = value.getUint16(0, true) / 100;
+        }
+
+        setChartData(prevData => {
+            const newData = [...prevData.slice(1), {
+                time: 'now',
+                temp: newTemp,
+                moisture: newMoisture,
+                nitrogen: lastDataPoint.nitrogen, // Nitrogen not from standard BT service
+            }];
+            return newData.map((d, i) => ({...d, time: `${(newData.length - 1 - i) * 2}s ago`}));
+        });
+    };
+
+    const handleConnect = async () => {
+        if (!navigator.bluetooth) {
+            toast({ variant: "destructive", title: "Web Bluetooth not supported", description: "Your browser doesn't support Web Bluetooth. Try Chrome on desktop or Android." });
+            return;
+        }
+
+        setIsConnecting(true);
+        stopSimulation();
+
+        try {
+            const device = await navigator.bluetooth.requestDevice({
+                filters: [{ services: ['environmental_sensing'] }],
+            });
+
+            if (!device.gatt) {
+                throw new Error("GATT server not available.");
+            }
+            
+            setBluetoothDevice(device);
+            const server = await device.gatt.connect();
+            const service = await server.getPrimaryService('environmental_sensing');
+            
+            const characteristics = await service.getCharacteristics();
+            
+            for (const characteristic of characteristics) {
+                if (characteristic.properties.notify) {
+                    await characteristic.startNotifications();
+                    characteristic.addEventListener('characteristicvaluechanged', handleNotifications);
+                }
+            }
+
+            device.addEventListener('gattserverdisconnected', onDisconnected);
+            
+            setIsConnected(true);
+            toast({ title: "Connected!", description: `Now receiving data from ${device.name || 'your device'}.` });
+
+        } catch (error: any) {
+            toast({ variant: "destructive", title: "Connection Failed", description: error.message || "Could not connect to device." });
+            startSimulation(); // Restart simulation if connection fails
+        } finally {
+            setIsConnecting(false);
+        }
+    };
+    
+    const onDisconnected = () => {
+        setIsConnected(false);
+        setBluetoothDevice(null);
+        toast({ title: "Device Disconnected", description: "The connection to the IoT device was lost." });
+        startSimulation();
+    };
+
+    const handleDisconnect = async () => {
+        if (bluetoothDevice && bluetoothDevice.gatt) {
+            bluetoothDevice.gatt.disconnect();
+        }
+    };
 
     return (
         <Card>
             <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                    <Leaf className="w-6 h-6 text-primary" />
-                    Live Field Monitor
+                <CardTitle className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                        <Leaf className="w-6 h-6 text-primary" />
+                        Live Field Monitor
+                    </div>
+                    <div>
+                        {isConnected ? (
+                             <Button variant="destructive" onClick={handleDisconnect} size="sm">
+                                <X className="mr-2 h-4 w-4" /> Disconnect
+                            </Button>
+                        ) : (
+                            <Button onClick={handleConnect} disabled={isConnecting} size="sm">
+                                {isConnecting ? (
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                ) : (
+                                    <Bluetooth className="mr-2 h-4 w-4" />
+                                )}
+                                Connect Device
+                            </Button>
+                        )}
+                    </div>
                 </CardTitle>
-                <CardDescription>Real-time data from your connected IoT soil sensor.</CardDescription>
+                <CardDescription>
+                    {isConnected ? `Live data from ${bluetoothDevice?.name || 'your device'}` : 'Real-time data from your connected IoT soil sensor.'}
+                </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
@@ -120,7 +247,7 @@ function LiveFieldMonitor() {
             </CardContent>
              <CardFooter className="text-xs text-muted-foreground">
                 <Info className="w-4 h-4 mr-2"/>
-                This is a simulation. Connect a real device via Firebase IoT for live data.
+                {isConnected ? 'Displaying live data. Nitrogen level is simulated.' : 'This is a simulation. Connect a real device via Bluetooth for live data.'}
             </CardFooter>
         </Card>
     );
@@ -305,5 +432,7 @@ export default function ToolsPage() {
     </div>
   );
 }
+
+    
 
     
