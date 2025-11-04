@@ -121,6 +121,42 @@
       },
       "required": ["userId", "fieldName", "fieldSize", "imageUrl", "vegetationIndex", "moistureLevel", "createdAt"]
     },
+    "UserMachinery": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UserMachinery",
+      "type": "object",
+      "description": "Represents a piece of farm machinery available for rent.",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the machinery (e.g., John Deere 5050D)."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of machinery (e.g., Tractor, Harvester, Seeder)."
+        },
+        "dealer": {
+          "type": "string",
+          "description": "The name of the rental provider or dealer."
+        },
+        "location": {
+          "type": "string",
+          "description": "The location of the dealer."
+        },
+        "hourlyRate": {
+          "type": "number",
+          "description": "The rental cost per hour in INR."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of an image of the machinery."
+        }
+      },
+      "required": ["id", "name", "type", "dealer", "location", "hourlyRate", "imageUrl"]
+    },
     "CommodityPrice": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "CommodityPrice",
@@ -432,3 +468,5 @@
     }
   }
 }
+
+    
