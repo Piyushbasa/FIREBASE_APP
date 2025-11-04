@@ -3,15 +3,10 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, BarChart2, User, Wrench } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { navItems } from '@/lib/nav-items';
 
-const bottomNavItems = [
-  { href: '/', label: 'Home', icon: Home },
-  { href: '/market', label: 'Market', icon: BarChart2 },
-  { href: '/tools', label: 'Tools', icon: Wrench },
-  { href: '/profile', label: 'Profile', icon: User },
-];
+const bottomNavItems = navItems.filter(item => item.isMobile);
 
 export function BottomNavbar() {
   const pathname = usePathname();
