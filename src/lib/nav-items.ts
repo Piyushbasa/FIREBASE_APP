@@ -1,5 +1,4 @@
-
-import { BarChart2, Bot, GraduationCap, Home, MessageSquare, User, Wrench, Sprout } from 'lucide-react';
+import { BarChart2, Bot, GraduationCap, Home, Landmark, MessageSquare, User, Wrench } from 'lucide-react';
 
 export const navItems = [
   { href: '/', label: 'Home', icon: Home, isMobile: true, isDesktop: false },
@@ -9,4 +8,5 @@ export const navItems = [
   { href: '/assistant', label: 'Assistant', icon: Bot, isMobile: false, isDesktop: true },
   { href: '/learn', label: 'Learn', icon: GraduationCap, isMobile: false, isDesktop: true },
   { href: '/community', label: 'Forum', icon: MessageSquare, isMobile: false, isDesktop: true },
+  { href: '/land-review', label: 'Land Review', icon: Landmark, isMobile: false, isDesktop: true },
 ];
