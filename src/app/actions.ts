@@ -1,3 +1,4 @@
+
 'use server';
 
 import { suggestCrop, SuggestCropInput, SuggestCropOutput } from '@/ai/flows/suggest-crop';
@@ -97,5 +98,3 @@ export async function fetchFieldAnalysis(input: AnalyzeFieldInput): Promise<{ da
         return { data: null, error: `Failed to fetch field analysis: ${errorMessage}` };
     }
 }
-
-    
