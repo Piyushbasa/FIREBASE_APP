@@ -9,8 +9,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Leaf, Droplets, MapPin, Ruler, BrainCircuit, Check, Sparkles, Loader2 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useUser, useFirestore, useCollection } from '@/firebase';
-import { collection, query, orderBy } from 'firebase/firestore';
+import { useUser, useFirestore, useCollection, useDoc } from '@/firebase';
+import { collection, query, orderBy, doc } from 'firebase/firestore';
 import { useMemoFirebase } from '@/firebase/provider';
 import { NewFieldForm } from '@/components/land-review/NewFieldForm';
 import { FieldList, UserField } from '@/components/land-review/FieldList';
@@ -29,6 +29,9 @@ const generateNdviData = (base: number) => {
   ].map(d => ({ ...d, ndvi: parseFloat(d.ndvi.toFixed(2)) }));
 };
 
+type UserProfile = {
+  language?: string;
+};
 
 export default function FieldAnalysisPage() {
   const [selectedField, setSelectedField] = React.useState<UserField | null>(null);
@@ -37,6 +40,13 @@ export default function FieldAnalysisPage() {
   const { user, isUserLoading } = useUser();
   const firestore = useFirestore();
   const { toast } = useToast();
+
+  const userProfileRef = useMemoFirebase(() => {
+    if (!firestore || !user) return null;
+    return doc(firestore, 'userProfile', user.uid);
+  }, [firestore, user]);
+  
+  const { data: userProfile } = useDoc<UserProfile>(userProfileRef);
 
   const fieldsQuery = useMemoFirebase(() => {
     if (!firestore || !user) return null;
@@ -65,6 +75,7 @@ export default function FieldAnalysisPage() {
           fieldName: selectedField.fieldName,
           vegetationIndex: selectedField.vegetationIndex,
           moistureLevel: selectedField.moistureLevel,
+          language: userProfile?.language || 'English',
         });
         if (result.error) {
           toast({
@@ -79,7 +90,7 @@ export default function FieldAnalysisPage() {
       };
       getAnalysis();
     }
-  }, [selectedField, toast]);
+  }, [selectedField, toast, userProfile]);
 
   const ndviData = React.useMemo(() => 
     selectedField ? generateNdviData(selectedField.vegetationIndex) : [], 
@@ -257,5 +268,3 @@ export default function FieldAnalysisPage() {
     </div>
   );
 }
-
-    

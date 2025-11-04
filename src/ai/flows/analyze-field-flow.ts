@@ -14,6 +14,7 @@ const AnalyzeFieldInputSchema = z.object({
   fieldName: z.string().describe("The name of the user's field."),
   vegetationIndex: z.coerce.number().describe('The simulated Normalized Difference Vegetation Index (NDVI) of the field. Ranges from 0 to 1.'),
   moistureLevel: z.coerce.number().describe('The simulated soil moisture percentage.'),
+  language: z.string().optional().default('English').describe('The language for the response.'),
 });
 export type AnalyzeFieldInput = z.infer<typeof AnalyzeFieldInputSchema>;
 
@@ -33,6 +34,7 @@ const prompt = ai.definePrompt({
   input: { schema: AnalyzeFieldInputSchema },
   output: { schema: AnalyzeFieldOutputSchema },
   prompt: `You are an expert agronomist providing a quick analysis of a farmer's field based on remote sensor data.
+Your entire response MUST be in the user's preferred language: {{{language}}}.
 
 Field Name: {{{fieldName}}}
 Vegetation Index (NDVI): {{{vegetationIndex}}}
@@ -63,5 +65,3 @@ const analyzeFieldFlow = ai.defineFlow(
     return output!;
   }
 );
-
-    
