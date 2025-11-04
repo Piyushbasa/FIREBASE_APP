@@ -35,6 +35,30 @@
       "description": "A vibrant, healthy field of crops growing under a blue sky.",
       "imageUrl": "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "healthy field"
+    },
+    {
+      "id": "uva-map",
+      "description": "A satellite view of the Indian subcontinent, showing various data layers.",
+      "imageUrl": "https://images.unsplash.com/photo-1736258329532-be8e1684f2e2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxzYXRlbGxpdGUlMjBtYXB8ZW58MHx8fHwxNzYyMjE5MTIxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "satellite map"
+    },
+    {
+      "id": "vegetation-monitoring",
+      "description": "A lush yellow field of mustard crops under a clear sky.",
+      "imageUrl": "https://images.unsplash.com/photo-1421930866250-aa0594cea05c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxtdXN0YXJkJTIwZmllbGR8ZW58MHx8fHwxNzYyMjQ3ODc1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "mustard field"
+    },
+    {
+      "id": "drought-portal",
+      "description": "A color-coded map of India showing different levels of drought intensity.",
+      "imageUrl": "https://images.unsplash.com/photo-1678112472967-61aaf12b4f89?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxkcm91Z2h0JTIwbWFwfGVufDB8fHx8MTc2MjI0Nzg3NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "drought map"
+    },
+    {
+      "id": "renewable-energy",
+      "description": "Solar panels and wind turbines in a field, representing renewable energy sources.",
+      "imageUrl": "https://images.unsplash.com/photo-1660330589257-813305a4a383?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxzb2xhciUyMHBhbmVsc3xlbnwwfHx8fDE3NjIxNDIyMzl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "solar panels"
     }
   ]
 }

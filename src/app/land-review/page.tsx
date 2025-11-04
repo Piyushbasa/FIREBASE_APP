@@ -64,7 +64,7 @@ const generateNdviData = (base: number) => {
 };
 
 
-export default function LandReviewPage() {
+export default function FieldAnalysisPage() {
   const [selectedFieldId, setSelectedFieldId] = React.useState(fields[0].id);
   const [isLoading, setIsLoading] = React.useState(false);
   const [displayField, setDisplayField] = React.useState(fields[0]);
@@ -90,7 +90,7 @@ export default function LandReviewPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
-                Review Your Land
+                Field Analysis
                 <Select value={selectedFieldId} onValueChange={handleFieldChange}>
                   <SelectTrigger className="w-[250px]">
                     <SelectValue placeholder="Select a field" />
