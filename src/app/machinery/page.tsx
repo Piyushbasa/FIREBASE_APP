@@ -80,7 +80,7 @@ const allMachinery: UserMachinery[] = [
     imageHint: 'Swaraj tractor',
     features: ['Puddling', 'Hauling', 'Mowing'],
   },
-    {
+  {
     id: '7',
     name: 'New Holland 3630 TX',
     type: 'Tractor',
@@ -102,6 +102,50 @@ const allMachinery: UserMachinery[] = [
     imageHint: 'Kubota tractor',
     features: ['Front Loader Work', 'Tillage', 'Spraying'],
   },
+  {
+    id: '9',
+    name: 'John Deere W70',
+    type: 'Harvester',
+    dealer: 'Punjab Harvesters',
+    location: 'Amritsar, Punjab',
+    hourlyRate: 2800,
+    imageUrl: 'https://picsum.photos/seed/jdw70/600/400',
+    imageHint: 'John Deere harvester',
+    features: ['Paddy Harvesting', 'Wheat Harvesting'],
+  },
+  {
+    id: '10',
+    name: 'Preet 955',
+    type: 'Tractor',
+    dealer: 'Preet Agro Industries',
+    location: 'Patiala, Punjab',
+    hourlyRate: 810,
+    imageUrl: 'https://picsum.photos/seed/preet955/600/400',
+    imageHint: 'Preet tractor',
+    features: ['Cultivation', 'Sowing', 'Threshing'],
+  },
+  {
+    id: '11',
+    name: 'Farmtrac 60',
+    type: 'Tractor',
+    dealer: 'Escorts Agri Machinery',
+    location: 'Faridabad, Haryana',
+    hourlyRate: 790,
+    imageUrl: 'https://picsum.photos/seed/farmtrac60/600/400',
+    imageHint: 'Farmtrac tractor',
+    features: ['Plowing', 'Hauling', 'Rotavating'],
+  },
+  {
+    id: '12',
+    name: 'JCB 3DX Backhoe Loader',
+    type: 'Loader',
+    dealer: 'JCB Rentals India',
+    location: 'Mumbai, Maharashtra',
+    hourlyRate: 1500,
+    imageUrl: 'https://picsum.photos/seed/jcb3dx/600/400',
+    imageHint: 'JCB backhoe loader',
+    features: ['Digging', 'Loading', 'Excavation'],
+  }
 ];
 
 type UserProfile = {
