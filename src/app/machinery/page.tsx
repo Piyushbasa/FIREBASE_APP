@@ -433,6 +433,54 @@ const allMachinery: UserMachinery[] = [
     imageHint: 'disc harrow attachment',
     features: ['Ploughing', 'Soil breaking', 'Weed removal'],
     phone: '+919876543244'
+  },
+  {
+    id: '36',
+    name: 'Sonalika DI 745',
+    type: 'Tractor',
+    dealer: 'Jharkhand Tractors',
+    location: 'Jamshedpur, Jharkhand',
+    hourlyRate: 760,
+    imageUrl: 'https://picsum.photos/seed/sonalika745/600/400',
+    imageHint: 'Sonalika tractor',
+    features: ['Hauling', 'Cultivator', 'Rotavator'],
+    phone: '+919876543245'
+  },
+  {
+    id: '37',
+    name: 'Eicher 380',
+    type: 'Tractor',
+    dealer: 'Singh Motors',
+    location: 'Bokaro, Jharkhand',
+    hourlyRate: 740,
+    imageUrl: 'https://picsum.photos/seed/eicher380/600/400',
+    imageHint: 'Eicher tractor',
+    features: ['Fuel efficient', 'Puddling', 'Hauling'],
+    phone: '+919876543246'
+  },
+  {
+    id: '38',
+    name: 'Mahindra Sprayer',
+    type: 'Sprayer',
+    dealer: 'Agro Sales Corp',
+    location: 'Rourkela, Odisha',
+    hourlyRate: 420,
+    imageUrl: 'https://picsum.photos/seed/mahinsprayer/600/400',
+    imageHint: 'tractor mounted sprayer',
+    features: ['Boom sprayer', 'Orchard spraying', 'High coverage'],
+    phone: '+919876543247'
+  },
+  {
+    id: '39',
+    name: 'Gyanajyoti Harvester',
+    type: 'Harvester',
+    dealer: 'Gyanajyoti Agro',
+    location: 'Balasore, Odisha',
+    hourlyRate: 2700,
+    imageUrl: 'https://picsum.photos/seed/gyanajyoti/600/400',
+    imageHint: 'small harvester',
+    features: ['Paddy', 'Wheat', 'Soybean'],
+    phone: '+919876543248'
   }
 ];
 
@@ -516,5 +564,7 @@ export default function MachineryPage() {
     </div>
   );
 }
+
+    
 
     
