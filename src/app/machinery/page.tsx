@@ -373,6 +373,66 @@ const allMachinery: UserMachinery[] = [
     imageHint: 'walking tiller',
     features: ['Small farms', 'Easy maneuverability', 'Fuel efficient'],
     phone: '+919876543239'
+  },
+  {
+    id: '31',
+    name: 'Powertrac Euro 50',
+    type: 'Tractor',
+    dealer: 'Ranchi Tractors',
+    location: 'Ranchi, Jharkhand',
+    hourlyRate: 810,
+    imageUrl: 'https://picsum.photos/seed/powertrac50/600/400',
+    imageHint: 'Powertrac tractor',
+    features: ['Cultivation', 'Puddling', 'Hauling'],
+    phone: '+919876543240'
+  },
+  {
+    id: '32',
+    name: 'John Deere 3028EN',
+    type: 'Tractor',
+    dealer: 'Chotanagpur Agri',
+    location: 'Hazaribagh, Jharkhand',
+    hourlyRate: 700,
+    imageUrl: 'https://picsum.photos/seed/jd3028en/600/400',
+    imageHint: 'small John Deere tractor',
+    features: ['Orchard work', 'Inter-cultivation', 'Compact'],
+    phone: '+919876543241'
+  },
+  {
+    id: '33',
+    name: 'KisanKraft Tiller',
+    type: 'Tiller',
+    dealer: 'Jharkhand Farm Solutions',
+    location: 'Dhanbad, Jharkhand',
+    hourlyRate: 480,
+    imageUrl: 'https://picsum.photos/seed/kisankraft/600/400',
+    imageHint: 'power tiller small',
+    features: ['Weeding', 'Soil turning', 'Lightweight'],
+    phone: '+919876543242'
+  },
+  {
+    id: '34',
+    name: 'Captain 250 DI',
+    type: 'Tractor',
+    dealer: 'Odisha Farm Tech',
+    location: 'Sambalpur, Odisha',
+    hourlyRate: 680,
+    imageUrl: 'https://picsum.photos/seed/captain250/600/400',
+    imageHint: 'mini tractor',
+    features: ['Small plots', 'Spraying', 'Hauling'],
+    phone: '+919876543243'
+  },
+  {
+    id: '35',
+    name: 'Fieldking Tandem Disc Harrow',
+    type: 'Harrow',
+    dealer: 'Kalinga Agro',
+    location: 'Berhampur, Odisha',
+    hourlyRate: 400,
+    imageUrl: 'https://picsum.photos/seed/fieldking/600/400',
+    imageHint: 'disc harrow attachment',
+    features: ['Ploughing', 'Soil breaking', 'Weed removal'],
+    phone: '+919876543244'
   }
 ];
 
@@ -456,3 +516,5 @@ export default function MachineryPage() {
     </div>
   );
 }
+
+    
