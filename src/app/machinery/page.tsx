@@ -24,6 +24,7 @@ const allMachinery: UserMachinery[] = [
     imageUrl: 'https://picsum.photos/seed/jd5050d/600/400',
     imageHint: 'John Deere tractor',
     features: ['Tillage', 'Hauling', 'Seeding'],
+    phone: '+919876543210'
   },
   {
     id: '2',
@@ -35,6 +36,7 @@ const allMachinery: UserMachinery[] = [
     imageUrl: 'https://picsum.photos/seed/mahindra555/600/400',
     imageHint: 'Mahindra tractor',
     features: ['Plowing', 'Rotavating', 'Transport'],
+    phone: '+919876543211'
   },
   {
     id: '3',
@@ -46,6 +48,7 @@ const allMachinery: UserMachinery[] = [
     imageUrl: 'https://picsum.photos/seed/claas150/600/400',
     imageHint: 'combine harvester',
     features: ['Grain Harvesting', 'Threshing', 'Cleaning'],
+    phone: '+919876543212'
   },
   {
     id: '4',
@@ -57,6 +60,7 @@ const allMachinery: UserMachinery[] = [
     imageUrl: 'https://picsum.photos/seed/shaktiman/600/400',
     imageHint: 'rotary tiller',
     features: ['Soil Preparation', 'Weed Control'],
+    phone: '+919876543213'
   },
   {
     id: '5',
@@ -68,6 +72,7 @@ const allMachinery: UserMachinery[] = [
     imageUrl: 'https://picsum.photos/seed/gaspardo/600/400',
     imageHint: 'seed drill',
     features: ['Precision Sowing', 'Fertilizer Drilling'],
+    phone: '+919876543214'
   },
   {
     id: '6',
@@ -79,6 +84,7 @@ const allMachinery: UserMachinery[] = [
     imageUrl: 'https://picsum.photos/seed/swaraj744/600/400',
     imageHint: 'Swaraj tractor',
     features: ['Puddling', 'Hauling', 'Mowing'],
+    phone: '+919876543215'
   },
   {
     id: '7',
@@ -90,6 +96,7 @@ const allMachinery: UserMachinery[] = [
     imageUrl: 'https://picsum.photos/seed/newholland/600/400',
     imageHint: 'New Holland tractor',
     features: ['Heavy Haulage', 'Plowing', 'Baling'],
+    phone: '+919876543216'
   },
   {
     id: '8',
@@ -101,6 +108,7 @@ const allMachinery: UserMachinery[] = [
     imageUrl: 'https://picsum.photos/seed/kubota/600/400',
     imageHint: 'Kubota tractor',
     features: ['Front Loader Work', 'Tillage', 'Spraying'],
+    phone: '+919876543217'
   },
   {
     id: '9',
@@ -112,6 +120,7 @@ const allMachinery: UserMachinery[] = [
     imageUrl: 'https://picsum.photos/seed/jdw70/600/400',
     imageHint: 'John Deere harvester',
     features: ['Paddy Harvesting', 'Wheat Harvesting'],
+    phone: '+919876543218'
   },
   {
     id: '10',
@@ -123,6 +132,7 @@ const allMachinery: UserMachinery[] = [
     imageUrl: 'https://picsum.photos/seed/preet955/600/400',
     imageHint: 'Preet tractor',
     features: ['Cultivation', 'Sowing', 'Threshing'],
+    phone: '+919876543219'
   },
   {
     id: '11',
@@ -134,6 +144,7 @@ const allMachinery: UserMachinery[] = [
     imageUrl: 'https://picsum.photos/seed/farmtrac60/600/400',
     imageHint: 'Farmtrac tractor',
     features: ['Plowing', 'Hauling', 'Rotavating'],
+    phone: '+919876543220'
   },
   {
     id: '12',
@@ -145,6 +156,7 @@ const allMachinery: UserMachinery[] = [
     imageUrl: 'https://picsum.photos/seed/jcb3dx/600/400',
     imageHint: 'JCB backhoe loader',
     features: ['Digging', 'Loading', 'Excavation'],
+    phone: '+919876543221'
   }
 ];
 
@@ -228,5 +240,3 @@ export default function MachineryPage() {
     </div>
   );
 }
-
-    

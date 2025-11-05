@@ -2,6 +2,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { MapPin, Phone } from 'lucide-react';
@@ -18,6 +19,7 @@ export type UserMachinery = {
   imageUrl: string;
   imageHint: string;
   features: string[];
+  phone: string;
 };
 
 interface MachineryListProps {
@@ -69,15 +71,15 @@ export function MachineryList({ machinery }: MachineryListProps) {
               <p className="text-lg font-bold">₹{item.hourlyRate}</p>
               <p className="text-xs text-muted-foreground">per hour</p>
             </div>
-            <Button>
-              <Phone className="w-4 h-4 mr-2" />
-              Contact Dealer
-            </Button>
+            <Link href={`tel:${item.phone}`}>
+              <Button>
+                <Phone className="w-4 h-4 mr-2" />
+                Contact Dealer
+              </Button>
+            </Link>
           </CardFooter>
         </Card>
       ))}
     </div>
   );
 }
-
-    
