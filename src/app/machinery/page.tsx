@@ -58,7 +58,7 @@ const allMachinery: UserMachinery[] = [
     location: 'Nashik, Maharashtra',
     hourlyRate: 500,
     imageUrl: 'https://picsum.photos/seed/shaktiman/600/400',
-    imageHint: 'rotary tiller',
+    imageHint: 'rotary tiller attachment',
     features: ['Soil Preparation', 'Weed Control'],
     phone: '+919876543213'
   },
@@ -70,7 +70,7 @@ const allMachinery: UserMachinery[] = [
     location: 'Hisar, Haryana',
     hourlyRate: 600,
     imageUrl: 'https://picsum.photos/seed/gaspardo/600/400',
-    imageHint: 'seed drill',
+    imageHint: 'agricultural seed drill',
     features: ['Precision Sowing', 'Fertilizer Drilling'],
     phone: '+919876543214'
   },
@@ -82,7 +82,7 @@ const allMachinery: UserMachinery[] = [
     location: 'Cuttack, Odisha',
     hourlyRate: 780,
     imageUrl: 'https://picsum.photos/seed/swaraj744/600/400',
-    imageHint: 'Swaraj tractor',
+    imageHint: 'Swaraj tractor farm',
     features: ['Puddling', 'Hauling', 'Mowing'],
     phone: '+919876543215'
   },
@@ -106,7 +106,7 @@ const allMachinery: UserMachinery[] = [
     location: 'Bengaluru, Karnataka',
     hourlyRate: 850,
     imageUrl: 'https://picsum.photos/seed/kubota/600/400',
-    imageHint: 'Kubota tractor',
+    imageHint: 'Kubota tractor field',
     features: ['Front Loader Work', 'Tillage', 'Spraying'],
     phone: '+919876543217'
   },
@@ -130,7 +130,7 @@ const allMachinery: UserMachinery[] = [
     location: 'Patiala, Punjab',
     hourlyRate: 810,
     imageUrl: 'https://picsum.photos/seed/preet955/600/400',
-    imageHint: 'Preet tractor',
+    imageHint: 'Preet tractor agriculture',
     features: ['Cultivation', 'Sowing', 'Threshing'],
     phone: '+919876543219'
   },
@@ -142,7 +142,7 @@ const allMachinery: UserMachinery[] = [
     location: 'Faridabad, Haryana',
     hourlyRate: 790,
     imageUrl: 'https://picsum.photos/seed/farmtrac60/600/400',
-    imageHint: 'Farmtrac tractor',
+    imageHint: 'Farmtrac tractor field',
     features: ['Plowing', 'Hauling', 'Rotavating'],
     phone: '+919876543220'
   },
@@ -166,7 +166,7 @@ const allMachinery: UserMachinery[] = [
     location: 'Lucknow, Uttar Pradesh',
     hourlyRate: 770,
     imageUrl: 'https://picsum.photos/seed/solis5015/600/400',
-    imageHint: 'Solis tractor',
+    imageHint: 'Solis tractor farm',
     features: ['Tillage', 'Spraying', 'Hauling'],
     phone: '+919876543222'
   },
@@ -202,7 +202,7 @@ const allMachinery: UserMachinery[] = [
     location: 'Bhatinda, Punjab',
     hourlyRate: 3000,
     imageUrl: 'https://picsum.photos/seed/kartar4000/600/400',
-    imageHint: 'Kartar harvester',
+    imageHint: 'Kartar combine harvester',
     features: ['Multi-crop harvesting', 'GPS enabled', 'High capacity'],
     phone: '+919876543225'
   },
@@ -214,7 +214,7 @@ const allMachinery: UserMachinery[] = [
     location: 'Ahmedabad, Gujarat',
     hourlyRate: 450,
     imageUrl: 'https://picsum.photos/seed/lemken/600/400',
-    imageHint: 'reversible plough',
+    imageHint: 'reversible plough attachment',
     features: ['Deep Ploughing', 'Reversible', 'Heavy-duty'],
     phone: '+919876543226'
   },
@@ -226,7 +226,7 @@ const allMachinery: UserMachinery[] = [
     location: 'Jalgaon, Maharashtra',
     hourlyRate: 1200,
     imageUrl: 'https://picsum.photos/seed/jaindrip/600/400',
-    imageHint: 'drip irrigation system',
+    imageHint: 'drip irrigation field',
     features: ['Water saving', 'Automated', 'Fertigation capable'],
     phone: '+919876543227'
   },
@@ -238,7 +238,7 @@ const allMachinery: UserMachinery[] = [
     location: 'Coimbatore, Tamil Nadu',
     hourlyRate: 550,
     imageUrl: 'https://picsum.photos/seed/vst130/600/400',
-    imageHint: 'power tiller',
+    imageHint: 'power tiller farm',
     features: ['Wetland Puddling', 'Dryland Cultivation', 'Compact'],
     phone: '+919876543228'
   },
@@ -262,7 +262,7 @@ const allMachinery: UserMachinery[] = [
     location: 'Jodhpur, Rajasthan',
     hourlyRate: 720,
     imageUrl: 'https://picsum.photos/seed/balwan500/600/400',
-    imageHint: 'Force tractor',
+    imageHint: 'Force Motors tractor',
     features: ['Fuel Efficient', 'Hauling', 'Cultivation'],
     phone: '+919876543230'
   },
@@ -286,7 +286,7 @@ const allMachinery: UserMachinery[] = [
     location: 'Chennai, Tamil Nadu',
     hourlyRate: 830,
     imageUrl: 'https://picsum.photos/seed/tafe5900/600/400',
-    imageHint: 'TAFE tractor',
+    imageHint: 'TAFE tractor red',
     features: ['Puddling Specialist', 'Rotavating', 'Heavy Duty'],
     phone: '+919876543232'
   },
@@ -298,7 +298,7 @@ const allMachinery: UserMachinery[] = [
     location: 'Ambala, Haryana',
     hourlyRate: 2600,
     imageUrl: 'https://picsum.photos/seed/dasmesh912/600/400',
-    imageHint: 'Dasmesh harvester',
+    imageHint: 'Dasmesh combine harvester',
     features: ['Wheat harvesting', 'Paddy harvesting', 'Reliable'],
     phone: '+919876543233'
   },
@@ -322,7 +322,7 @@ const allMachinery: UserMachinery[] = [
     location: 'Guwahati, Assam',
     hourlyRate: 400,
     imageUrl: 'https://picsum.photos/seed/agrisprayer/600/400',
-    imageHint: 'power sprayer farm',
+    imageHint: 'agricultural power sprayer',
     features: ['Pesticide Spraying', 'Foliar application', 'High pressure'],
     phone: '+919876543235'
   },
@@ -346,7 +346,7 @@ const allMachinery: UserMachinery[] = [
     location: 'Kanpur, Uttar Pradesh',
     hourlyRate: 520,
     imageUrl: 'https://picsum.photos/seed/landforce/600/400',
-    imageHint: 'tractor rotavator',
+    imageHint: 'tractor rotavator attachment',
     features: ['Seedbed preparation', 'Heavy duty', 'Multi-speed'],
     phone: '+919876543237'
   },
@@ -370,7 +370,7 @@ const allMachinery: UserMachinery[] = [
     location: 'Kolkata, West Bengal',
     hourlyRate: 500,
     imageUrl: 'https://picsum.photos/seed/shrachi/600/400',
-    imageHint: 'walking tiller',
+    imageHint: 'walking power tiller',
     features: ['Small farms', 'Easy maneuverability', 'Fuel efficient'],
     phone: '+919876543239'
   },
@@ -382,7 +382,7 @@ const allMachinery: UserMachinery[] = [
     location: 'Ranchi, Jharkhand',
     hourlyRate: 810,
     imageUrl: 'https://picsum.photos/seed/powertrac50/600/400',
-    imageHint: 'Powertrac tractor',
+    imageHint: 'Powertrac tractor blue',
     features: ['Cultivation', 'Puddling', 'Hauling'],
     phone: '+919876543240'
   },
@@ -406,7 +406,7 @@ const allMachinery: UserMachinery[] = [
     location: 'Dhanbad, Jharkhand',
     hourlyRate: 480,
     imageUrl: 'https://picsum.photos/seed/kisankraft/600/400',
-    imageHint: 'power tiller small',
+    imageHint: 'small power tiller',
     features: ['Weeding', 'Soil turning', 'Lightweight'],
     phone: '+919876543242'
   },
@@ -418,7 +418,7 @@ const allMachinery: UserMachinery[] = [
     location: 'Sambalpur, Odisha',
     hourlyRate: 680,
     imageUrl: 'https://picsum.photos/seed/captain250/600/400',
-    imageHint: 'mini tractor',
+    imageHint: 'red mini tractor',
     features: ['Small plots', 'Spraying', 'Hauling'],
     phone: '+919876543243'
   },
@@ -430,7 +430,7 @@ const allMachinery: UserMachinery[] = [
     location: 'Berhampur, Odisha',
     hourlyRate: 400,
     imageUrl: 'https://picsum.photos/seed/fieldking/600/400',
-    imageHint: 'disc harrow attachment',
+    imageHint: 'disc harrow farm',
     features: ['Ploughing', 'Soil breaking', 'Weed removal'],
     phone: '+919876543244'
   },
@@ -442,7 +442,7 @@ const allMachinery: UserMachinery[] = [
     location: 'Jamshedpur, Jharkhand',
     hourlyRate: 760,
     imageUrl: 'https://picsum.photos/seed/sonalika745/600/400',
-    imageHint: 'Sonalika tractor',
+    imageHint: 'Sonalika tractor blue',
     features: ['Hauling', 'Cultivator', 'Rotavator'],
     phone: '+919876543245'
   },
@@ -454,7 +454,7 @@ const allMachinery: UserMachinery[] = [
     location: 'Bokaro, Jharkhand',
     hourlyRate: 740,
     imageUrl: 'https://picsum.photos/seed/eicher380/600/400',
-    imageHint: 'Eicher tractor',
+    imageHint: 'Eicher tractor red',
     features: ['Fuel efficient', 'Puddling', 'Hauling'],
     phone: '+919876543246'
   },
@@ -478,7 +478,7 @@ const allMachinery: UserMachinery[] = [
     location: 'Balasore, Odisha',
     hourlyRate: 2700,
     imageUrl: 'https://picsum.photos/seed/gyanajyoti/600/400',
-    imageHint: 'small harvester',
+    imageHint: 'small combine harvester',
     features: ['Paddy', 'Wheat', 'Soybean'],
     phone: '+919876543248'
   }
@@ -564,7 +564,3 @@ export default function MachineryPage() {
     </div>
   );
 }
-
-    
-
-    
