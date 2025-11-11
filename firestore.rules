@@ -8,7 +8,6 @@
  * Data Structure:
  * - `/posts/{postId}`: Community forum posts, readable by all, writable only by authenticated authors.
  * - `/userProfile/{userId}`: User profiles, private to the owner.
- * - `/userProfile/{userId}/fields/{fieldId}`: User-specific fields, private to the owner.
  * - `/userProfile/{userId}/transactions/{transactionId}`: User's financial records, private to the owner.
  * - `/userProfile/{userId}/traces/{traceId}`: User's product traceability logs, private to the owner.
  *
@@ -20,7 +19,6 @@
  *
  * Denormalization for Authorization:
  * - Posts denormalize `authorId` onto each post document to simplify ownership checks.
- * - UserField documents denormalize `userId` for the same purpose.
  * - Transaction documents denormalize `userId` for the same purpose.
  * - ProductTrace documents denormalize `userId` for the same purpose.
  */
@@ -72,16 +70,6 @@ service cloud.firestore {
       allow create: if isOwner(userId);
       allow update: if isExistingOwner(userId);
       allow delete: if isExistingOwner(userId);
-
-      /**
-       * @description Security rules for the 'fields' subcollection.
-       * @path /userProfile/{userId}/fields/{fieldId}
-       */
-      match /fields/{fieldId} {
-        allow list, get: if isOwner(userId);
-        allow create: if isOwner(userId) && request.resource.data.userId == userId;
-        allow update, delete: if isExistingOwner(userId) && resource.data.userId == userId;
-      }
 
       /**
        * @description Security rules for the 'transactions' subcollection.

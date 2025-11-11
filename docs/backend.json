@@ -83,44 +83,6 @@
       },
       "required": ["email"]
     },
-    "UserField": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "UserField",
-      "type": "object",
-      "description": "Represents a user's agricultural field.",
-      "properties": {
-        "userId": {
-          "type": "string",
-          "description": "The UID of the user who owns the field."
-        },
-        "fieldName": {
-          "type": "string",
-          "description": "The name of the field."
-        },
-        "fieldSize": {
-          "type": "number",
-          "description": "The size of the field in acres."
-        },
-        "imageUrl": {
-            "type": "string",
-            "description": "URL of a representative image for the field.",
-            "format": "uri"
-        },
-        "vegetationIndex": {
-            "type": "number",
-            "description": "A simulated NDVI value for crop health."
-        },
-        "moistureLevel": {
-            "type": "number",
-            "description": "A simulated soil moisture percentage."
-        },
-        "createdAt": {
-          "type": "object",
-          "description": "The timestamp when the field was added."
-        }
-      },
-      "required": ["userId", "fieldName", "fieldSize", "imageUrl", "vegetationIndex", "moistureLevel", "createdAt"]
-    },
     "UserMachinery": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "UserMachinery",
@@ -504,12 +466,6 @@
             },
             "description": "Stores public profile information for a user, such as their location.",
             "collections": {
-              "fields": {
-                "schema": {
-                  "$ref": "#/entities/UserField"
-                },
-                "description": "Stores the fields belonging to a specific user."
-              },
                "transactions": {
                 "schema": {
                   "$ref": "#/entities/Transaction"

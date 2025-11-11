@@ -8,7 +8,6 @@ import { getCommodityPrices, CommodityPricesInput, CommodityPricesOutput } from 
 import { diagnosePlant, DiagnosePlantInput, DiagnosePlantOutput } from '@/ai/flows/diagnose-plant-flow';
 import { getPesticideInfo, PesticideInfoInput, PesticideInfoOutput } from '@/ai/flows/pesticide-info-flow';
 import { getQuizQuestion, QuizQuestionInput, QuizQuestionOutput } from '@/ai/flows/quiz-flow';
-import { analyzeField, AnalyzeFieldInput, AnalyzeFieldOutput } from '@/ai/flows/analyze-field-flow';
 import { getCarbonSequestration } from '@/ai/flows/carbon-tracking-flow';
 import { analyzeSatelliteImage } from '@/ai/flows/analyze-satellite-image-flow';
 import type { CarbonSequestrationInput, CarbonSequestrationOutput } from '@/ai/schemas/carbon-tracking-schema';
@@ -55,7 +54,7 @@ export async function fetchCommodityPrices(input: CommodityPricesInput): Promise
     } catch (e) {
         console.error(e);
         const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
-        return { data: null, error: `Failed to fetch commodity prices: ${errorMessage}` };
+    return { data: null, error: `Failed to fetch commodity prices: ${errorMessage}` };
     }
 }
 
@@ -89,17 +88,6 @@ export async function fetchQuizQuestion(input: QuizQuestionInput): Promise<{ dat
         console.error(e);
         const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
         return { data: null, error: `Failed to fetch quiz question: ${errorMessage}` };
-    }
-}
-
-export async function fetchFieldAnalysis(input: AnalyzeFieldInput): Promise<{ data: AnalyzeFieldOutput | null; error: string | null }> {
-    try {
-        const result = await analyzeField(input);
-        return { data: result, error: null };
-    } catch (e) {
-        console.error(e);
-        const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
-        return { data: null, error: `Failed to fetch field analysis: ${errorMessage}` };
     }
 }
 
