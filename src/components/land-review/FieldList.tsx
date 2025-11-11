@@ -76,5 +76,3 @@ export function FieldList({ fields, isLoading, selectedField, onSelectField }: F
     </ScrollArea>
   );
 }
-
-    

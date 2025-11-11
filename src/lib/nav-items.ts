@@ -1,3 +1,4 @@
+
 import { BarChart2, Bot, GraduationCap, Home, Landmark, MessageSquare, User, Wrench, Satellite, Wallet, PackageSearch } from 'lucide-react';
 import { Tractor } from '@/components/icons/Tractor';
 
@@ -15,5 +16,3 @@ export const navItems = [
   { href: '/learn', label: 'Learn', icon: GraduationCap, isMobile: false, isDesktop: true },
   { href: '/community', label: 'Forum', icon: MessageSquare, isMobile: false, isDesktop: true },
 ];
-
-    
