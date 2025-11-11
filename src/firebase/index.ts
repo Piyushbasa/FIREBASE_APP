@@ -4,7 +4,9 @@
 import { firebaseConfig } from '@/firebase/config';
 import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore'
+import { getFirestore } from 'firebase/firestore';
+import { getAnalytics } from "firebase/analytics";
+import { getMessaging } from "firebase/messaging";
 
 // IMPORTANT: DO NOT MODIFY THIS FUNCTION
 export function initializeFirebase() {
@@ -34,10 +36,14 @@ export function initializeFirebase() {
 }
 
 export function getSdks(firebaseApp: FirebaseApp) {
+  // Check if we are running on the client side before initializing client-side services
+  const isClient = typeof window !== 'undefined';
   return {
     firebaseApp,
     auth: getAuth(firebaseApp),
-    firestore: getFirestore(firebaseApp)
+    firestore: getFirestore(firebaseApp),
+    analytics: isClient ? getAnalytics(firebaseApp) : null,
+    messaging: isClient ? getMessaging(firebaseApp) : null,
   };
 }
 
