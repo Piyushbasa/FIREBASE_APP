@@ -10,7 +10,7 @@ export const navItems = [
   { href: '/profile', label: 'Profile', icon: User, isMobile: true, isDesktop: true },
   { href: '/machinery', label: 'Machinery', icon: Tractor, isMobile: false, isDesktop: true },
   { href: '/satellite', label: 'Satellite', icon: Satellite, isMobile: false, isDesktop: true },
-  { href: '/earth-observer', label: 'Earth Observer', icon: Globe, isMobile: true, isDesktop: true },
+  { href: '/earth-observer', label: 'Earth Observer', icon: Globe, isMobile: false, isDesktop: true },
   { href: '/land-review', label: 'Field Analysis', icon: Landmark, isMobile: false, isDesktop: true },
   { href: '/traceability', label: 'Traceability', icon: PackageSearch, isMobile: false, isDesktop: true },
   { href: '/assistant', label: 'Assistant', icon: Bot, isMobile: false, isDesktop: true },
