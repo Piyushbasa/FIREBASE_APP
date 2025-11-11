@@ -9,7 +9,10 @@ import { diagnosePlant, DiagnosePlantInput, DiagnosePlantOutput } from '@/ai/flo
 import { getPesticideInfo, PesticideInfoInput, PesticideInfoOutput } from '@/ai/flows/pesticide-info-flow';
 import { getQuizQuestion, QuizQuestionInput, QuizQuestionOutput } from '@/ai/flows/quiz-flow';
 import { analyzeField, AnalyzeFieldInput, AnalyzeFieldOutput } from '@/ai/flows/analyze-field-flow';
-import { getCarbonSequestration, CarbonSequestrationInput, CarbonSequestrationOutput } from '@/ai/flows/carbon-tracking-flow';
+import { getCarbonSequestration } from '@/ai/flows/carbon-tracking-flow';
+import { analyzeSatelliteImage } from '@/ai/flows/analyze-satellite-image-flow';
+import type { CarbonSequestrationInput, CarbonSequestrationOutput } from '@/ai/schemas/carbon-tracking-schema';
+import type { AnalyzeSatelliteImageInput, AnalyzeSatelliteImageOutput } from '@/ai/schemas/analyze-satellite-image-schema';
 
 
 export async function fetchCropSuggestion(input: SuggestCropInput): Promise<{ data: SuggestCropOutput | null; error: string | null }> {
@@ -40,7 +43,7 @@ export async function askAssistant(input: AssistantInput): Promise<{ data: Assis
         return { data: result, error: null };
     } catch (e) {
         console.error(e);
-        const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
+        const errorMessage = e instanceof "An unknown error occurred." ? e.message : 'An unknown error occurred.';
         return { data: null, error: `Failed to ask assistant: ${errorMessage}` };
     }
 }
@@ -109,4 +112,15 @@ export async function fetchCarbonSequestration(input: CarbonSequestrationInput):
         const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
         return { data: null, error: `Failed to fetch carbon sequestration: ${errorMessage}` };
     }
+}
+
+export async function fetchSatelliteImageAnalysis(input: AnalyzeSatelliteImageInput): Promise<{ data: AnalyzeSatelliteImageOutput | null; error: string | null }> {
+  try {
+    const result = await analyzeSatelliteImage(input);
+    return { data: result, error: null };
+  } catch (e) {
+    console.error(e);
+    const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
+    return { data: null, error: `Failed to analyze satellite image: ${errorMessage}` };
+  }
 }
