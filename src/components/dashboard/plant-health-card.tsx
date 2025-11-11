@@ -222,7 +222,7 @@ export function PlantHealthCard({ userLanguage }: { userLanguage?: string; }) {
                           <h4 className="font-semibold text-primary">Diagnosis:</h4>
                           <p className="text-sm text-muted-foreground">{diagnosisResult.diagnosis.diagnosis}</p>
                        </div>
-                       {!diagnosisResult.diagnosis.isHealthy && (
+                       {!diagnosisResult.diagnosis.isHealthy && diagnosisResult.diagnosis.remedy && (
                          <div className="space-y-1">
                             <h4 className="font-semibold text-primary">Suggested Remedy:</h4>
                             <p className="text-sm text-muted-foreground">{diagnosisResult.diagnosis.remedy}</p>
@@ -288,7 +288,7 @@ export function PlantHealthCard({ userLanguage }: { userLanguage?: string; }) {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsCameraOpen(false)}>Cancel</Button>
-            <Button onClick={handleCapture} disabled={hasCameraPermission === false}>
+            <Button onClick={handleCapture} disabled={hasCameraPermission !== true}>
               <Camera className="mr-2" />
               Capture Photo
             </Button>
@@ -298,5 +298,3 @@ export function PlantHealthCard({ userLanguage }: { userLanguage?: string; }) {
     </>
   );
 }
-
-    
