@@ -1,0 +1,72 @@
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * @description Defines if the user is signed in
+     * @path N/A
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * @description Defines if the user owns the resource
+     * @path N/A
+     */
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    /**
+     * @description Defines if the user owns the resource and the resource exists
+     * @path N/A
+     */
+    function isExistingOwner(userId) {
+        return isOwner(userId) && resource != null;
+    }
+
+    /**
+     * @description Security rules for the 'posts' collection.
+     * @path /posts/{postId}
+     */
+    match /posts/{postId} {
+      allow get, list: if true;
+      allow create: if isSignedIn() && request.resource.data.authorId == request.auth.uid;
+      allow update, delete: if isExistingOwner(resource.data.authorId);
+    }
+
+    /**
+     * @description Security rules for the 'userProfile' collection and its subcollections.
+     * @path /userProfile/{userId}
+     */
+    match /userProfile/{userId} {
+      allow get: if isOwner(userId);
+      allow list: if false;
+      allow create: if isOwner(userId);
+      allow update: if isExistingOwner(userId);
+      allow delete: if isExistingOwner(userId);
+
+      /**
+       * @description Security rules for the 'transactions' subcollection.
+       * @path /userProfile/{userId}/transactions/{transactionId}
+       */
+       match /transactions/{transactionId} {
+        allow list, get: if isOwner(userId);
+        allow create: if isOwner(userId) && request.resource.data.userId == userId;
+        allow update, delete: if isExistingOwner(userId) && resource.data.userId == userId;
+       }
+
+      /**
+       * @description Security rules for the 'traces' subcollection.
+       * @path /userProfile/{userId}/traces/{traceId}
+       */
+       match /traces/{traceId} {
+        allow list, get: if isOwner(userId);
+        allow create: if isOwner(userId) && request.resource.data.userId == userId;
+        allow update, delete: if isExistingOwner(userId) && resource.data.userId == userId;
+       }
+    }
+  }
+}
