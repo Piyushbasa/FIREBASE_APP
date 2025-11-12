@@ -1,8 +1,8 @@
 
 'use client';
-import { useState } from 'react';
-import { Bot, Loader2, Send, User } from 'lucide-react';
-import { askAssistant } from '@/app/actions';
+import { useState, useRef } from 'react';
+import { Bot, Loader2, Send, User, Volume2, Play, Pause } from 'lucide-react';
+import { askAssistant, fetchAudioForText } from '@/app/actions';
 import { Header } from '@/components/dashboard/header';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -23,6 +23,70 @@ type Message = {
 type UserProfile = {
   language?: string;
 };
+
+function AssistantMessage({ message }: { message: Message }) {
+  const { toast } = useToast();
+  const [isSynthesizing, setIsSynthesizing] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const handleReadAloud = async () => {
+    if (isSynthesizing) return;
+    
+    // If audio is already loaded and just paused, play it.
+    if (audioRef.current && !isPlaying) {
+      audioRef.current.play();
+      setIsPlaying(true);
+      return;
+    }
+    
+    // If it's currently playing, pause it.
+    if (audioRef.current && isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+      return;
+    }
+
+    setIsSynthesizing(true);
+    const result = await fetchAudioForText({ text: message.content });
+    if (result.error) {
+      toast({
+        variant: 'destructive',
+        title: 'Audio Failed',
+        description: result.error,
+      });
+    } else if (result.data) {
+      audioRef.current = new Audio(result.data.audioDataUri);
+      audioRef.current.play();
+      setIsPlaying(true);
+      audioRef.current.onended = () => setIsPlaying(false);
+    }
+    setIsSynthesizing(false);
+  };
+
+  return (
+    <div className="flex items-start gap-3 justify-start">
+      <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground">
+        <Bot size={20} />
+      </div>
+      <div className="bg-muted rounded-lg p-3 max-w-[80%]">
+          <p className="text-sm">{message.content}</p>
+          <div className="flex justify-end mt-2">
+            <Button onClick={handleReadAloud} size="sm" variant="ghost" className="h-6 px-2">
+              {isSynthesizing ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : isPlaying ? (
+                <Pause className="w-4 h-4" />
+              ) : (
+                <Volume2 className="w-4 h-4" />
+              )}
+               <span className="sr-only">Read aloud</span>
+            </Button>
+          </div>
+      </div>
+    </div>
+  );
+}
 
 export default function AssistantPage() {
   const { toast } = useToast();
@@ -90,34 +154,21 @@ export default function AssistantPage() {
                   </div>
                 )}
                 {messages.map((message, index) => (
-                  <div
-                    key={index}
-                    className={cn(
-                      'flex items-start gap-3',
-                      message.role === 'user' ? 'justify-end' : 'justify-start'
-                    )}
-                  >
-                    {message.role === 'assistant' && (
-                      <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground">
-                        <Bot size={20} />
-                      </div>
-                    )}
+                  message.role === 'assistant' ? (
+                    <AssistantMessage key={index} message={message} />
+                  ) : (
                     <div
-                      className={cn(
-                        'rounded-lg p-3 max-w-[80%]',
-                        message.role === 'user'
-                          ? 'bg-primary text-primary-foreground'
-                          : 'bg-muted'
-                      )}
+                      key={index}
+                      className='flex items-start gap-3 justify-end'
                     >
-                      <p className="text-sm">{message.content}</p>
-                    </div>
-                     {message.role === 'user' && (
-                      <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-secondary-foreground">
-                        <User size={20} />
+                      <div className='bg-primary text-primary-foreground rounded-lg p-3 max-w-[80%]'>
+                        <p className="text-sm">{message.content}</p>
                       </div>
-                    )}
-                  </div>
+                       <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-secondary-foreground">
+                          <User size={20} />
+                        </div>
+                    </div>
+                  )
                 ))}
                  {isLoading && (
                     <div className="flex items-start gap-3 justify-start">

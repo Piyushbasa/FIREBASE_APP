@@ -10,6 +10,7 @@ import { getPesticideInfo, PesticideInfoInput, PesticideInfoOutput } from '@/ai/
 import { getQuizQuestion, QuizQuestionInput, QuizQuestionOutput } from '@/ai/flows/quiz-flow';
 import { getCarbonSequestration } from '@/ai/flows/carbon-tracking-flow';
 import { analyzeSatelliteImage } from '@/ai/flows/analyze-satellite-image-flow';
+import { textToSpeech, TextToSpeechInput, TextToSpeechOutput } from '@/ai/flows/text-to-speech-flow';
 import type { CarbonSequestrationInput, CarbonSequestrationOutput } from '@/ai/schemas/carbon-tracking-schema';
 import type { AnalyzeSatelliteImageInput, AnalyzeSatelliteImageOutput } from '@/ai/schemas/analyze-satellite-image-schema';
 
@@ -113,4 +114,13 @@ export async function fetchSatelliteImageAnalysis(input: AnalyzeSatelliteImageIn
   }
 }
 
-    
+export async function fetchAudioForText(input: TextToSpeechInput): Promise<{ data: TextToSpeechOutput | null; error: string | null }> {
+  try {
+    const result = await textToSpeech(input);
+    return { data: result, error: null };
+  } catch (e) {
+    console.error(e);
+    const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
+    return { data: null, error: `Failed to synthesize audio: ${errorMessage}` };
+  }
+}
