@@ -13,6 +13,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LanguageSelector } from '@/components/dashboard/language-selector';
 import { navItems } from '@/lib/nav-items';
+import { ConnectionStatusIndicator } from '@/components/dashboard/ConnectionStatusIndicator';
 
 
 const backgroundImage = "https://images.unsplash.com/photo-1492944548512-5a90181354d5?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
@@ -91,7 +92,8 @@ export default function RootLayout({
                     />
                     <div className="md:flex">
                         <AppSidebar />
-                         <SidebarInset className="relative pb-24 md:pb-4">
+                         <SidebarInset className="relative pt-12 md:pt-4 pb-24 md:pb-4">
+                            <ConnectionStatusIndicator />
                             {children}
                         </SidebarInset>
                     </div>
