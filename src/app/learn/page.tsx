@@ -16,6 +16,7 @@ import type { QuizQuestionOutput } from '@/ai/flows/quiz-flow';
 import { useUser, useDoc, useFirestore } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { useMemoFirebase } from '@/firebase/provider';
+import { OfflineGuide } from '@/components/dashboard/OfflineGuide';
 
 const learningTopics = [
     {
@@ -109,6 +110,8 @@ export default function LearnPage() {
       <main className="flex-1 p-4">
         <div className="mx-auto max-w-7xl space-y-6">
           
+          <OfflineGuide />
+
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2"><Lightbulb className="text-primary"/>AI-Powered Quiz</CardTitle>
