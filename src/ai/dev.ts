@@ -13,5 +13,3 @@ import '@/ai/flows/quiz-flow.ts';
 import '@/ai/flows/carbon-tracking-flow.ts';
 import '@/ai/flows/analyze-satellite-image-flow.ts';
 import '@/ai/flows/text-to-speech-flow.ts';
-
-    

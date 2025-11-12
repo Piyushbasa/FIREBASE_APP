@@ -252,4 +252,3 @@ export function OfflineGuide() {
         </Card>
     );
 }
-
