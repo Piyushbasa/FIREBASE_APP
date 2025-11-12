@@ -14,5 +14,3 @@ export const CarbonSequestrationOutputSchema = z.object({
   analysis: z.string().describe('A brief, encouraging analysis of the carbon impact and a suggestion for improvement. (1-2 sentences)'),
 });
 export type CarbonSequestrationOutput = z.infer<typeof CarbonSequestrationOutputSchema>;
-
-    

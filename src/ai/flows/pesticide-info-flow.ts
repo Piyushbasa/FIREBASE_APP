@@ -75,5 +75,3 @@ const pesticideInfoFlow = ai.defineFlow(
     return output!;
   }
 );
-
-    

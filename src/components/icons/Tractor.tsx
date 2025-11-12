@@ -1,3 +1,4 @@
+
 export function Tractor(props: React.SVGProps<SVGSVGElement>) {
     return (
         <svg
@@ -21,5 +22,3 @@ export function Tractor(props: React.SVGProps<SVGSVGElement>) {
         </svg>
     )
 }
-
-    

@@ -51,5 +51,3 @@ export function LiveFieldMonitorPreview() {
         </Link>
     );
 }
-
-    

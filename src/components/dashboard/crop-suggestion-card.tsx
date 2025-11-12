@@ -240,5 +240,3 @@ export function CropSuggestionCard({ defaultLocation, userLanguage }: { defaultL
     </Card>
   );
 }
-
-    

@@ -58,5 +58,3 @@ const carbonTrackingFlow = ai.defineFlow(
     return output!;
   }
 );
-
-    
