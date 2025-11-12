@@ -403,7 +403,9 @@
             "properties": {
               "eventName": { "type": "string" },
               "date": { "type": "object" },
-              "notes": { "type": "string" }
+              "notes": { "type": "string" },
+              "latitude": { "type": "number" },
+              "longitude": { "type": "number" }
             },
             "required": ["eventName", "date"]
           }
@@ -453,5 +455,3 @@
     }
   }
 }
-
-    

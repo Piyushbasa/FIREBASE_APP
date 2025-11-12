@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Header } from '@/components/dashboard/header';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -14,7 +14,7 @@ import { useUser, useFirestore, useCollection } from '@/firebase';
 import { addDocumentNonBlocking } from '@/firebase';
 import { collection, query, where, Timestamp } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Plus, Trash2, PackageSearch, Calendar as CalendarIcon, Share2 } from 'lucide-react';
+import { Loader2, Plus, Trash2, PackageSearch, Calendar as CalendarIcon, Share2, MapPin } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
@@ -23,15 +23,19 @@ import { useMemoFirebase } from '@/firebase/provider';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Link from 'next/link';
 
+const eventSchema = z.object({
+    eventName: z.string().min(2, 'Event name is required.'),
+    date: z.date(),
+    notes: z.string().optional(),
+    latitude: z.number().optional(),
+    longitude: z.number().optional(),
+});
+
 const formSchema = z.object({
   productName: z.string().min(2, 'Product name is required.'),
   batchId: z.string().min(2, 'Batch ID is required.'),
   harvestDate: z.date(),
-  events: z.array(z.object({
-    eventName: z.string().min(2, 'Event name is required.'),
-    date: z.date(),
-    notes: z.string().optional(),
-  })),
+  events: z.array(eventSchema),
 });
 
 type ProductTrace = {
@@ -64,7 +68,7 @@ export default function TraceabilityPage() {
         },
     });
 
-    const { fields, append, remove } = useFieldArray({
+    const { fields, append, remove, update } = useFieldArray({
         control: form.control,
         name: "events",
     });
@@ -102,6 +106,36 @@ export default function TraceabilityPage() {
             description: 'The shareable link for this trace has been copied to your clipboard.',
         });
     }
+
+    const fetchLocation = (index: number) => {
+        if (!navigator.geolocation) {
+            toast({
+                variant: "destructive",
+                title: "Geolocation not supported",
+                description: "Your browser does not support geolocation.",
+            });
+            return;
+        }
+        
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const { latitude, longitude } = position.coords;
+                const currentEvent = form.getValues(`events.${index}`);
+                update(index, { ...currentEvent, latitude, longitude });
+                toast({
+                    title: "Location Added",
+                    description: `Coordinates captured for event: ${currentEvent.eventName}`,
+                });
+            },
+            () => {
+                toast({
+                    variant: "destructive",
+                    title: "Unable to retrieve location",
+                    description: "Please ensure location services are enabled.",
+                });
+            }
+        );
+    };
 
     if (isUserLoading) {
          return (
@@ -201,11 +235,26 @@ export default function TraceabilityPage() {
                                     <div className="space-y-4">
                                          <FormLabel>Traceability Events</FormLabel>
                                          {fields.map((field, index) => (
-                                            <div key={field.id} className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_1fr_auto] gap-2 items-end p-3 border rounded-lg">
-                                                <FormField control={form.control} name={`events.${index}.eventName`} render={({ field }) => ( <FormItem><FormLabel className="text-xs">Event</FormLabel><FormControl><Input placeholder="e.g., Sowing" {...field} /></FormControl></FormItem> )} />
-                                                <FormField control={form.control} name={`events.${index}.date`} render={({ field }) => ( <FormItem><FormLabel className="text-xs">Date</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant="outline" className={cn("w-full pl-3 text-left font-normal",!field.value && "text-muted-foreground")}><small>{field.value ? format(field.value, "PPP") : "Pick a date"}</small><CalendarIcon className="ml-auto h-3 w-3 opacity-50" /></Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0"><Calendar mode="single" selected={field.value} onSelect={field.onChange} /></PopoverContent></Popover></FormItem> )} />
-                                                <FormField control={form.control} name={`events.${index}.notes`} render={({ field }) => ( <FormItem><FormLabel className="text-xs">Notes</FormLabel><FormControl><Input placeholder="Organic fertilizer used" {...field} /></FormControl></FormItem> )} />
-                                                <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
+                                            <div key={field.id} className="space-y-2 p-3 border rounded-lg">
+                                                <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto] gap-2 items-end">
+                                                    <FormField control={form.control} name={`events.${index}.eventName`} render={({ field }) => ( <FormItem><FormLabel className="text-xs">Event</FormLabel><FormControl><Input placeholder="e.g., Sowing" {...field} /></FormControl></FormItem> )} />
+                                                    <FormField control={form.control} name={`events.${index}.date`} render={({ field }) => ( <FormItem><FormLabel className="text-xs">Date</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant="outline" className={cn("w-full pl-3 text-left font-normal text-xs",!field.value && "text-muted-foreground")}><small>{field.value ? format(field.value, "PP") : "Pick a date"}</small><CalendarIcon className="ml-auto h-3 w-3 opacity-50" /></Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0"><Calendar mode="single" selected={field.value} onSelect={field.onChange} /></PopoverContent></Popover></FormItem> )} />
+                                                    <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
+                                                </div>
+                                                 <FormField control={form.control} name={`events.${index}.notes`} render={({ field }) => ( <FormItem><FormLabel className="text-xs">Notes</FormLabel><FormControl><Input placeholder="Organic fertilizer used" {...field} /></FormControl></FormItem> )} />
+                                                <div className="flex items-center justify-between pt-2">
+                                                    {field.latitude && field.longitude ? (
+                                                        <div className="text-xs text-muted-foreground">
+                                                            Lat: {field.latitude.toFixed(4)}, Lon: {field.longitude.toFixed(4)}
+                                                        </div>
+                                                    ) : (
+                                                        <div className="text-xs text-muted-foreground italic">No location added</div>
+                                                    )}
+                                                    <Button type="button" variant="outline" size="sm" onClick={() => fetchLocation(index)}>
+                                                        <MapPin className="mr-2 h-4 w-4" />
+                                                        Add Location
+                                                    </Button>
+                                                </div>
                                             </div>
                                          ))}
                                          <Button type="button" variant="outline" size="sm" onClick={() => append({ eventName: '', date: new Date(), notes: '' })}><Plus className="mr-2 h-4 w-4" /> Add Event</Button>
