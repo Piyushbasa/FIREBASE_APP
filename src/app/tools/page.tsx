@@ -18,7 +18,7 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { fetchPesticideInfo, fetchCarbonSequestration } from '@/app/actions';
 import type { PesticideInfoOutput } from "@/ai/flows/pesticide-info-flow";
-import type { CarbonSequestrationOutput } from "@/ai/flows/carbon-tracking-flow";
+import type { CarbonSequestrationOutput } from "@/ai/schemas/carbon-tracking-schema";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { useUser, useDoc, useFirestore } from '@/firebase';
@@ -630,3 +630,5 @@ export default function ToolsPage() {
     </div>
   );
 }
+
+    

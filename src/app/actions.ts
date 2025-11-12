@@ -42,7 +42,7 @@ export async function askAssistant(input: AssistantInput): Promise<{ data: Assis
         return { data: result, error: null };
     } catch (e) {
         console.error(e);
-        const errorMessage = e instanceof "An unknown error occurred." ? e.message : 'An unknown error occurred.';
+        const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
         return { data: null, error: `Failed to ask assistant: ${errorMessage}` };
     }
 }
@@ -112,3 +112,5 @@ export async function fetchSatelliteImageAnalysis(input: AnalyzeSatelliteImageIn
     return { data: null, error: `Failed to analyze satellite image: ${errorMessage}` };
   }
 }
+
+    
