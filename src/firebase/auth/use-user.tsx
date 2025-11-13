@@ -1,4 +1,3 @@
-
 'use client';
 import { User } from 'firebase/auth';
 import { useFirebase } from '@/firebase/provider';

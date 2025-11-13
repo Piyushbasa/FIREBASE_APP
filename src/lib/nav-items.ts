@@ -1,4 +1,3 @@
-
 import { BarChart2, Bot, GraduationCap, Home, MessageSquare, User, Wrench, Satellite, Wallet, PackageSearch, Globe } from 'lucide-react';
 import { Tractor } from '@/components/icons/Tractor';
 

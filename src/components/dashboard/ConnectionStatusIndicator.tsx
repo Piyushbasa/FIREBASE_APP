@@ -1,4 +1,3 @@
-
 'use client';
 
 import * as React from 'react';
@@ -12,7 +11,10 @@ export function ConnectionStatusIndicator() {
 
   React.useEffect(() => {
     // Set initial state from navigator
-    setIsOnline(navigator.onLine);
+    if (typeof navigator !== 'undefined') {
+      setIsOnline(navigator.onLine);
+    }
+    
 
     const handleOnline = () => {
       setIsOnline(true);

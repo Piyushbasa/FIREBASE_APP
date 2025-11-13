@@ -1,4 +1,3 @@
-
 'use client';
 import { useState, useRef } from 'react';
 import { Bot, Loader2, Send, User, Volume2, Play, Pause } from 'lucide-react';

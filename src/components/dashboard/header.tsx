@@ -1,4 +1,3 @@
-
 import { ThemeToggle } from '../theme-toggle';
 
 export function Header({ rightContent }: { rightContent?: React.ReactNode }) {

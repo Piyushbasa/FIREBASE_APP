@@ -1,4 +1,3 @@
-
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
@@ -35,7 +34,8 @@ const learningTopics = [
         title: 'Government Schemes & Subsidies',
         description: 'Information on the latest government schemes for farmers.',
         icon: Landmark,
-        href: 'https://www.youtube.com/results?search_query=government+schemes+for+indian+farmers',
+        href: 'https://www
+.youtube.com/results?search_query=government+schemes+for+indian+farmers',
     },
     {
         title: 'Pest and Disease Control',

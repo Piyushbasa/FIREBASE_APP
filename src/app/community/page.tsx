@@ -1,4 +1,3 @@
-
 'use client';
 import { useMemoFirebase } from '@/firebase/provider';
 import { Header } from '@/components/dashboard/header';
