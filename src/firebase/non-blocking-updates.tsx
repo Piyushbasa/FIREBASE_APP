@@ -1,3 +1,4 @@
+
 'use client';
     
 import {
@@ -6,10 +7,10 @@ import {
   updateDoc,
   deleteDoc,
   writeBatch,
+  doc,
   CollectionReference,
   DocumentReference,
   SetOptions,
-  Firestore,
 } from 'firebase/firestore';
 import { errorEmitter } from '@/firebase/error-emitter';
 import {FirestorePermissionError} from '@/firebase/errors';
@@ -24,7 +25,7 @@ export function setDocumentNonBlocking(docRef: DocumentReference, data: any, opt
       'permission-error',
       new FirestorePermissionError({
         path: docRef.path,
-        operation: 'write', // or 'create'/'update' based on options
+        operation: options.merge ? 'update' : 'create',
         requestResourceData: data,
       })
     )
@@ -39,8 +40,8 @@ export function setDocumentNonBlocking(docRef: DocumentReference, data: any, opt
  * Does NOT await the write operation internally.
  */
 export function addDocumentNonBlocking(colRef: CollectionReference, data: any) {
-  // If this is a 'traces' collection, perform a batch write
-  if (colRef.path.endsWith('/traces')) {
+  // If this is a 'traces' collection within a user profile, perform a batch write
+  if (colRef.path.startsWith('userProfile/') && colRef.path.endsWith('/traces')) {
     const firestore = colRef.firestore;
     const privateDocRef = doc(colRef); // Creates a ref with a new auto-generated ID
     const publicDocRef = doc(firestore, 'traces', privateDocRef.id);

@@ -1,3 +1,4 @@
+
 {
   "entities": {
     "Transaction": {
@@ -434,26 +435,22 @@
         "description": "Publicly readable traceability logs. This collection is a read-only mirror of user-specific trace data for consumer-facing display."
       },
       "userProfile": {
+        "schema": {
+          "$ref": "#/entities/UserProfile"
+        },
+        "description": "Stores public profile information for a user, such as their location.",
         "collections": {
-          "{userId}": {
+          "transactions": {
             "schema": {
-              "$ref": "#/entities/UserProfile"
+              "$ref": "#/entities/Transaction"
             },
-            "description": "Stores public profile information for a user, such as their location.",
-            "collections": {
-               "transactions": {
-                "schema": {
-                  "$ref": "#/entities/Transaction"
-                },
-                "description": "Stores the financial transactions for a specific user."
-              },
-              "traces": {
-                "schema": {
-                  "$ref": "#/entities/ProductTrace"
-                },
-                "description": "Stores traceability logs for a user's products. This is the primary, user-owned copy."
-              }
-            }
+            "description": "Stores the financial transactions for a specific user."
+          },
+          "traces": {
+            "schema": {
+              "$ref": "#/entities/ProductTrace"
+            },
+            "description": "Stores traceability logs for a user's products. This is the primary, user-owned copy."
           }
         }
       }

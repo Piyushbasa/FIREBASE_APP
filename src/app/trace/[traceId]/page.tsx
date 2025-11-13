@@ -1,13 +1,15 @@
+
 'use client';
 import * as React from 'react';
 import { useFirestore, useDoc } from '@/firebase';
-import { doc, getDoc, collection, DocumentReference } from 'firebase/firestore';
-import { Loader2, Package, Calendar, MapPin, ChevronRight, FileText, Anchor } from 'lucide-react';
+import { doc, DocumentReference } from 'firebase/firestore';
+import { Loader2, Package, Calendar, MapPin, Anchor, FileText } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { format } from 'date-fns';
 import type { Timestamp } from 'firebase/firestore';
 import { useMemoFirebase } from '@/firebase/provider';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 type TraceEvent = {
     eventName: string;
@@ -27,34 +29,17 @@ type ProductTrace = {
 
 export default function TraceViewerPage({ params }: { params: { traceId: string } }) {
     const firestore = useFirestore();
-    const [traceRef, setTraceRef] = React.useState<DocumentReference | null>(null);
-
-    // This effect is needed because we can't perform an async query directly inside useMemoFirebase
-    // We first find the document and then create a stable reference to it.
-    React.useEffect(() => {
-        async function findDocument() {
-            if (firestore && params.traceId) {
-                // This is a simplified approach. In a real-world scenario with many users,
-                // this would be insecure and inefficient. A backend function would be needed
-                // to query across all `traces` subcollections.
-                // For this app, we assume a traceId is globally unique enough for a demo.
-                // A better structure might be a root `traces` collection.
-                try {
-                     const docSnap = await getDoc(doc(firestore, 'traces', params.traceId));
-                     if(docSnap.exists()){
-                         setTraceRef(docSnap.ref);
-                     }
-                } catch (error) {
-                    console.error("Could not find the trace document by ID across users.", error);
-                }
-            }
-        }
-        findDocument();
+    
+    // The public trace document is now in the root `traces` collection.
+    // This is a stable reference, so we can use useMemoFirebase directly.
+    const traceRef = useMemoFirebase(() => {
+        if (!firestore || !params.traceId) return null;
+        return doc(firestore, 'traces', params.traceId);
     }, [firestore, params.traceId]);
 
     const { data: trace, isLoading, error } = useDoc<ProductTrace>(traceRef);
 
-    if (isLoading || !traceRef) {
+    if (isLoading) {
         return (
             <main className="flex-1 flex items-center justify-center p-4 min-h-screen bg-secondary">
                 <div className="text-center">

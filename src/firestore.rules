@@ -74,8 +74,9 @@ service cloud.firestore {
        match /traces/{traceId} {
         allow list, get: if isOwner(userId);
         // On create, also write a public copy to the root `traces` collection
-        allow create: if isOwner(userId) && request.resource.data.userId == userId &&
-                         // The public doc must have the same ID and content
+        allow create: if isOwner(userId) && 
+                         request.resource.data.userId == userId &&
+                         // Check that the corresponding public doc exists after the write and has the same data.
                          getAfter(/databases/$(database)/documents/traces/$(traceId)).data == request.resource.data;
         allow update, delete: if isExistingOwner(userId) && resource.data.userId == userId;
        }
