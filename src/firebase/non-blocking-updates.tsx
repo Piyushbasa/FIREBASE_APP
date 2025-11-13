@@ -5,9 +5,11 @@ import {
   addDoc,
   updateDoc,
   deleteDoc,
+  writeBatch,
   CollectionReference,
   DocumentReference,
   SetOptions,
+  Firestore,
 } from 'firebase/firestore';
 import { errorEmitter } from '@/firebase/error-emitter';
 import {FirestorePermissionError} from '@/firebase/errors';
@@ -32,22 +34,46 @@ export function setDocumentNonBlocking(docRef: DocumentReference, data: any, opt
 
 
 /**
- * Initiates an addDoc operation for a collection reference.
+ * Initiates an addDoc operation. For traceability, it performs a batch write
+ * to create both a private (user-owned) and public (read-only) copy of the log.
  * Does NOT await the write operation internally.
- * Returns the Promise for the new doc ref, but typically not awaited by caller.
  */
 export function addDocumentNonBlocking(colRef: CollectionReference, data: any) {
-  addDoc(colRef, data)
-    .catch(error => {
-      errorEmitter.emit(
+  // If this is a 'traces' collection, perform a batch write
+  if (colRef.path.endsWith('/traces')) {
+    const firestore = colRef.firestore;
+    const privateDocRef = doc(colRef); // Creates a ref with a new auto-generated ID
+    const publicDocRef = doc(firestore, 'traces', privateDocRef.id);
+
+    const batch = writeBatch(firestore);
+    batch.set(privateDocRef, data); // Set the private, user-owned document
+    batch.set(publicDocRef, data);  // Set the public, read-only document with the same ID and data
+
+    batch.commit().catch(error => {
+       errorEmitter.emit(
         'permission-error',
         new FirestorePermissionError({
-          path: colRef.path,
+          path: colRef.path, // Path of the collection being added to
           operation: 'create',
           requestResourceData: data,
         })
       )
     });
+
+  } else {
+    // For all other collections, perform a standard addDoc
+    addDoc(colRef, data)
+      .catch(error => {
+        errorEmitter.emit(
+          'permission-error',
+          new FirestorePermissionError({
+            path: colRef.path,
+            operation: 'create',
+            requestResourceData: data,
+          })
+        )
+      });
+  }
 }
 
 

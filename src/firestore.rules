@@ -1,27 +1,4 @@
 
-/**
- * @fileoverview Firestore Security Rules for the application.
- *
- * Core Philosophy:
- * This ruleset prioritizes a secure, owner-centric model for user data while allowing public read access to community forum posts. User profiles and their associated data (like fields) are private and only accessible to the owning user.
- *
- * Data Structure:
- * - `/posts/{postId}`: Community forum posts, readable by all, writable only by authenticated authors.
- * - `/userProfile/{userId}`: User profiles, private to the owner.
- * - `/userProfile/{userId}/transactions/{transactionId}`: User's financial records, private to the owner.
- * - `/userProfile/{userId}/traces/{traceId}`: User's product traceability logs, private to the owner.
- *
- * Key Security Decisions:
- * - Posts are publicly readable to foster community engagement.
- * - User profiles and all subcollections are private and only accessible/modifiable by the corresponding user.
- * - Listing of user profiles is disallowed for privacy.
- * - All write operations require the `userId` or `authorId` in the resource to match the authenticated user's UID.
- *
- * Denormalization for Authorization:
- * - Posts denormalize `authorId` onto each post document to simplify ownership checks.
- * - Transaction documents denormalize `userId` for the same purpose.
- * - ProductTrace documents denormalize `userId` for the same purpose.
- */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -59,6 +36,15 @@ service cloud.firestore {
       allow create: if isSignedIn() && request.resource.data.authorId == request.auth.uid;
       allow update, delete: if isExistingOwner(resource.data.authorId);
     }
+    
+    /**
+     * @description Security rules for the public 'traces' collection.
+     * @path /traces/{traceId}
+     */
+    match /traces/{traceId} {
+      allow get: if true; // Publicly readable
+      allow list, create, update, delete: if false; // No one can list, create, update or delete from here
+    }
 
     /**
      * @description Security rules for the 'userProfile' collection and its subcollections.
@@ -87,7 +73,10 @@ service cloud.firestore {
        */
        match /traces/{traceId} {
         allow list, get: if isOwner(userId);
-        allow create: if isOwner(userId) && request.resource.data.userId == userId;
+        // On create, also write a public copy to the root `traces` collection
+        allow create: if isOwner(userId) && request.resource.data.userId == userId &&
+                         // The public doc must have the same ID and content
+                         getAfter(/databases/$(database)/documents/traces/$(traceId)).data == request.resource.data;
         allow update, delete: if isExistingOwner(userId) && resource.data.userId == userId;
        }
     }

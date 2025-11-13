@@ -13,7 +13,7 @@ import { useUser, useFirestore, useCollection } from '@/firebase';
 import { addDocumentNonBlocking } from '@/firebase';
 import { collection, query, where, Timestamp } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Plus, Trash2, PackageSearch, Calendar as CalendarIcon, Share2, MapPin } from 'lucide-react';
+import { Loader2, Plus, Trash2, PackageSearch, Calendar as CalendarIcon, Share2, MapPin, ExternalLink } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
@@ -243,9 +243,9 @@ export default function TraceabilityPage() {
                                                  <FormField control={form.control} name={`events.${index}.notes`} render={({ field }) => ( <FormItem><FormLabel className="text-xs">Notes</FormLabel><FormControl><Input placeholder="Organic fertilizer used" {...field} /></FormControl></FormItem> )} />
                                                 <div className="flex items-center justify-between pt-2">
                                                     {field.latitude && field.longitude ? (
-                                                        <div className="text-xs text-muted-foreground">
-                                                            Lat: {field.latitude.toFixed(4)}, Lon: {field.longitude.toFixed(4)}
-                                                        </div>
+                                                        <a href={`https://www.google.com/maps/search/?api=1&query=${field.latitude},${field.longitude}`} target="_blank" rel="noopener noreferrer" className="text-xs text-primary underline hover:text-primary/80 flex items-center gap-1">
+                                                            Lat: {field.latitude.toFixed(4)}, Lon: {field.longitude.toFixed(4)} <ExternalLink className="w-3 h-3" />
+                                                        </a>
                                                     ) : (
                                                         <div className="text-xs text-muted-foreground italic">No location added</div>
                                                     )}
