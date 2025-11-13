@@ -86,12 +86,12 @@ export default function RootLayout({
                         src={backgroundImage}
                         alt="Lush green farming fields"
                         fill
-                        className="object-cover -z-10 transition-opacity duration-1000"
+                        className="object-cover -z-10"
                         data-ai-hint="green farming fields"
                     />
-                    <div className="md:flex">
+                    <div className="md:flex relative z-10">
                         <AppSidebar />
-                         <SidebarInset className="relative pt-12 md:pt-4 pb-24 md:pb-4">
+                         <SidebarInset>
                             <ConnectionStatusIndicator />
                             {children}
                         </SidebarInset>
