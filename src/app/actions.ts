@@ -1,4 +1,3 @@
-
 'use server';
 
 import { suggestCrop, SuggestCropInput, SuggestCropOutput } from '@/ai/flows/suggest-crop';
