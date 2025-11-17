@@ -1,10 +1,11 @@
+
 'use client';
 
 import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { FlaskConical, Loader2, Info, ShieldAlert, Thermometer, Droplets, Leaf, Bluetooth, X, Recycle } from "lucide-react";
+import { FlaskConical, Loader2, Info, ShieldAlert, Thermometer, Droplets, Leaf, Bluetooth, X, Recycle, AlertTriangle } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 
@@ -26,6 +27,7 @@ import { useMemoFirebase } from '@/firebase/provider';
 import { Progress } from "@/components/ui/progress";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 
 const pesticideFormSchema = z.object({
@@ -57,6 +59,8 @@ function LiveFieldMonitor() {
     const [chartData, setChartData] = React.useState(initialChartData);
     const [isConnected, setIsConnected] = React.useState(false);
     const [isConnecting, setIsConnecting] = React.useState(false);
+    const [isBluetoothSupported, setIsBluetoothSupported] = React.useState(true);
+    const [isSecureContext, setIsSecureContext] = React.useState(true);
     const [bluetoothDevice, setBluetoothDevice] = React.useState<BluetoothDevice | null>(null);
     const simulationIntervalRef = React.useRef<NodeJS.Timeout | null>(null);
     const { toast } = useToast();
@@ -92,9 +96,13 @@ function LiveFieldMonitor() {
     }, [stopSimulation]);
     
     React.useEffect(() => {
-        // Start simulation by default
+        if (typeof window !== 'undefined') {
+          setIsSecureContext(window.isSecureContext);
+          if (!navigator.bluetooth) {
+            setIsBluetoothSupported(false);
+          }
+        }
         startSimulation();
-        // Cleanup on unmount
         return () => stopSimulation();
     }, [startSimulation, stopSimulation]);
 
@@ -138,17 +146,13 @@ function LiveFieldMonitor() {
     }, [toast, startSimulation]);
 
     const handleConnect = React.useCallback(async () => {
-        if (!navigator.bluetooth) {
-            toast({ variant: "destructive", title: "Web Bluetooth not supported", description: "Your browser doesn't support Web Bluetooth. Try Chrome on desktop or Android." });
-            return;
-        }
-
         setIsConnecting(true);
         stopSimulation();
 
         try {
             const device = await navigator.bluetooth.requestDevice({
                 filters: [{ services: ['environmental_sensing'] }],
+                optionalServices: ['environmental_sensing']
             });
 
             if (!device.gatt) {
@@ -188,6 +192,8 @@ function LiveFieldMonitor() {
         }
     }, [bluetoothDevice]);
 
+    const canUseBluetooth = isBluetoothSupported && isSecureContext;
+
     return (
         <Card>
             <CardHeader>
@@ -202,7 +208,7 @@ function LiveFieldMonitor() {
                                 <X className="mr-2 h-4 w-4" /> Disconnect
                             </Button>
                         ) : (
-                            <Button onClick={handleConnect} disabled={isConnecting} size="sm">
+                            <Button onClick={handleConnect} disabled={isConnecting || !canUseBluetooth} size="sm">
                                 {isConnecting ? (
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                 ) : (
@@ -218,6 +224,18 @@ function LiveFieldMonitor() {
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
+                {!canUseBluetooth && (
+                  <Alert variant="destructive">
+                    <AlertTriangle className="h-4 w-4" />
+                    <AlertTitle>Bluetooth Feature Disabled</AlertTitle>
+                    <AlertDescription>
+                        {!isBluetoothSupported
+                        ? "Your browser does not support Web Bluetooth. Please try a different browser like Chrome on desktop or Android."
+                        : "This feature requires a secure (HTTPS) connection. The simulated data below is for demonstration."
+                        }
+                    </AlertDescription>
+                  </Alert>
+                )}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
                     <div className="p-3 rounded-md border bg-secondary/30">
                         <h4 className="font-semibold text-primary flex items-center justify-center gap-1"><Thermometer size={16}/> Temperature</h4>
@@ -629,3 +647,5 @@ export default function ToolsPage() {
     </div>
   );
 }
+
+    
