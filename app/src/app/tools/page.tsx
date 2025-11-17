@@ -5,7 +5,7 @@ import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { FlaskConical, Loader2, Info, ShieldAlert, Thermometer, Droplets, Leaf, Bluetooth, X, Recycle } from "lucide-react";
+import { FlaskConical, Loader2, Info, ShieldAlert, Thermometer, Droplets, Leaf, Recycle } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 
@@ -27,6 +27,7 @@ import { useMemoFirebase } from '@/firebase/provider';
 import { Progress } from "@/components/ui/progress";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 
 const pesticideFormSchema = z.object({
@@ -56,11 +57,7 @@ const initialChartData = [
 
 function LiveFieldMonitor() {
     const [chartData, setChartData] = React.useState(initialChartData);
-    const [isConnected, setIsConnected] = React.useState(false);
-    const [isConnecting, setIsConnecting] = React.useState(false);
-    const [bluetoothDevice, setBluetoothDevice] = React.useState<BluetoothDevice | null>(null);
     const simulationIntervalRef = React.useRef<NodeJS.Timeout | null>(null);
-    const { toast } = useToast();
 
     const lastDataPoint = chartData[chartData.length - 1];
 
@@ -93,129 +90,20 @@ function LiveFieldMonitor() {
     }, [stopSimulation]);
     
     React.useEffect(() => {
-        // Start simulation by default
         startSimulation();
-        // Cleanup on unmount
         return () => stopSimulation();
     }, [startSimulation, stopSimulation]);
 
 
-    const handleNotifications = React.useCallback((event: Event) => {
-        const value = (event.target as BluetoothRemoteGATTCharacteristic).value;
-        if (!value) return;
-
-        const characteristicUUID = (event.target as BluetoothRemoteGATTCharacteristic).uuid;
-        
-        let newTemp = chartData[chartData.length - 1].temp;
-        let newMoisture = chartData[chartData.length - 1].moisture;
-
-        // Standard UUIDs for Temperature and Humidity
-        const tempUUID = '00002a6e-0000-1000-8000-00805f9b34fb';
-        const humidityUUID = '00002a6f-0000-1000-8000-00805f9b34fb';
-
-        if (characteristicUUID.includes(tempUUID)) { 
-            newTemp = value.getInt16(0, true) / 100;
-        } else if (characteristicUUID.includes(humidityUUID)) { 
-            newMoisture = value.getUint16(0, true) / 100;
-        }
-
-        setChartData(prevData => {
-            const lastPoint = prevData[prevData.length - 1];
-            const newData = [...prevData.slice(1), {
-                time: 'now',
-                temp: newTemp,
-                moisture: newMoisture,
-                nitrogen: lastPoint.nitrogen, // Nitrogen not from standard BT service, keep it from simulation
-            }];
-            return newData.map((d, i) => ({...d, time: `${(newData.length - 1 - i) * 2}s ago`}));
-        });
-    }, [chartData]);
-    
-    const onDisconnected = React.useCallback(() => {
-        setIsConnected(false);
-        setBluetoothDevice(null);
-        toast({ title: "Device Disconnected", description: "The connection to the IoT device was lost." });
-        startSimulation();
-    }, [toast, startSimulation]);
-
-    const handleConnect = React.useCallback(async () => {
-        if (!navigator.bluetooth) {
-            toast({ variant: "destructive", title: "Web Bluetooth not supported", description: "Your browser doesn't support Web Bluetooth. Try Chrome on desktop or Android." });
-            return;
-        }
-
-        setIsConnecting(true);
-        stopSimulation();
-
-        try {
-            const device = await navigator.bluetooth.requestDevice({
-                filters: [{ services: ['environmental_sensing'] }],
-            });
-
-            if (!device.gatt) {
-                throw new Error("GATT server not available.");
-            }
-            
-            setBluetoothDevice(device);
-            device.addEventListener('gattserverdisconnected', onDisconnected);
-            const server = await device.gatt.connect();
-            
-            const service = await server.getPrimaryService('environmental_sensing');
-            
-            const tempChar = await service.getCharacteristic('temperature'); // UUID 0x2A6E
-            const humidityChar = await service.getCharacteristic('humidity'); // UUID 0x2A6F
-
-            await tempChar.startNotifications();
-            tempChar.addEventListener('characteristicvaluechanged', handleNotifications);
-            
-            await humidityChar.startNotifications();
-            humidityChar.addEventListener('characteristicvaluechanged', handleNotifications);
-            
-            setIsConnected(true);
-            toast({ title: "Connected!", description: `Now receiving data from ${device.name || 'your device'}.` });
-
-        } catch (error: any) {
-            toast({ variant: "destructive", title: "Connection Failed", description: error.message || "Could not connect to device. Ensure it's discoverable." });
-            startSimulation(); // Restart simulation if connection fails
-        } finally {
-            setIsConnecting(false);
-        }
-    }, [toast, stopSimulation, startSimulation, onDisconnected, handleNotifications]);
-    
-
-    const handleDisconnect = React.useCallback(() => {
-        if (bluetoothDevice && bluetoothDevice.gatt) {
-            bluetoothDevice.gatt.disconnect();
-        }
-    }, [bluetoothDevice]);
-
     return (
         <Card>
             <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <Leaf className="w-6 h-6 text-primary" />
-                        Live Field Monitor
-                    </div>
-                    <div>
-                        {isConnected ? (
-                             <Button variant="destructive" onClick={handleDisconnect} size="sm">
-                                <X className="mr-2 h-4 w-4" /> Disconnect
-                            </Button>
-                        ) : (
-                            <Button onClick={handleConnect} disabled={isConnecting} size="sm">
-                                {isConnecting ? (
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                ) : (
-                                    <Bluetooth className="mr-2 h-4 w-4" />
-                                )}
-                                Connect Device
-                            </Button>
-                        )}
-                    </div>
+                <CardTitle className="flex items-center gap-2">
+                    <Leaf className="w-6 h-6 text-primary" />
+                    Live Field Monitor
                 </CardTitle>
                 <CardDescription>
-                    {isConnected ? `Live data from ${bluetoothDevice?.name || 'your device'}` : 'Real-time data from your connected IoT soil sensor.'}
+                    Real-time simulated data from a virtual IoT soil sensor.
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -258,7 +146,7 @@ function LiveFieldMonitor() {
             </CardContent>
              <CardFooter className="text-xs text-muted-foreground">
                 <Info className="w-4 h-4 mr-2"/>
-                {isConnected ? 'Displaying live data. Nitrogen level is simulated.' : 'This is a simulation. Connect a real device via Bluetooth for live data.'}
+                This is a simulation of real-time sensor data.
             </CardFooter>
         </Card>
     );
