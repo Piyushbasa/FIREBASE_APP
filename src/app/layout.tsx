@@ -86,7 +86,7 @@ export default function RootLayout({
                         src={backgroundImage}
                         alt="Lush green farming fields"
                         fill
-                        className="object-cover -z-10"
+                        className="object-cover -z-20"
                         data-ai-hint="green farming fields"
                     />
                     <div className="md:flex relative z-10">
